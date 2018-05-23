@@ -53,8 +53,10 @@ describe SearchndrochBot do
   end
 
   it 'should move game start' do
-    expect(
-      @snd.send(:cmd_move_start, '/move_start 1 2120-08-02 01:00:00 UTC+3')
-    ).to eq 'Время старта игры #1 смещено на 2120-08-02 01:00:00 +0300'
+    expect do
+      @snd.send(:cmd_move_start, '/move_start 1 2120-08-02 01:00:00 +0300')
+    end.not_to raise_error
+    expect(SND::Game.find(1).start.to_i)
+      .to eq(Time.parse('2120-08-02 01:00:00 +0300').to_i)
   end
 end

@@ -43,13 +43,13 @@ require 'telegram/snd_telegram'
 require 'db/snd_game'
 require 'db/snd_chat'
 
-include R18n::Helpers
 R18n::Filters.on(:named_variables)
 R18n.default_places = "#{SND.libdir}/../i18n/"
 R18n.set('ru')
 
 # Main class for Search'N'Droch bot
 class SearchndrochBot
+  include R18n::Helpers
   attr_reader :token, :client, :chat
 
   def initialize

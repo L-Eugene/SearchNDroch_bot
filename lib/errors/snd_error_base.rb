@@ -5,6 +5,7 @@ require 'log/snd_logger'
 module SND
   # Basic class for exceptions with telegram message support
   class ErrorBase < StandardError
+    include R18n::Helpers
     attr_reader :cmessage
 
     def initialize(options = {})

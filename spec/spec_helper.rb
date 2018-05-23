@@ -14,6 +14,7 @@ FactoryGirl.find_definitions
 ActiveRecord::Base.establish_connection(SND.cfg.options['database'])
 
 RSpec.configure do |config|
+  include R18n::Helpers
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
