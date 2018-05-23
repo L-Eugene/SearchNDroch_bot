@@ -1,0 +1,12 @@
+tg_token: sometoken
+
+libdir: lib
+logfile: /tmp/sndtest.log
+
+database:
+  adapter: sqlite3
+  encoding: utf8
+  pool: 5
+  min_messages: warning
+  timeout: 5000
+  database: db/test.sqlite3

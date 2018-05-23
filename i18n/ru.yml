@@ -1,0 +1,34 @@
+error:
+  undefined: Should be defined in child class
+  invalid_game_number:
+    log: Номер игры должен быть целым числом больше нуля
+    msg: Номер игры должен быть целым числом больше нуля
+  defunct_game_number:
+    log: Игры с таким номером не существует
+    msg: Игры с таким номером не существует
+  game_owner:
+    log: Вы не являетесь владельцем выбранной игры
+    msg: Вы не являетесь владельцем выбранной игры
+  time_in_past:
+    log: Время начала игры не может быть в прошлом
+    msg: Время начала игры не может быть в прошлом
+  invalid_time_format:
+    log: Некорректный формат времени
+    msg: Некорректный формат времени
+list:
+  games: |-
+    Ваши игры:
+    %{list}
+  nogames: У Вас нет игр
+delete:
+  success: |-
+    Игра #%{id} удалена
+join:
+  success: |-
+    Вы заявлены на игру #%{id}
+move_start:
+  success: |-
+    Время старта игры #%{id} смещено на %{start}
+create:
+  success: |-
+    Игра #%{id} создана.
