@@ -23,5 +23,14 @@ module SND
     def games_print
       own_games.map { |g| "##{g.id}: [#{g.start}] #{g.name}" }
     end
+
+    def self.identify(message)
+      chat = Chat.find_or_create_by(chat_id: message.chat.id)
+      chat.update_attribute(
+        :name,lib/
+        "#{message.from.first_name} #{message.from.last_name}"
+      )
+      chat
+    end
   end
 end
