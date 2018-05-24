@@ -62,4 +62,13 @@ describe SND::Game do
     expect { @game.players << @chat }.to raise_error(SND::AlreadyJoinedError)
     expect(@game.players.size).to eq before + 1
   end
+
+  it 'should provide needed attributes' do
+    expect(@game).to respond_to(:id)
+    expect(@game).to respond_to(:name)
+    expect(@game).to respond_to(:description)
+    expect(@game).to respond_to(:allow_teams)
+    expect(@game).to respond_to(:start)
+    expect(@game).to respond_to(:author)
+  end
 end
