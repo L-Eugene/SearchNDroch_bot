@@ -27,7 +27,7 @@ module SND
     def self.identify(message)
       chat = Chat.find_or_create_by(chat_id: message.chat.id)
       chat.update_attribute(
-        :name,lib/
+        :name,
         "#{message.from.first_name} #{message.from.last_name}"
       )
       chat
