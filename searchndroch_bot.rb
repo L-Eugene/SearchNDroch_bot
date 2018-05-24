@@ -69,7 +69,7 @@ class SearchndrochBot
   end
 
   def process_message(message)
-    identify_chat(message)
+    @chat = SND::Chat.identify(message)
 
     if message.text
       meth = method_from_message(message.text)
