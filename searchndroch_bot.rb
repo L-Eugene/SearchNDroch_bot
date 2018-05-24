@@ -136,7 +136,7 @@ class SearchndrochBot
     game = parse_spreadsheet(file, ext.to_sym)
     file.unlink
 
-    create_game game
+    chat.own_games << SND::Game.create_game(game)
   end
 
   def parse_spreadsheet(file, ext)
@@ -144,22 +144,6 @@ class SearchndrochBot
     return @sp.to_hash if @sp.valid?
     nil
     # TODO: raise exception
-  end
-
-  def create_game(game)
-    raise unless game.is_a? Hash
-    g = SND::Game.create_game game
-    chat.own_games << g
-
-    chat.send_message(text: t.create.success(id: g.id))
-  end
-
-  def identify_chat(message)
-    @chat = SND::Chat.find_or_create_by(chat_id: message.chat.id)
-    @chat.update_attribute(
-      :name,
-      "#{message.from.first_name} #{message.from.last_name}"
-    )
   end
 
   def parse_args(preg, msg)

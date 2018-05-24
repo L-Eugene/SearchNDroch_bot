@@ -6,7 +6,7 @@ require 'db/snd_game_player'
 module SND
   # Chat class
   class Chat < SNDBase
-    has_many :own_games, class_name: 'Game'
+    has_many :own_games, class_name: 'Game', after_add: :added_game
     has_many :bonuses
     has_many :game_players
 
@@ -22,6 +22,10 @@ module SND
 
     def games_print
       own_games.map { |g| "##{g.id}: [#{g.start}] #{g.name}" }
+    end
+
+    def added_game(game)
+      send_message(text: t.create.success(id: game.id))
     end
 
     def self.identify(message)

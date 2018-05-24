@@ -44,5 +44,6 @@ RSpec.configure do |config|
 
   config.before(:each) do
     DatabaseCleaner.clean
+    allow(SND.tlg.api).to receive(:send_message) { |p| p[:text] }
   end
 end
