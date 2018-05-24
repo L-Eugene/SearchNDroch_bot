@@ -81,6 +81,16 @@ class SearchndrochBot
 
   private
 
+  def method_from_message(text)
+    meth = (text || '').downcase
+    [%r{\@.*$}, %r{\s.*$}, %r{^/}].each { |x| meth.gsub!(x, '') }
+
+    SND.log.info "#{meth} command from #{chat.chat_id}"
+    SND.log.debug "Full command is #{text}"
+
+    "cmd_#{meth}"
+  end
+
   def cmd_delete(msg)
     game_id = msg.sub(%r{/delete\s*}, '').to_i
 
@@ -118,16 +128,6 @@ class SearchndrochBot
     )
   end
 
-  def method_from_message(text)
-    meth = (text || '').downcase
-    [%r{\@.*$}, %r{\s.*$}, %r{^/}].each { |x| meth.gsub!(x, '') }
-
-    SND.log.info "#{meth} command from #{chat.chat_id}"
-    SND.log.debug "Full command is #{text}"
-
-    "cmd_#{meth}"
-  end
-
   def process_file(document)
     file = SND::Tlg.instance.download_file(document)
     ext = file.extname.delete('.')
@@ -141,8 +141,7 @@ class SearchndrochBot
 
   def parse_spreadsheet(file, ext)
     @sp = SND::SpreadsheetParser.new(file, extension: ext)
-    return @sp.to_hash if @sp.valid?
-    nil
+    @sp.valid? ? @sp.to_hash : nil
     # TODO: raise exception
   end
 
