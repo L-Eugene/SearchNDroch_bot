@@ -51,3 +51,5 @@ Gemfile.lock
 /nbproject/
 
 /db/test.sqlite3
+
+.*~
