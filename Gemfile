@@ -10,6 +10,7 @@ source 'https://rubygems.org' do
   gem 'tzinfo'
 
   group :test do
+    gem 'sqlite3'
     gem 'database_cleaner'
     gem 'factory_girl'
     gem 'rspec'

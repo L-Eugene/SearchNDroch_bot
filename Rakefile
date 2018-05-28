@@ -2,19 +2,23 @@
 
 require_relative 'searchndroch_bot.rb'
 require 'rspec/core/rake_task'
+require 'active_record'
 
-ActiveRecord::Base.establish_connection SND.cfg.options['database']
+include ActiveRecord::Tasks
+DatabaseTasks.env = :development
+DatabaseTasks.db_dir = './'
+DatabaseTasks.migrations_paths = 'db'
+
+DatabaseTasks.database_configuration = SND.cfg.options['database']
 
 RSpec::Core::RakeTask.new
 
+task :environment do
+  ActiveRecord::Base.establish_connection SND.cfg.options['database']
+end
+
 namespace :test do
-  namespace :db do
-    desc 'Initialize test database'
-    task :init do
-      FileUtils.rm(SND.cfg.options['database']['database'])
-      ActiveRecord::Migrator.migrate('db/', nil)
-    end
-  end
+  load 'active_record/railties/databases.rake'
 
   task run: ['db:prepare', :spec]
 end
