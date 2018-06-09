@@ -104,4 +104,21 @@ module SND
       :warn
     end
   end
+
+  # Game is not running yet
+  class GameNotRunning < ErrorBase
+    private
+
+    def default_message
+      t.error.game_not_running.log
+    end
+
+    def default_cmessage
+      t.error.game_not_running.msg
+    end
+
+    def log_level
+      :warn
+    end
+  end
 end

@@ -79,6 +79,12 @@ class SearchndrochBot
     end
   end
 
+  # Start/stop games by cron
+  def process
+    SND::Game.start_games
+    SND::Game.finish_games
+  end
+
   private
 
   def method_from_message(text)

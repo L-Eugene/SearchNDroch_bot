@@ -3,6 +3,8 @@ tg_token: sometoken
 libdir: lib
 logfile: /tmp/sndtest.log
 
+debug: /tmp/test_debug
+
 database:
   :adapter: sqlite3
   :encoding: utf8

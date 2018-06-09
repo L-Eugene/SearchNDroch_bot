@@ -15,6 +15,9 @@ error:
   invalid_time_format:
     log: Некорректный формат времени
     msg: Некорректный формат времени
+  game_not_running:
+    log: Game is not running now.
+    msg: Игра ещё не началась либо уже закончилась.
 list:
   games: |-
     Ваши игры:
@@ -32,3 +35,6 @@ move_start:
 create:
   success: |-
     Игра #%{id} создана.
+game:
+  start: Игра #%{id} началась.
+  finish: Игра #%{id} завершилась.

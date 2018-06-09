@@ -30,6 +30,32 @@ module SND
       self
     end
 
+    def start!
+      update_attribute(:status, 'Running')
+      players.each do |player|
+        player.send_message(text: t.game.start(id: id))
+      end
+    end
+
+    def finish
+      start + levels.sum(&:duration).minutes
+    end
+
+    def finish!
+      update_attribute(:status, 'Over')
+      players.each do |player|
+        player.send_message(text: t.game.finish(id: id))
+      end
+    end
+
+    def level
+      raise SND::GameNotRunning if status != 'Running'
+      levels.inject(start) do |time, l|
+        return l if time + l.duration.minutes > Time.now
+        time + l.duration.minutes
+      end
+    end
+
     def update_start(time)
       begin
         time = Time.parse(time)
@@ -70,6 +96,23 @@ module SND
         start: hash[:start]
       )
       game.create_levels(hash[:levels])
+    end
+
+    def self.start_games
+      ts = Time.now
+      time = [ts.beginning_of_minute, ts.end_of_minute]
+      SND::Game.where(start: time.first..time.last).each do |g|
+        next unless g.status.nil?
+        g.start!
+      end
+    end
+
+    def self.finish_games
+      ts = Time.now
+      SND::Game.where(status: 'Running').each do |g|
+        next unless g.finish <= ts
+        g.finish!
+      end
     end
   end
 end
