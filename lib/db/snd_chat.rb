@@ -32,6 +32,18 @@ module SND
       active_game.info_print
     end
 
+    def send_code(ucode, time)
+      code = active_game.level.check_code(ucode)
+      return t.game.code.invalid(code: ucode) unless code
+
+      code.bonuses << SND::Bonus.create(
+        chat: self,
+        code: code,
+        time: time
+      )
+      t.game.code.valid(code: ucode)
+    end
+
     def added_game(game)
       send_message(text: t.create.success(id: game.id))
     end

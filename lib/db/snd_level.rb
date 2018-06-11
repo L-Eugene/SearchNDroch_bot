@@ -23,5 +23,9 @@ module SND
 
       level
     end
+
+    def check_code(code)
+      codes.where(value_hash: Digest::MD5.hexdigest(code)).first
+    end
   end
 end

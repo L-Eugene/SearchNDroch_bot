@@ -39,3 +39,6 @@ game:
   start: Игра #%{id} началась.
   finish: Игра #%{id} завершилась.
   starts: Игра начнется в %{time}.
+  code:
+    valid: Код "%{code}" верный.
+    invalid: Код "%{code}" неверный.

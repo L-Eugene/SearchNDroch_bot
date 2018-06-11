@@ -58,7 +58,7 @@ module SND
     end
 
     def info_print
-      <<~RES
+      <<-RES
         [#{id}] #{name}
         #{description}
         #{t.game.starts(time: l(start, '%F %T %z'))}

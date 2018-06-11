@@ -7,6 +7,6 @@ module SND
   class Code < SNDBase
     belongs_to :level
 
-    has_many :bonuses
+    has_many :bonuses, class_name: 'Bonus'
   end
 end

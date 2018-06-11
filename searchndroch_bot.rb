@@ -60,6 +60,7 @@ class SearchndrochBot
   def update(data)
     update = Telegram::Bot::Types::Update.new(data)
     message = update.message
+    @time = Time.parse(message.date)
 
     process_message(message) unless message.nil?
   rescue SND::ErrorBase
@@ -74,6 +75,7 @@ class SearchndrochBot
     if message.text
       meth = method_from_message(message.text)
       send(meth, message.text) if respond_to? meth.to_sym, true
+      cmd_code(message.text)
     elsif message.document
       process_file(message.document)
     end
@@ -140,6 +142,11 @@ class SearchndrochBot
 
   def cmd_info(_msg)
     chat.send_message(text: chat.info_print)
+  end
+
+  def cmd_code(msg)
+    return unless msg =~ %r{^#}
+    chat.send_message(text: chat.send_code(msg[1..-1], @time))
   end
 
   def process_file(document)
