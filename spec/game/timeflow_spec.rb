@@ -69,7 +69,7 @@ describe SND::Game do
         .to receive(:send_message) { |_| messages += 1 }
       expect { @snd.process }.not_to raise_error
       expect(@game.reload.status).to eq 'Running'
-      expect(messages).to eq 2
+      expect(messages).to eq 4
     end
 
     it 'should calculate finish time' do

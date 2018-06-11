@@ -134,6 +134,10 @@ class SearchndrochBot
     )
   end
 
+  def cmd_task(_msg)
+    chat.send_message(text: chat.task_print)
+  end
+
   def process_file(document)
     file = SND::Tlg.instance.download_file(document)
     ext = file.extname.delete('.')

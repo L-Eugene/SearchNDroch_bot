@@ -34,6 +34,7 @@ module SND
       update_attribute(:status, 'Running')
       players.each do |player|
         player.send_message(text: t.game.start(id: id))
+        player.send_message(text: level.task)
       end
     end
 

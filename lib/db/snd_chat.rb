@@ -24,6 +24,12 @@ module SND
       own_games.map { |g| "##{g.id}: [#{g.start}] #{g.name}" }
     end
 
+    def task_print
+      game = games.where(status: 'Running').first
+      raise SND::GameNotRunning if game.nil?
+      game.level.task
+    end
+
     def added_game(game)
       send_message(text: t.create.success(id: game.id))
     end
