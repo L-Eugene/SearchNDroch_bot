@@ -57,6 +57,14 @@ module SND
       end
     end
 
+    def info_print
+      <<~RES
+        [#{id}] #{name}
+        #{description}
+        #{t.game.starts(time: l(start, '%F %T %z'))}
+      RES
+    end
+
     def update_start(time)
       begin
         time = Time.parse(time)

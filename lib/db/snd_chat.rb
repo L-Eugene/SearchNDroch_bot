@@ -25,9 +25,11 @@ module SND
     end
 
     def task_print
-      game = games.where(status: 'Running').first
-      raise SND::GameNotRunning if game.nil?
-      game.level.task
+      active_game.level.task
+    end
+
+    def info_print
+      active_game.info_print
     end
 
     def added_game(game)
@@ -41,6 +43,14 @@ module SND
         "#{message.from.first_name} #{message.from.last_name}"
       )
       chat
+    end
+
+    private
+
+    def active_game
+      game = games.where(status: 'Running').first
+      raise SND::GameNotRunning if game.nil?
+      game
     end
   end
 end

@@ -38,3 +38,4 @@ create:
 game:
   start: Игра #%{id} началась.
   finish: Игра #%{id} завершилась.
+  starts: Игра начнется в %{time}.
