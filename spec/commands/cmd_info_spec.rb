@@ -45,7 +45,7 @@ describe SearchndrochBot do
       expect { @snd.send(:cmd_info, '') }.to raise_error(SND::GameNotRunning)
     end
 
-    it 'should return correct level task' do
+    it 'should return correct game info' do
       allow(@snd).to receive(:chat) { @player }
       expect { @result = @snd.send(:cmd_info, '') }.not_to raise_error
       expect(@result).to include '[10]'
