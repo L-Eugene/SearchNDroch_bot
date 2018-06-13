@@ -33,15 +33,25 @@ module SND
     end
 
     def send_code(ucode, time)
-      code = active_game.level.check_code(ucode)
-      return t.game.code.invalid(code: ucode) unless code
+      code = active_game.level(time).check_code(ucode)
 
+      return code_msg(:invalid, ucode) unless code
+      return code_msg(:double, ucode) if bonus?(code)
+
+      create_bonus(code, time)
+      code_msg(:valid, ucode)
+    end
+
+    def create_bonus(code, time)
       code.bonuses << SND::Bonus.create(
         chat: self,
         code: code,
         time: time
       )
-      t.game.code.valid(code: ucode)
+    end
+
+    def bonus?(code)
+      !code.bonuses.where(code: code).empty?
     end
 
     def added_game(game)
@@ -63,6 +73,10 @@ module SND
       game = games.where(status: 'Running').first
       raise SND::GameNotRunning if game.nil?
       game
+    end
+
+    def code_msg(name, code)
+      t.game.code.send(name.to_sym, code: code)
     end
   end
 end

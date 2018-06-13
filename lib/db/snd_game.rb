@@ -49,11 +49,11 @@ module SND
       end
     end
 
-    def level
+    def level(time = Time.now)
       raise SND::GameNotRunning if status != 'Running'
-      levels.inject(start) do |time, l|
-        return l if time + l.duration.minutes > Time.now
-        time + l.duration.minutes
+      levels.inject(start) do |t, l|
+        return l if t + l.duration.minutes > time
+        t + l.duration.minutes
       end
     end
 

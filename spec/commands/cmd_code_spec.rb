@@ -38,6 +38,7 @@ describe SearchndrochBot do
       allow(@chat).to receive(:send_message) { |msg| msg[:text] }
 
       Timecop.freeze('2050-01-01 17:01:00 UTC+3')
+      @snd.instance_variable_set(:@time, Time.now)
 
       @game.start!
     end
@@ -53,6 +54,7 @@ describe SearchndrochBot do
 
     it 'should return code results' do
       allow(@snd).to receive(:chat) { @player }
+
       expect(@snd.send(:cmd_code, '#sa')).to include 'неверный'
       expect(SND::Bonus.all.where(chat: @player).empty?).to be_truthy
 
@@ -60,9 +62,37 @@ describe SearchndrochBot do
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
 
+      expect(@snd.send(:cmd_code, '#as')).to include 'уже введен'
+      expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
+      expect(SND::Bonus.all.where(chat: @player).size).to eq 1
+
       expect(@snd.send(:cmd_code, '#xx')).to include 'неверный'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
+    end
+
+    it 'should add correct code to previous level' do
+      allow(@snd).to receive(:chat) { @player }
+
+      # Playing at level 2 now
+      Timecop.freeze('2050-01-01 17:16:00 UTC+3')
+      @snd.instance_variable_set(:@time, Time.now)
+
+      # Putting code to level 2
+      expect(@snd.send(:cmd_code, '#as')).to include 'верный'
+      expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
+      expect(SND::Bonus.all.where(chat: @player).size).to eq 1
+
+      # Imitate late submission of correct code
+      @snd.instance_variable_set(
+        :@time,
+        Time.parse('2050-01-01 17:10:00 UTC+3')
+      )
+
+      # This code has to be sent to level 1
+      expect(@snd.send(:cmd_code, '#as')).to include 'верный'
+      expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
+      expect(SND::Bonus.all.where(chat: @player).size).to eq 2
     end
   end
 end
