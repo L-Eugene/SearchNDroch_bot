@@ -28,6 +28,10 @@ module SND
       active_game.level.task
     end
 
+    def status_print
+      active_game.level.status_print self
+    end
+
     def info_print
       active_game.info_print
     end

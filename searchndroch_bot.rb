@@ -122,6 +122,10 @@ class SearchndrochBot
     chat.send_message text: t.join.success(id: game.id)
   end
 
+  def cmd_status(_msg)
+    chat.send_message text: chat.status_print
+  end
+
   def cmd_move_start(msg)
     args = parse_args(%r{^\/move_start\s}, msg)
 

@@ -43,3 +43,4 @@ game:
     valid: Код "%{code}" верный.
     invalid: Код "%{code}" неверный.
     double: Код "%{code}" уже введен.
+    alldone: Все коды введены.
