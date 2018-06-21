@@ -49,7 +49,7 @@ module SND
       return code_msg(:double, ucode) if bonus?(code)
 
       create_bonus(code, time)
-      code_msg(:valid, ucode)
+      "#{code_msg(:valid, ucode)}\n#{status_print}"
     end
 
     def create_bonus(code, time)
