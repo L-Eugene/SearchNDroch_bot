@@ -153,6 +153,10 @@ class SearchndrochBot
     chat.send_message(text: chat.send_code(msg[1..-1], @time))
   end
 
+  def cmd_stat(_msg)
+    chat.send_message(text: chat.stat_print)
+  end
+
   def process_file(document)
     file = SND::Tlg.instance.download_file(document)
     ext = file.extname.delete('.')

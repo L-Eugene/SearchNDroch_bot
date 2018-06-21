@@ -65,6 +65,10 @@ module SND
       RES
     end
 
+    def stat
+      players.map { |player| SND::Bonus.player_stat(player, self) }
+    end
+
     def update_start(time)
       begin
         time = Time.parse(time)
