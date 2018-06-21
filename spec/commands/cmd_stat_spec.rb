@@ -61,7 +61,7 @@ describe SearchndrochBot do
       # Nobody has any bonus
       it 'Case 1' do
         expect(@snd.send(:cmd_stat, ''))
-          .to eq "1. Player 1 [0]\n2. Player 2 [0]"
+          .to include "1. Player 1 [0]\n2. Player 2 [0]"
       end
 
       # Player 2 has more bonuses than Player 1
@@ -72,7 +72,7 @@ describe SearchndrochBot do
         end
 
         expect(@snd.send(:cmd_stat, ''))
-          .to eq "1. Player 2 [3]\n2. Player 1 [1]"
+          .to include "1. Player 2 [3]\n2. Player 1 [1]"
       end
 
       # Both players has one bonus, but player 1 entered last code earlier
@@ -87,7 +87,7 @@ describe SearchndrochBot do
         )
 
         expect(@snd.send(:cmd_stat, ''))
-          .to eq "1. Player 1 [1]\n2. Player 2 [1]"
+          .to include "1. Player 1 [1]\n2. Player 2 [1]"
       end
 
       # Both players has one bonus, but player 2 entered last code earlier
@@ -102,7 +102,7 @@ describe SearchndrochBot do
         )
 
         expect(@snd.send(:cmd_stat, ''))
-          .to eq "1. Player 2 [1]\n2. Player 1 [1]"
+          .to include "1. Player 2 [1]\n2. Player 1 [1]"
       end
     end
   end

@@ -32,12 +32,10 @@ module SND
       active_game.level.status_print self
     end
 
-    def stat_print
-      active_game.stat
-                 .sort_by { |a| [-1 * a[:bonus], a[:time]] }
-                 .map.with_index do |row, id|
-        "#{id + 1}. #{row[:name]} [#{row[:bonus]}]"
-      end.join("\n")
+    def stat_print(game = active_game)
+      game.stat.map
+          .with_index { |row, id| "#{id + 1}. #{row[:name]} [#{row[:bonus]}]" }
+          .unshift("[#{game.id}] #{game.name}").join("\n")
     end
 
     def info_print

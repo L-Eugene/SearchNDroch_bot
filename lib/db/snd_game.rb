@@ -67,6 +67,7 @@ module SND
 
     def stat
       players.map { |player| SND::Bonus.player_stat(player, self) }
+             .sort_by { |a| [-1 * a[:bonus], a[:time]] }
     end
 
     def update_start(time)
