@@ -3,7 +3,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe SearchndrochBot do
-  describe '/status command' do
+  describe '/stat command' do
     before(:each) do
       @player1 = FactoryGirl.create(:user, id: 1, name: 'Player 1')
       allow(@player1).to receive(:send_message) { |msg| msg[:text] }
@@ -104,6 +104,20 @@ describe SearchndrochBot do
         expect(@snd.send(:cmd_stat, ''))
           .to include "1. Player 2 [1]\n2. Player 1 [1]"
       end
+    end
+
+    it 'should show game stat by id' do
+      allow(@snd).to receive(:chat) { @player1 }
+
+      expect(@snd.send(:cmd_stat, '/stat 10'))
+        .to include "1. Player 1 [0]\n2. Player 2 [0]"
+    end
+
+    it 'should raise if incorrect game given' do
+      allow(@snd).to receive(:chat) { @player1 }
+
+      expect { @snd.send(:cmd_stat, '/stat 2') }
+        .to raise_error(SND::DefunctGameNumberError)
     end
   end
 end

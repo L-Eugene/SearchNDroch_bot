@@ -153,8 +153,13 @@ class SearchndrochBot
     chat.send_message(text: chat.send_code(msg[1..-1], @time))
   end
 
-  def cmd_stat(_msg)
-    chat.send_message(text: chat.stat_print)
+  def cmd_stat(msg)
+    args = parse_args(%r{^\/stat\s}, msg)
+
+    return chat.send_message(text: chat.stat_print) if args.empty?
+
+    game = SND::Game.load_game(chat, args.shift)
+    chat.send_message(text: chat.stat_print(game))
   end
 
   def process_file(document)
