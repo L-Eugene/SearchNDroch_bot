@@ -18,6 +18,9 @@ error:
   game_not_running:
     log: Game is not running now.
     msg: Игра ещё не началась либо уже закончилась.
+  delete_after_start:
+    log: Cannot delete game after it started.
+    msg: Невозможно удалить игру после её начала.
 list:
   games: |-
     Ваши игры:

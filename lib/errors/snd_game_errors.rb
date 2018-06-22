@@ -121,4 +121,21 @@ module SND
       :warn
     end
   end
+
+  # Trying to delete game after it started
+  class DeleteAfterStart < ErrorBase
+    private
+
+    def default_message
+      t.error.delete_after_start.log
+    end
+
+    def default_cmessage
+      t.error.delete_after_start.msg
+    end
+
+    def log_level
+      :warn
+    end
+  end
 end

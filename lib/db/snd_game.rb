@@ -14,6 +14,8 @@ module SND
     has_many :players, through: :game_players, source: :chat,
                        before_add: :enforce_unique_players
 
+    before_destroy { |g| raise SND::DeleteAfterStart unless g.status.nil? }
+
     def authored_by?(chat)
       return false if chat_id.nil?
       chat_id == chat.id

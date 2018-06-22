@@ -7,10 +7,10 @@ describe SearchndrochBot do
     before(:each) do
       chat = FactoryGirl.create(:user)
 
-      g = FactoryGirl.create(:game, name: 'Game#1', id: 1)
-      chat.own_games << g
-      g.levels << FactoryGirl.create(:level, id: 1)
-      g.levels.first.codes << FactoryGirl.create(:code)
+      @g = FactoryGirl.create(:game, name: 'Game#1', id: 1)
+      chat.own_games << @g
+      @g.levels << FactoryGirl.create(:level, id: 1)
+      @g.levels.first.codes << FactoryGirl.create(:code)
 
       FactoryGirl.create(:game, name: 'Game#2', id: 2)
 
@@ -45,6 +45,20 @@ describe SearchndrochBot do
       expect(SND::Game.find_by_id(1)).to be_nil
       expect(SND::Level.where(game_id: 1)).to be_empty
       expect(SND::Code.where(level_id: 1)).to be_empty
+    end
+
+    it 'should raise when trying to delete running game' do
+      @g.update_attribute(:status, 'Running')
+
+      expect { @snd.send(:cmd_delete, '/delete 1') }
+        .to raise_error(SND::DeleteAfterStart)
+    end
+
+    it 'should raise when trying to delete ended game' do
+      @g.update_attribute(:status, 'Over')
+
+      expect { @snd.send(:cmd_delete, '/delete 1') }
+        .to raise_error(SND::DeleteAfterStart)
     end
   end
 end
