@@ -164,7 +164,7 @@ class SearchndrochBot
 
   def process_file(document)
     file = SND::Tlg.instance.download_file(document)
-    ext = file.extname.delete('.')
+    ext = File.extname(file.path).delete('.')
     raise 'Invalid file format' unless %w[ods xls xlsx].include? ext
 
     game = parse_spreadsheet(file, ext.to_sym)
