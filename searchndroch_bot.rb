@@ -60,7 +60,7 @@ class SearchndrochBot
   def update(data)
     update = Telegram::Bot::Types::Update.new(data)
     message = update.message
-    @time = Time.parse(message.date)
+    @time = Time.at(message.date)
 
     process_message(message) unless message.nil?
   rescue SND::ErrorBase
