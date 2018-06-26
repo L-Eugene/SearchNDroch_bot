@@ -59,11 +59,11 @@ module SND
     private
 
     def default_message
-      t.error.rttime_in_past.log
+      t.error.time_in_past.log
     end
 
     def default_cmessage
-      t.error.rttime_in_past.msg
+      t.error.time_in_past.msg
     end
 
     def log_level
