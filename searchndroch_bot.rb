@@ -66,7 +66,7 @@ class SearchndrochBot
   rescue SND::ErrorBase
     $ERROR_INFO.process
   rescue StandardError
-    SND.log.error $ERROR_INFO.message
+    SND.log.error "#{$ERROR_INFO.message}\n#{$ERROR_INFO.backtrace.join("\n")}"
   end
 
   def process_message(message)
