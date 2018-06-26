@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Migrate #1
+# Migrate #2
 class AddGameStatus < ActiveRecord::Migration[4.2]
   def self.up
     add_column :games, :status, :string
