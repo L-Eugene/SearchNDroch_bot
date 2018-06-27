@@ -7,17 +7,17 @@ describe SND::Game do
   describe 'Game start/stop' do
     before(:each) do
       @players = [
-        FactoryGirl.create(:user, id: 1),
-        FactoryGirl.create(:user, id: 2)
+        FactoryBot.create(:user, id: 1),
+        FactoryBot.create(:user, id: 2)
       ]
 
-      @game = FactoryGirl.create(
+      @game = FactoryBot.create(
         :game,
         start: Time.parse('2050-01-01 17:00:00 UTC+3')
       )
 
       1.upto(3) do |id|
-        @game.levels << FactoryGirl.create(
+        @game.levels << FactoryBot.create(
           :level,
           id: id,
           duration: 15

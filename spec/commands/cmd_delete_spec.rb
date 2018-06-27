@@ -5,14 +5,14 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe SearchndrochBot do
   describe '/delete command' do
     before(:each) do
-      chat = FactoryGirl.create(:user)
+      chat = FactoryBot.create(:user)
 
-      @g = FactoryGirl.create(:game, name: 'Game#1', id: 1)
+      @g = FactoryBot.create(:game, name: 'Game#1', id: 1)
       chat.own_games << @g
-      @g.levels << FactoryGirl.create(:level, id: 1)
-      @g.levels.first.codes << FactoryGirl.create(:code)
+      @g.levels << FactoryBot.create(:level, id: 1)
+      @g.levels.first.codes << FactoryBot.create(:code)
 
-      FactoryGirl.create(:game, name: 'Game#2', id: 2)
+      FactoryBot.create(:game, name: 'Game#2', id: 2)
 
       @snd = SearchndrochBot.new
 

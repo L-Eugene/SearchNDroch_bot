@@ -5,10 +5,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe SearchndrochBot do
   describe 'sending codes' do
     before(:each) do
-      @player = FactoryGirl.create(:user, id: 1)
+      @player = FactoryBot.create(:user, id: 1)
       allow(@player).to receive(:send_message) { |msg| msg[:text] }
 
-      @game = FactoryGirl.create(
+      @game = FactoryBot.create(
         :game,
         id: 10,
         name: 'TG1',
@@ -18,13 +18,13 @@ describe SearchndrochBot do
       @game.players << @player
 
       1.upto(3) do |id|
-        level = FactoryGirl.create(
+        level = FactoryBot.create(
           :level,
           id: id,
           duration: 15,
           task: "Level #{id} task"
         )
-        level.codes << FactoryGirl.create(
+        level.codes << FactoryBot.create(
           :code,
           id: 10 * id + 1,
           value_hash: Digest::MD5.hexdigest('as')
@@ -34,7 +34,7 @@ describe SearchndrochBot do
 
       @snd = SearchndrochBot.new
 
-      @chat = FactoryGirl.create(:user, id: 3)
+      @chat = FactoryBot.create(:user, id: 3)
       allow(@chat).to receive(:send_message) { |msg| msg[:text] }
 
       Timecop.freeze('2050-01-01 17:01:00 UTC+3')

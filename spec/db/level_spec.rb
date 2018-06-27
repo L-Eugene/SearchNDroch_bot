@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe SND::Level do
   before(:each) do
-    @level = FactoryGirl.create(:level)
+    @level = FactoryBot.create(:level)
   end
 
   it 'should provide needed attributes' do

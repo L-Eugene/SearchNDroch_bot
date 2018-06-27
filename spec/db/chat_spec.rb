@@ -5,7 +5,7 @@ require 'db/snd_chat'
 
 describe SND::Chat do
   before(:each) do
-    @chat = FactoryGirl.create(:user, id: 1, chat_id: 12_334_534)
+    @chat = FactoryBot.create(:user, id: 1, chat_id: 12_334_534)
   end
 
   it 'should provide needed attributes' do

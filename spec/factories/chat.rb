@@ -2,7 +2,7 @@
 
 require 'db/snd_chat'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :user, class: SND::Chat do
   end
 end

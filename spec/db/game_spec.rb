@@ -11,11 +11,11 @@ describe SND::Game do
   before(:each) do
     @game = SND::Game.create_game YAML.load_file("#{@file_path}/game.yml")
 
-    @chat = FactoryGirl.create(:user)
-    g = FactoryGirl.create(:game, name: 'Game#1', id: 10)
+    @chat = FactoryBot.create(:user)
+    g = FactoryBot.create(:game, name: 'Game#1', id: 10)
     @chat.own_games << g
 
-    FactoryGirl.create(:game, name: 'Game#2', id: 20)
+    FactoryBot.create(:game, name: 'Game#2', id: 20)
 
     @snd = SearchndrochBot.new
 

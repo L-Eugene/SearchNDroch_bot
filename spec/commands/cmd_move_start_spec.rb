@@ -5,9 +5,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe SearchndrochBot do
   describe '/move_start command' do
     before(:each) do
-      chat = FactoryGirl.create(:user)
+      chat = FactoryBot.create(:user)
 
-      g = FactoryGirl.create(
+      g = FactoryBot.create(
         :game,
         name: 'Game#1',
         id: 1,
@@ -15,7 +15,7 @@ describe SearchndrochBot do
       )
       chat.own_games << g
 
-      FactoryGirl.create(:game, name: 'Game#2', id: 2)
+      FactoryBot.create(:game, name: 'Game#2', id: 2)
 
       @snd = SearchndrochBot.new
 

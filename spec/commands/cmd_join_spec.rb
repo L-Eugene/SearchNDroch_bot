@@ -5,12 +5,12 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe SearchndrochBot do
   describe '/join command' do
     before(:each) do
-      @chat = FactoryGirl.create(:user)
+      @chat = FactoryBot.create(:user)
 
-      @game1 = FactoryGirl.create(:game, name: 'Game#1', id: 1)
+      @game1 = FactoryBot.create(:game, name: 'Game#1', id: 1)
       @chat.own_games << @game1
 
-      @game2 = FactoryGirl.create(:game, name: 'Game#2', id: 2)
+      @game2 = FactoryBot.create(:game, name: 'Game#2', id: 2)
 
       @snd = SearchndrochBot.new
 

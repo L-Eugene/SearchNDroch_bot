@@ -2,7 +2,7 @@
 
 require 'db/snd_game'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :level, class: SND::Level do
   end
 end

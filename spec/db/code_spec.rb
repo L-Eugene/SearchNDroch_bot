@@ -5,7 +5,7 @@ require 'db/snd_code'
 
 describe SND::Code do
   before(:each) do
-    @code = FactoryGirl.create(:code)
+    @code = FactoryBot.create(:code)
   end
 
   it 'should provide needed attributes' do

@@ -11,7 +11,7 @@ source 'https://rubygems.org' do
 
   group :test do
     gem 'database_cleaner'
-    gem 'factory_girl'
+    gem 'factory_bot'
     gem 'rspec'
     gem 'sqlite3'
     gem 'timecop'

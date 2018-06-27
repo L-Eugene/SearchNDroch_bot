@@ -2,7 +2,7 @@
 
 require 'db/snd_game'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :game, class: SND::Game do
   end
 end

@@ -5,14 +5,14 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe SearchndrochBot do
   describe '/list command' do
     before(:each) do
-      @chat1 = FactoryGirl.create(:user)
-      @chat2 = FactoryGirl.create(:user)
+      @chat1 = FactoryBot.create(:user)
+      @chat2 = FactoryBot.create(:user)
 
       allow(@chat1).to receive(:send_message) { |msg| msg[:text] }
       allow(@chat2).to receive(:send_message) { |msg| msg[:text] }
 
       3.times do |i|
-        @chat2.own_games << FactoryGirl.create(:game, name: "Game##{i}")
+        @chat2.own_games << FactoryBot.create(:game, name: "Game##{i}")
       end
 
       @snd = SearchndrochBot.new

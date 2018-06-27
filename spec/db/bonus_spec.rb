@@ -5,7 +5,7 @@ require 'db/snd_bonus'
 
 describe SND::Bonus do
   before(:each) do
-    @bonus = FactoryGirl.create(:bonus)
+    @bonus = FactoryBot.create(:bonus)
   end
 
   it 'should provide needed attributes' do

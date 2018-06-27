@@ -2,7 +2,7 @@
 
 require 'db/snd_bonus'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :bonus, class: SND::Bonus do
   end
 end

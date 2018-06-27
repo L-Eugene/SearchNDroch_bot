@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'English'
-require 'factory_girl'
+require 'factory_bot'
 require 'database_cleaner'
 require 'timecop'
 
@@ -10,7 +10,7 @@ $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../")
 
 require 'searchndroch_bot'
 
-FactoryGirl.find_definitions
+FactoryBot.find_definitions
 
 ActiveRecord::Base.establish_connection(SND.cfg.options['database'])
 
