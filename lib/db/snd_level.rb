@@ -45,8 +45,8 @@ module SND
 
     # Return list of unclosed codes ID for given chat
     def chat_unclosed_indexes(chat_id)
-      closed = codes.joins(:bonuses).where(bonus: [chat: chat_id])
-                    .order(:id).map(&:id)
+      closed = codes.joins(:bonuses).where(bonuses: { chat: chat_id })
+                    .order(:id).ids
       codes.each_with_index.map do |code, index|
         index + 1 unless closed.include?(code.id)
       end

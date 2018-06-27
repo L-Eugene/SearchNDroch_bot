@@ -2,6 +2,7 @@
 
 require 'db/snd_base'
 require 'db/snd_game_player'
+require 'db/snd_bonus'
 
 module SND
   # Chat class
