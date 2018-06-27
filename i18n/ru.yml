@@ -39,8 +39,10 @@ create:
   success: |-
     Игра #%{id} создана.
 game:
-  start: Игра #%{id} началась.
-  finish: Игра #%{id} завершилась.
+  start: |-
+    Игра #%{id} началась.
+  finish: |-
+    Игра #%{id} завершилась.
   starts: Игра начнется в %{time}.
   code:
     valid: Код "%{code}" верный.
