@@ -9,7 +9,7 @@ module SND
   class Game < SNDBase
     belongs_to :author, class_name: 'Chat', foreign_key: 'chat_id'
     has_many :levels, dependent: :destroy
-    has_many :game_players
+    has_many :game_players, dependent: :destroy
 
     has_many :players, through: :game_players, source: :chat,
                        before_add: :enforce_unique_players
