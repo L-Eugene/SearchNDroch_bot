@@ -7,6 +7,7 @@ require 'active_record'
 require 'net/http'
 require 'yaml'
 require 'uri'
+require 'unicode'
 require 'r18n-core'
 require 'r18n-rails-api'
 
@@ -150,7 +151,7 @@ class SearchndrochBot
 
   def cmd_code(msg)
     return unless msg =~ %r{^#}
-    chat.send_message(text: chat.send_code(msg[1..-1], @time))
+    chat.send_message(text: chat.send_code(Unicode.downcase(msg[1..-1]), @time))
   end
 
   def cmd_stat(msg)
