@@ -8,6 +8,7 @@ source 'https://rubygems.org' do
   gem 'roo-xls'
   gem 'telegram-bot-ruby'
   gem 'tzinfo'
+  gem 'unicode'
 
   group :test do
     gem 'database_cleaner'
