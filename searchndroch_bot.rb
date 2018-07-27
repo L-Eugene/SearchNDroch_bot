@@ -75,7 +75,8 @@ class SearchndrochBot
 
     if message.text
       meth = method_from_message(message.text)
-      send(meth, message.text) if respond_to? meth.to_sym, true
+      args = parse_args(%r{^\/\w+\s?}, message.text)
+      send(meth, args) if respond_to? meth.to_sym, true
       cmd_code(message.text)
     elsif message.document
       process_file(message.document)
@@ -100,36 +101,31 @@ class SearchndrochBot
     "cmd_#{meth}"
   end
 
-  def cmd_delete(msg)
-    game_id = msg.sub(%r{/delete\s*}, '').to_i
+  def cmd_delete(args)
+    game_id = args.shift.to_i
 
     SND::Game.load_own_game(chat, game_id).destroy
 
     chat.send_message(text: t.delete.success(id: game_id))
   end
 
-  def cmd_list(_msg)
+  def cmd_list(_args)
     games = chat.games_print
-    message = t.list.games(list: games.join("\n"))
-    message = t.list.nogames if games.size.zero?
-    chat.send_message(text: message)
+    return chat.send_message(text: t.list.nogames) if games.empty?
+    chat.send_message(text: t.list.games(list: games.join("\n")))
   end
 
-  def cmd_join(msg)
-    args = parse_args(%r{^\/join\s}, msg)
-
+  def cmd_join(args)
     game = SND::Game.load_game(chat, args.shift)
     game.players << chat
     chat.send_message text: t.join.success(id: game.id)
   end
 
-  def cmd_status(_msg)
+  def cmd_status(_args)
     chat.send_message text: chat.status_print
   end
 
-  def cmd_move_start(msg)
-    args = parse_args(%r{^\/move_start\s}, msg)
-
+  def cmd_move_start(args)
     game = SND::Game.load_own_game(chat, args.shift)
     game.update_start(args.join(' '))
 
@@ -141,12 +137,16 @@ class SearchndrochBot
     )
   end
 
-  def cmd_task(_msg)
+  def cmd_task(_args)
     chat.send_message(text: chat.task_print)
   end
 
-  def cmd_info(_msg)
-    chat.send_message(text: chat.info_print)
+  def cmd_info(args)
+    return chat.send_message(text: chat.info_print) if args.empty?
+
+    chat.send_message(
+      text: chat.info_print(SND::Game.load_game(chat, args.shift))
+    )
   end
 
   def cmd_code(msg)
@@ -154,9 +154,7 @@ class SearchndrochBot
     chat.send_message(text: chat.send_code(Unicode.downcase(msg[1..-1]), @time))
   end
 
-  def cmd_stat(msg)
-    args = parse_args(%r{^\/stat\s}, msg)
-
+  def cmd_stat(args)
     return chat.send_message(text: chat.stat_print) if args.empty?
 
     game = SND::Game.load_game(chat, args.shift)

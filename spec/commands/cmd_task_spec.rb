@@ -39,12 +39,12 @@ describe SearchndrochBot do
 
     it 'should raise error if there is no active games' do
       allow(@snd).to receive(:chat) { @chat }
-      expect { @snd.send(:cmd_task, '') }.to raise_error(SND::GameNotRunning)
+      expect { @snd.send(:cmd_task, []) }.to raise_error(SND::GameNotRunning)
     end
 
     it 'should return correct level task' do
       allow(@snd).to receive(:chat) { @player }
-      expect(@snd.send(:cmd_task, '')).to include('Level 1')
+      expect(@snd.send(:cmd_task, [])).to include('Level 1')
     end
   end
 end

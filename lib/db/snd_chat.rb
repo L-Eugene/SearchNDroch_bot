@@ -43,8 +43,8 @@ module SND
           .unshift("[#{game.id}] #{game.name}").join("\n")
     end
 
-    def info_print
-      active_game.info_print
+    def info_print(game = active_game)
+      game.info_print
     end
 
     def send_code(ucode, time)
