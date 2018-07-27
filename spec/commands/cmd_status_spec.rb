@@ -27,6 +27,7 @@ describe SearchndrochBot do
         level.codes << FactoryBot.create(
           :code,
           id: i,
+          bonus: 2,
           value_hash: Digest::MD5.hexdigest("as#{i}")
         )
       end
@@ -63,6 +64,7 @@ describe SearchndrochBot do
           @snd.send(:cmd_code, "#as#{x}")
         end
         expect(@snd.send(:cmd_status, '')).to include '1,3,4,6-8,10'
+        expect(@snd.send(:cmd_status, '')).to include '3 [6'
       end
 
       it 'Case 2' do

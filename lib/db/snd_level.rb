@@ -29,9 +29,9 @@ module SND
     end
 
     def status_print(chat)
-      result = group_indexes chat_unclosed_indexes(chat.id)
-      return t.game.code.alldone if result.empty?
-      result.join(',')
+      result = chat_stat_hash(chat.id)
+      return t.game.code.alldone if result[:left].empty?
+      t.game.status result
     end
 
     private
@@ -43,13 +43,24 @@ module SND
       "#{list.min}-#{list.max}"
     end
 
+    def closed_codes(chat_id)
+      codes.joins(:bonuses).where(bonuses: { chat: chat_id })
+    end
+
     # Return list of unclosed codes ID for given chat
     def chat_unclosed_indexes(chat_id)
-      closed = codes.joins(:bonuses).where(bonuses: { chat: chat_id })
-                    .order(:id).ids
+      closed = closed_codes(chat_id).order(:id).ids
       codes.each_with_index.map do |code, index|
         index + 1 unless closed.include?(code.id)
       end
+    end
+
+    def chat_stat_hash(chat_id)
+      {
+        left: group_indexes(chat_unclosed_indexes(chat_id)).join(','),
+        codes: closed_codes(chat_id).size,
+        points: closed_codes(chat_id).map(&:bonus).inject(0, &:+)
+      }
     end
 
     # Remove empty subarrays and compact lists

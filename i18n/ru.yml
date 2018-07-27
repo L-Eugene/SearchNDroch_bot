@@ -49,3 +49,6 @@ game:
     invalid: Код "%{code}" неверный.
     double: Код "%{code}" уже введен.
     alldone: Все коды введены.
+  status: |-
+    %{left}
+    Выполнено %{codes} [%{points} баллов]
