@@ -21,6 +21,9 @@ error:
   delete_after_start:
     log: Cannot delete game after it started.
     msg: Невозможно удалить игру после её начала.
+  already_joined:
+    log: User is applying game he is already joined.
+    msg: Вы уже заявлены на эту игру.
 list:
   games: |-
     Ваши игры:
