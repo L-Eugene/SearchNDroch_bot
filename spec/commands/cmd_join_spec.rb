@@ -20,17 +20,17 @@ describe SearchndrochBot do
 
     it 'should validate game_id' do
       # Game id is integer number greater than 0
-      expect { @snd.send(:cmd_join, '/join text') }
+      expect { @snd.send(:cmd_join, ['text']) }
         .to raise_error(SND::InvalidGameNumberError)
-      expect { @snd.send(:cmd_join, '/join -5') }
+      expect { @snd.send(:cmd_join, ['-5']) }
         .to raise_error(SND::InvalidGameNumberError)
-      expect { @snd.send(:cmd_join, '/join') }
+      expect { @snd.send(:cmd_join, []) }
         .to raise_error(SND::InvalidGameNumberError)
-      expect { @snd.send(:cmd_join, '/join 0') }
+      expect { @snd.send(:cmd_join, ['0']) }
         .to raise_error(SND::InvalidGameNumberError)
 
       # Game with given id should exist
-      expect { @snd.send(:cmd_join, '/join 3') }
+      expect { @snd.send(:cmd_join, ['3']) }
         .to raise_error(SND::DefunctGameNumberError)
     end
 
@@ -39,7 +39,7 @@ describe SearchndrochBot do
       expect(@game1.players.size).to eq 0
       expect(@game2.players.size).to eq 0
 
-      expect(@snd.send(:cmd_join, '/join 1')).to eq 'Вы заявлены на игру #1'
+      expect(@snd.send(:cmd_join, ['1'])).to eq 'Вы заявлены на игру #1'
 
       expect(@chat.games.reload.size).to eq 1
       expect(@game1.players.reload.size).to eq 1

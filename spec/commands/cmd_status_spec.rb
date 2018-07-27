@@ -27,6 +27,7 @@ describe SearchndrochBot do
         level.codes << FactoryBot.create(
           :code,
           id: i,
+          bonus: 2,
           value_hash: Digest::MD5.hexdigest("as#{i}")
         )
       end
@@ -49,7 +50,7 @@ describe SearchndrochBot do
 
     it 'should raise error if there is no active games' do
       allow(@snd).to receive(:chat) { @chat }
-      expect { @snd.send(:cmd_status, '') }.to raise_error(SND::GameNotRunning)
+      expect { @snd.send(:cmd_status, []) }.to raise_error(SND::GameNotRunning)
     end
 
     describe 'should group sectors left' do
@@ -62,25 +63,26 @@ describe SearchndrochBot do
         [2, 5, 9].each do |x|
           @snd.send(:cmd_code, "#as#{x}")
         end
-        expect(@snd.send(:cmd_status, '')).to include '1,3,4,6-8,10'
+        expect(@snd.send(:cmd_status, [])).to include '1,3,4,6-8,10'
+        expect(@snd.send(:cmd_status, [])).to include '3 [6'
       end
 
       it 'Case 2' do
         [5, 9].each do |x|
           @snd.send(:cmd_code, "#as#{x}")
         end
-        expect(@snd.send(:cmd_status, '')).to include '1-4,6-8,10'
+        expect(@snd.send(:cmd_status, [])).to include '1-4,6-8,10'
       end
 
       it 'Case 3' do
-        expect(@snd.send(:cmd_status, '')).to include '1-10'
+        expect(@snd.send(:cmd_status, [])).to include '1-10'
       end
 
       it 'Case 4' do
         2.upto(8) do |x|
           @snd.send(:cmd_code, "#as#{x}")
         end
-        expect(@snd.send(:cmd_status, '')).to include '1,9,10'
+        expect(@snd.send(:cmd_status, [])).to include '1,9,10'
       end
     end
 
@@ -89,7 +91,7 @@ describe SearchndrochBot do
       1.upto(10) do |x|
         @snd.send(:cmd_code, "#as#{x}")
       end
-      expect(@snd.send(:cmd_status, '')).to include 'Все коды введены'
+      expect(@snd.send(:cmd_status, [])).to include 'Все коды введены'
     end
   end
 end

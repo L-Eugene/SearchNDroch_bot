@@ -33,14 +33,18 @@ module SND
       active_game.level.status_print self
     end
 
+    def finish_print(game = active_game)
+      t.game.finish(results: stat_print(game), id: id)
+    end
+
     def stat_print(game = active_game)
       game.stat.map
           .with_index { |row, id| "#{id + 1}. #{row[:name]} [#{row[:bonus]}]" }
           .unshift("[#{game.id}] #{game.name}").join("\n")
     end
 
-    def info_print
-      active_game.info_print
+    def info_print(game = active_game)
+      game.info_print
     end
 
     def send_code(ucode, time)

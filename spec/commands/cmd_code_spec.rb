@@ -62,7 +62,7 @@ describe SearchndrochBot do
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
 
-      expect(@snd.send(:cmd_code, '#as')).to include 'уже введен'
+      expect(@snd.send(:cmd_code, '#As')).to include 'уже введен'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
 
