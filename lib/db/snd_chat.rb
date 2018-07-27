@@ -33,6 +33,10 @@ module SND
       active_game.level.status_print self
     end
 
+    def finish_print(game = active_game)
+      t.game.finish(results: stat_print(game), id: id)
+    end
+
     def stat_print(game = active_game)
       game.stat.map
           .with_index { |row, id| "#{id + 1}. #{row[:name]} [#{row[:bonus]}]" }

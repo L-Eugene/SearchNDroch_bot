@@ -47,7 +47,7 @@ module SND
     def finish!
       update_attribute(:status, 'Over')
       players.each do |player|
-        player.send_message(text: t.game.finish(id: id))
+        player.send_message(text: player.finish_print(self))
       end
     end
 
