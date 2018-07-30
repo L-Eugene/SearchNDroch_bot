@@ -39,6 +39,7 @@ require 'r18n/filters'
 
 require 'log/snd_logger'
 Dir["#{SND.libdir}/errors/*.rb"].each { |f| require f }
+Dir["#{SND.libdir}/commands/*.rb"].each { |f| require f }
 require 'parser/snd_spreadsheet_parser'
 require 'telegram/snd_telegram'
 require 'db/snd_game'
@@ -50,6 +51,9 @@ R18n.set('ru')
 # Main class for Search'N'Droch bot
 class SearchndrochBot
   include R18n::Helpers
+
+  include SND::ChatCommand
+
   attr_reader :token, :client, :chat
 
   def initialize
@@ -98,66 +102,6 @@ class SearchndrochBot
     SND.log.debug "Full command is #{text}"
 
     "cmd_#{meth}"
-  end
-
-  def cmd_delete(args)
-    game_id = args.shift.to_i
-
-    SND::Game.load_own_game(chat, game_id).destroy
-
-    chat.send_message(text: t.delete.success(id: game_id))
-  end
-
-  def cmd_list(_args)
-    games = chat.games_print
-    return chat.send_message(text: t.list.nogames) if games.empty?
-    chat.send_message(text: t.list.games(list: games.join("\n")))
-  end
-
-  def cmd_join(args)
-    game = SND::Game.load_game(chat, args.shift)
-    game.players << chat
-    chat.send_message text: t.join.success(id: game.id)
-  end
-
-  def cmd_status(_args)
-    chat.send_message text: chat.status_print
-  end
-
-  def cmd_move_start(args)
-    game = SND::Game.load_own_game(chat, args.shift)
-    game.update_start(args.join(' '))
-
-    chat.send_message(
-      text: t.move_start.success(
-        id: game.id,
-        start: l(game.start, '%F %T %z')
-      )
-    )
-  end
-
-  def cmd_task(_args)
-    chat.send_message(text: chat.task_print)
-  end
-
-  def cmd_info(args)
-    return chat.send_message(text: chat.info_print) if args.empty?
-
-    chat.send_message(
-      text: chat.info_print(SND::Game.load_game(chat, args.shift))
-    )
-  end
-
-  def cmd_code(msg)
-    return chat.send_noprefix unless msg =~ %r{^#}
-    chat.send_message(text: chat.send_code(Unicode.downcase(msg[1..-1]), @time))
-  end
-
-  def cmd_stat(args)
-    return chat.send_message(text: chat.stat_print) if args.empty?
-
-    game = SND::Game.load_game(chat, args.shift)
-    chat.send_message(text: chat.stat_print(game))
   end
 
   def process_file(document)
