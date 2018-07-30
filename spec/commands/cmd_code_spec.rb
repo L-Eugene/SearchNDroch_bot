@@ -6,6 +6,7 @@ describe SearchndrochBot do
   describe 'sending codes' do
     before(:each) do
       @player = FactoryBot.create(:user, id: 1)
+      @player2 = FactoryBot.create(:user, id: 2)
       allow(@player).to receive(:send_message) { |msg| msg[:text] }
 
       @game = FactoryBot.create(
@@ -15,7 +16,7 @@ describe SearchndrochBot do
         description: 'Test game',
         start: Time.parse('2050-01-01 17:00:00 UTC+3')
       )
-      @game.players << @player
+      @game.players << @player << @player2
 
       1.upto(3) do |id|
         level = FactoryBot.create(
@@ -69,6 +70,20 @@ describe SearchndrochBot do
       expect(@snd.send(:cmd_code, '#xx')).to include 'неверный'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
+    end
+
+    it 'should cout bonuses for different players separately' do
+      allow(@snd).to receive(:chat) { @player }
+
+      expect(@snd.send(:cmd_code, '#as')).to include 'верный'
+      expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
+      expect(SND::Bonus.all.where(chat: @player).size).to eq 1
+
+      allow(@snd).to receive(:chat) { @player2 }
+
+      expect(@snd.send(:cmd_code, '#as')).to include 'верный'
+      expect(SND::Bonus.all.where(chat: @player2).empty?).not_to be_truthy
+      expect(SND::Bonus.all.where(chat: @player2).size).to eq 1
     end
 
     it 'should add correct code to previous level' do

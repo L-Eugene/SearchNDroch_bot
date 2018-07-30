@@ -66,7 +66,7 @@ module SND
     end
 
     def bonus?(code)
-      !code.bonuses.where(code: code).empty?
+      !code.bonuses.where(chat: id).empty?
     end
 
     def added_game(game)
