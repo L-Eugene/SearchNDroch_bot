@@ -34,7 +34,7 @@ module SND
     end
 
     def finish_print(game = active_game)
-      t.game.finish(results: stat_print(game), id: id)
+      t.game.finish(results: stat_print(game), id: game.id)
     end
 
     def stat_print(game = active_game)
