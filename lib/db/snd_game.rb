@@ -63,7 +63,7 @@ module SND
       <<-RES
         [#{id}] #{name}
         #{description}
-        #{t.game.starts(time: l(start, '%F %T %z'))}
+        #{t.game.starts(time: l(start, '%F %T %z'), status: status)}
       RES
     end
 

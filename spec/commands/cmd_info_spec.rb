@@ -32,6 +32,12 @@ describe SearchndrochBot do
           duration: 15,
           task: "Level #{id} task"
         )
+        @game2.levels << FactoryBot.create(
+          :level,
+          id: 10 + id,
+          duration: 15,
+          task: "Level #{id} task"
+        )
       end
 
       @snd = SearchndrochBot.new
@@ -58,14 +64,29 @@ describe SearchndrochBot do
       expect { @result = @snd.send(:cmd_info, []) }.not_to raise_error
       expect(@result).to include '[10]'
       expect(@result).to include 'TG1'
-      expect(@result).to include '2050-01-01'
+      expect(@result).to include 'Игра идёт'
     end
 
     it 'shoutd return game info by game id' do
       allow(@snd).to receive(:chat) { @player }
+
+      @game2.update_attribute(:status, nil)
       expect { @result = @snd.send(:cmd_info, [11]) }.not_to raise_error
       expect(@result).to include '[11]'
       expect(@result).to include 'TG2'
+      expect(@result).to include 'начнётся'
+
+      @game2.update_attribute(:status, 'Running')
+      expect { @result = @snd.send(:cmd_info, [11]) }.not_to raise_error
+      expect(@result).to include '[11]'
+      expect(@result).to include 'TG2'
+      expect(@result).to include 'идёт'
+
+      @game2.update_attribute(:status, 'Over')
+      expect { @result = @snd.send(:cmd_info, [11]) }.not_to raise_error
+      expect(@result).to include '[11]'
+      expect(@result).to include 'TG2'
+      expect(@result).to include 'завершилась'
     end
   end
 end

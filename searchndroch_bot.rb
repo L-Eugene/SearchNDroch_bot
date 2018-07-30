@@ -8,8 +8,6 @@ require 'net/http'
 require 'yaml'
 require 'uri'
 require 'unicode'
-require 'r18n-core'
-require 'r18n-rails-api'
 
 # SearchNDroch Bot namespace
 module SND
@@ -37,6 +35,8 @@ end
 
 $LOAD_PATH.unshift(SND.libdir)
 
+require 'r18n/filters'
+
 require 'log/snd_logger'
 Dir["#{SND.libdir}/errors/*.rb"].each { |f| require f }
 require 'parser/snd_spreadsheet_parser'
@@ -44,7 +44,6 @@ require 'telegram/snd_telegram'
 require 'db/snd_game'
 require 'db/snd_chat'
 
-R18n::Filters.on(:named_variables)
 R18n.default_places = "#{SND.libdir}/../i18n/"
 R18n.set('ru')
 
