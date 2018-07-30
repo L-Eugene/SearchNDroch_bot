@@ -5,8 +5,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe SearchndrochBot do
   describe 'sending codes' do
     before(:each) do
-      @player = FactoryBot.create(:user, id: 1)
-      @player2 = FactoryBot.create(:user, id: 2)
+      @player = FactoryBot.create(:user, id: 1, chat_id: 1)
+      @player2 = FactoryBot.create(:user, id: 2, chat_id: -1)
       allow(@player).to receive(:send_message) { |msg| msg[:text] }
 
       @game = FactoryBot.create(
@@ -70,6 +70,16 @@ describe SearchndrochBot do
       expect(@snd.send(:cmd_code, '#xx')).to include 'неверный'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
+    end
+
+    it 'should warn on codes without octotorp' do
+      allow(@snd).to receive(:chat) { @player }
+      expect(@snd.send(:cmd_code, 'sa')).to include 'забыли ввести префикс'
+      expect(SND::Bonus.all.where(chat: @player).empty?).to be_truthy
+
+      allow(@snd).to receive(:chat) { @player2 }
+      expect(@snd.send(:cmd_code, 'sa')).to be_nil
+      expect(SND::Bonus.all.where(chat: @player).empty?).to be_truthy
     end
 
     it 'should cout bonuses for different players separately' do

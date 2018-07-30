@@ -47,6 +47,10 @@ module SND
       game.info_print
     end
 
+    def send_noprefix
+      send_message(text: t.game.code.noprefix) if private?
+    end
+
     def send_code(ucode, time)
       code = active_game.level(time).check_code(ucode)
 
@@ -67,6 +71,14 @@ module SND
 
     def bonus?(code)
       !code.bonuses.where(chat: id).empty?
+    end
+
+    def private?
+      chat_id.to_i.positive?
+    end
+
+    def group?
+      !private?
     end
 
     def added_game(game)
