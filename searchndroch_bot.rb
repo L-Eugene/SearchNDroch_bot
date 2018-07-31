@@ -79,8 +79,7 @@ class SearchndrochBot
     if message.text
       meth = method_from_message(message.text)
       args = parse_args(%r{^\/\w+\s?}, message.text)
-      send(meth, args) if respond_to? meth.to_sym, true
-      cmd_code(message.text)
+      respond_to?(meth.to_sym, true) ? send(meth, args) : cmd_code(message.text)
     elsif message.document
       process_file(message.document)
     end
