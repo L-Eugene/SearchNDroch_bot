@@ -106,7 +106,7 @@ module SND
       active_game
       {
         reply_markup: Telegram::Bot::Types::ReplyKeyboardMarkup.new(
-          keyboard: [['/info', '/task'], ['/stat', '/status']],
+          keyboard: [['/info', '/task'], ['/stat', '/status'], ['/help']],
           one_time_keyboard: true
         )
       }
