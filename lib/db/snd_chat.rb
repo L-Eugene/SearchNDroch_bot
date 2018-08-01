@@ -111,7 +111,7 @@ module SND
         )
       }
     rescue (SND::GameNotRunning)
-      {}
+      { reply_markup: Telegram::Bot::Types::ReplyKeyboardMarkup.new }
     end
 
     def code_msg(name, code)
