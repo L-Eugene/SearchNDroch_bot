@@ -61,7 +61,7 @@ describe SearchndrochBot do
 
       it 'Case 1' do
         [2, 5, 9].each do |x|
-          @snd.send(:cmd_code, "#as#{x}")
+          @snd.send(:cmd_code, "!as#{x}")
         end
         expect(@snd.send(:cmd_status, [])).to include '1,3,4,6-8,10'
         expect(@snd.send(:cmd_status, [])).to include '3 [6'
@@ -69,7 +69,7 @@ describe SearchndrochBot do
 
       it 'Case 2' do
         [5, 9].each do |x|
-          @snd.send(:cmd_code, "#as#{x}")
+          @snd.send(:cmd_code, "!as#{x}")
         end
         expect(@snd.send(:cmd_status, [])).to include '1-4,6-8,10'
       end
@@ -80,7 +80,7 @@ describe SearchndrochBot do
 
       it 'Case 4' do
         2.upto(8) do |x|
-          @snd.send(:cmd_code, "#as#{x}")
+          @snd.send(:cmd_code, "!as#{x}")
         end
         expect(@snd.send(:cmd_status, [])).to include '1,9,10'
       end
@@ -89,7 +89,7 @@ describe SearchndrochBot do
     it 'should write when no codes left to search' do
       allow(@snd).to receive(:chat) { @player }
       1.upto(10) do |x|
-        @snd.send(:cmd_code, "#as#{x}")
+        @snd.send(:cmd_code, "!as#{x}")
       end
       expect(@snd.send(:cmd_status, [])).to include 'Все коды введены'
     end

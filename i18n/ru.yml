@@ -66,3 +66,7 @@ game:
   status: |-
     Невыполненные сектора: %{left}
     Выполнено %{codes} [%{points} баллов]
+level:
+  task: |-
+    *%{name}*
+    %{task}

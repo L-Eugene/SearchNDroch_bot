@@ -51,6 +51,15 @@ module SND
       end
     end
 
+    def level_up!
+      players.each do |player|
+        player.send_message(
+          text: t.level.task(name: level.name, task: level.task),
+          parse_mode: markdown
+        )
+      end
+    end
+
     def level(time = Time.now)
       raise SND::GameNotRunning if status != 'Running'
       levels.inject(start) do |t, l|
@@ -120,6 +129,12 @@ module SND
       SND::Game.where(start: time.first..time.last).each do |g|
         next unless g.status.nil?
         g.start!
+      end
+    end
+
+    def self.level_up
+      SND::Game.where(status: 'Running').each do |g|
+        g.level_up! if g.level != g.level(Time.now - 90.seconds)
       end
     end
 

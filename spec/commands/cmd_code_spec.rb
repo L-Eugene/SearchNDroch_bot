@@ -50,24 +50,24 @@ describe SearchndrochBot do
 
     it 'should raise error if there is no active games' do
       allow(@snd).to receive(:chat) { @chat }
-      expect { @snd.send(:cmd_code, '#23') }.to raise_error(SND::GameNotRunning)
+      expect { @snd.send(:cmd_code, '!23') }.to raise_error(SND::GameNotRunning)
     end
 
     it 'should return code results' do
       allow(@snd).to receive(:chat) { @player }
 
-      expect(@snd.send(:cmd_code, '#sa')).to include 'неверный'
+      expect(@snd.send(:cmd_code, '!sa')).to include 'неверный'
       expect(SND::Bonus.all.where(chat: @player).empty?).to be_truthy
 
-      expect(@snd.send(:cmd_code, '#as')).to include 'верный'
+      expect(@snd.send(:cmd_code, '!as')).to include 'верный'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
 
-      expect(@snd.send(:cmd_code, '#As')).to include 'уже введен'
+      expect(@snd.send(:cmd_code, '!As')).to include 'уже введен'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
 
-      expect(@snd.send(:cmd_code, '#xx')).to include 'неверный'
+      expect(@snd.send(:cmd_code, '!xx')).to include 'неверный'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
     end
@@ -85,13 +85,13 @@ describe SearchndrochBot do
     it 'should cout bonuses for different players separately' do
       allow(@snd).to receive(:chat) { @player }
 
-      expect(@snd.send(:cmd_code, '#as')).to include 'верный'
+      expect(@snd.send(:cmd_code, '!as')).to include 'верный'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
 
       allow(@snd).to receive(:chat) { @player2 }
 
-      expect(@snd.send(:cmd_code, '#as')).to include 'верный'
+      expect(@snd.send(:cmd_code, '!as')).to include 'верный'
       expect(SND::Bonus.all.where(chat: @player2).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player2).size).to eq 1
     end
@@ -104,7 +104,7 @@ describe SearchndrochBot do
       @snd.instance_variable_set(:@time, Time.now)
 
       # Putting code to level 2
-      expect(@snd.send(:cmd_code, '#as')).to include 'верный'
+      expect(@snd.send(:cmd_code, '!as')).to include 'верный'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
 
@@ -115,7 +115,7 @@ describe SearchndrochBot do
       )
 
       # This code has to be sent to level 1
-      expect(@snd.send(:cmd_code, '#as')).to include 'верный'
+      expect(@snd.send(:cmd_code, '!as')).to include 'верный'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 2
     end
