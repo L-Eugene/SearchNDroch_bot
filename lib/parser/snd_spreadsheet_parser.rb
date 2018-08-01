@@ -49,7 +49,9 @@ module SND
     def parse_codes(sheet)
       (sheet.first_row..sheet.last_row).to_a.drop(5).map do |row|
         {
-          code: Digest::MD5.hexdigest(Unicode.downcase(sheet.cell(row, 1))),
+          code: Digest::MD5.hexdigest(
+            Unicode.downcase(sheet.cell(row, 1).to_s)
+          ),
           bonus: sheet.cell(row, 2).to_i
         }
       end
