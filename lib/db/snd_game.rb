@@ -134,7 +134,7 @@ module SND
 
     def self.level_up
       SND::Game.where(status: 'Running').each do |g|
-        g.level_up! if g.level != g.level(Time.now - 90.seconds)
+        g.level_up! if g.level != g.level(Time.now - 60.seconds)
       end
     end
 

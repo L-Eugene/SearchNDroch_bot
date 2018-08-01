@@ -88,9 +88,9 @@ class SearchndrochBot
 
   # Start/stop games by cron
   def process
-    SND::Game.start_games
     SND::Game.finish_games
     SND::Game.level_up
+    SND::Game.start_games
   end
 
   private
