@@ -55,7 +55,7 @@ module SND
       players.each do |player|
         player.send_message(
           text: t.level.task(name: level.name, task: level.task),
-          parse_mode: markdown
+          parse_mode: 'HTML'
         )
       end
     end
