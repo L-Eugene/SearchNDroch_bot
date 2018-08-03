@@ -4,7 +4,7 @@ module SND
   # Chat /task command processor
   module ChatCommand
     def cmd_task(_args)
-      chat.send_message(text: chat.task_print)
+      chat.send_message(chat.task_print)
     end
   end
 end

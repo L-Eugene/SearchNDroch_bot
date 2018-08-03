@@ -16,7 +16,7 @@ module SND
     def send_message(options)
       raise ArgumentError, 'Parameter should be hash' unless options.is_a? Hash
       raise ArgumentError, 'Missing message text' unless options.key? :text
-      SND.tlg.api.send_message(options.merge(chat_id: chat_id).merge(menu))
+      SND.tlg.api.send_message(options.merge(chat_id: chat_id))
     rescue StandardError
       SND.log.error $ERROR_INFO.message
     end
@@ -26,7 +26,7 @@ module SND
     end
 
     def task_print
-      active_game.level.task
+      active_game.level.task_print(self)
     end
 
     def status_print
@@ -94,24 +94,25 @@ module SND
       chat
     end
 
+    def menu(show = true)
+      if show
+        {
+          reply_markup: Telegram::Bot::Types::ReplyKeyboardMarkup.new(
+            keyboard: [['/info', '/task'], ['/stat', '/status'], ['/help']],
+            resize_keyboard: true
+          )
+        }
+      else
+        { reply_markup: Telegram::Bot::Types::ReplyKeyboardRemove.new }
+      end
+    end
+
     private
 
     def active_game
       game = games.where(status: 'Running').first
       raise SND::GameNotRunning if game.nil?
       game
-    end
-
-    def menu
-      active_game
-      {
-        reply_markup: Telegram::Bot::Types::ReplyKeyboardMarkup.new(
-          keyboard: [['/info', '/task'], ['/stat', '/status'], ['/help']],
-          one_time_keyboard: true
-        )
-      }
-    rescue (SND::GameNotRunning)
-      { reply_markup: Telegram::Bot::Types::ReplyKeyboardMarkup.new }
     end
 
     def code_msg(name, code)

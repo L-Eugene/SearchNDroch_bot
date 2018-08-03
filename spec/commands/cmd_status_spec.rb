@@ -6,7 +6,7 @@ describe SearchndrochBot do
   describe '/status command' do
     before(:each) do
       @player = FactoryBot.create(:user, id: 1)
-      allow(@player).to receive(:send_message) { |msg| msg[:text] }
+      allow(@player).to receive(:send_message) { |msg| msg[:text].to_s }
 
       @game = FactoryBot.create(
         :game,
@@ -21,6 +21,7 @@ describe SearchndrochBot do
         :level,
         id: 1,
         duration: 15,
+        to_pass: 10,
         task: 'Level 1 task'
       )
       1.upto(10) do |i|
@@ -36,9 +37,9 @@ describe SearchndrochBot do
       @snd = SearchndrochBot.new
 
       @chat = FactoryBot.create(:user, id: 3)
-      allow(@chat).to receive(:send_message) { |msg| msg[:text] }
+      allow(@chat).to receive(:send_message) { |msg| msg[:text].to_s }
 
-      Timecop.freeze('2050-01-01 17:01:00 UTC+3')
+      Timecop.freeze('2050-01-01 17:01:02 UTC+3')
       @snd.instance_variable_set(:@time, Time.now)
 
       @game.start!
@@ -65,6 +66,8 @@ describe SearchndrochBot do
         end
         expect(@snd.send(:cmd_status, [])).to include '1,3,4,6-8,10'
         expect(@snd.send(:cmd_status, [])).to include '3 [6'
+        expect(@snd.send(:cmd_status, [])).to include '(7)'
+        expect(@snd.send(:cmd_status, [])).to include '00:13:58'
       end
 
       it 'Case 2' do
@@ -72,10 +75,14 @@ describe SearchndrochBot do
           @snd.send(:cmd_code, "!as#{x}")
         end
         expect(@snd.send(:cmd_status, [])).to include '1-4,6-8,10'
+        expect(@snd.send(:cmd_status, [])).to include '2 [4'
+        expect(@snd.send(:cmd_status, [])).to include '(8)'
       end
 
       it 'Case 3' do
         expect(@snd.send(:cmd_status, [])).to include '1-10'
+        expect(@snd.send(:cmd_status, [])).to include '0 [0'
+        expect(@snd.send(:cmd_status, [])).to include '(10)'
       end
 
       it 'Case 4' do
@@ -83,6 +90,8 @@ describe SearchndrochBot do
           @snd.send(:cmd_code, "!as#{x}")
         end
         expect(@snd.send(:cmd_status, [])).to include '1,9,10'
+        expect(@snd.send(:cmd_status, [])).to include '7 [14'
+        expect(@snd.send(:cmd_status, [])).to include '(3)'
       end
     end
 

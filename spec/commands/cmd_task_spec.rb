@@ -6,7 +6,7 @@ describe SearchndrochBot do
   describe '/task command' do
     before(:each) do
       @player = FactoryBot.create(:user, id: 1)
-      allow(@player).to receive(:send_message) { |msg| msg[:text] }
+      allow(@player).to receive(:send_message) { |msg| msg[:text].to_s }
 
       @game = FactoryBot.create(
         :game,
@@ -28,6 +28,7 @@ describe SearchndrochBot do
       @chat = FactoryBot.create(:user, id: 3)
       allow(@chat).to receive(:send_message) { |msg| msg[:text] }
 
+      allow(@snd).to receive(:chat) { @player }
       Timecop.freeze('2050-01-01 17:01:00 UTC+3')
 
       @game.start!
@@ -43,8 +44,18 @@ describe SearchndrochBot do
     end
 
     it 'should return correct level task' do
-      allow(@snd).to receive(:chat) { @player }
       expect(@snd.send(:cmd_task, [])).to include('Level 1')
+    end
+
+    it 'should calculate time left on level' do
+      Timecop.freeze('2050-01-01 17:01:00 UTC+3')
+      expect(@snd.send(:cmd_task, [])).to include '00:14:00'
+
+      Timecop.freeze('2050-01-01 17:17:15 UTC+3')
+      expect(@snd.send(:cmd_task, [])).to include '00:12:45'
+
+      Timecop.freeze('2050-01-01 17:40:11 UTC+3')
+      expect(@snd.send(:cmd_task, [])).to include '00:04:49'
     end
   end
 end

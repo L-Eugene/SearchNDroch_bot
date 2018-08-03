@@ -88,9 +88,10 @@ class SearchndrochBot
 
   # Start/stop games by cron
   def process
-    SND::Game.finish_games
-    SND::Game.level_up
-    SND::Game.start_games
+    finish_games
+    level_up
+    warn_level_up
+    start_games
   end
 
   private
@@ -124,5 +125,36 @@ class SearchndrochBot
 
   def parse_args(preg, msg)
     msg.gsub(preg, '').gsub(%r{\s+}m, ' ').strip.split(' ')
+  end
+
+  def start_games
+    ts = Time.now
+    time = [ts.beginning_of_minute, ts.end_of_minute]
+    SND::Game.where(start: time.first..time.last).each do |g|
+      next unless g.status.nil?
+      g.start!
+    end
+  end
+
+  def level_up
+    SND::Game.where(status: 'Running').each do |g|
+      g.level_up! if g.level != g.level(Time.now - 60.seconds)
+    end
+  end
+
+  def finish_games
+    ts = Time.now
+    SND::Game.where(status: 'Running').each do |g|
+      next unless g.finish <= ts
+      g.finish!
+    end
+  end
+
+  def warn_level_up
+    SND::Game.where(status: 'Running').each do |g|
+      min_left = Time.at(g.level.time_left_sec).strftime('%M').to_i
+      next unless [5, 1].include? min_left
+      g.warn_level_up! min_left
+    end
   end
 end

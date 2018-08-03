@@ -36,7 +36,7 @@ module SND
       update_attribute(:status, 'Running')
       players.each do |player|
         player.send_message(text: t.game.start(id: id))
-        player.send_message(text: level.task)
+        player.send_message(player.menu.merge(text: level.task))
       end
     end
 
@@ -47,25 +47,29 @@ module SND
     def finish!
       update_attribute(:status, 'Over')
       players.each do |player|
-        player.send_message(text: player.finish_print(self))
+        player.send_message(
+          player.menu(false).merge(text: player.finish_print(self))
+        )
       end
     end
 
     def level_up!
+      players.each { |player| player.send_message(level.task_print(player)) }
+    end
+
+    def warn_level_up!(time)
       players.each do |player|
-        player.send_message(
-          text: t.level.task(name: level.name, task: level.task),
-          parse_mode: 'HTML'
-        )
+        player.send_message(t.level.warn_level_up(time: time))
       end
     end
 
     def level(time = Time.now)
       raise SND::GameNotRunning if status != 'Running'
-      levels.inject(start) do |t, l|
+      result = levels.inject(start) do |t, l|
         return l if t + l.duration.minutes > time
         t + l.duration.minutes
       end
+      return nil unless result.is_a? SND::Level
     end
 
     def info_print
@@ -96,6 +100,10 @@ module SND
       raise AlreadyJoinedError, chat: player if played_by? player
     end
 
+    def minutes_until(level)
+      levels.take_while { |e| e.id != level.id }.sum(&:duration)
+    end
+
     def self.load_game(chat, game_id)
       game_id = game_id.to_i
       raise SND::InvalidGameNumberError, chat: chat if game_id <= 0
@@ -121,29 +129,6 @@ module SND
         start: hash[:start]
       )
       game.create_levels(hash[:levels])
-    end
-
-    def self.start_games
-      ts = Time.now
-      time = [ts.beginning_of_minute, ts.end_of_minute]
-      SND::Game.where(start: time.first..time.last).each do |g|
-        next unless g.status.nil?
-        g.start!
-      end
-    end
-
-    def self.level_up
-      SND::Game.where(status: 'Running').each do |g|
-        g.level_up! if g.level != g.level(Time.now - 60.seconds)
-      end
-    end
-
-    def self.finish_games
-      ts = Time.now
-      SND::Game.where(status: 'Running').each do |g|
-        next unless g.finish <= ts
-        g.finish!
-      end
     end
   end
 end

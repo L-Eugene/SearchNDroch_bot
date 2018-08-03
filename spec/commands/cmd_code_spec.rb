@@ -7,7 +7,7 @@ describe SearchndrochBot do
     before(:each) do
       @player = FactoryBot.create(:user, id: 1, chat_id: 1)
       @player2 = FactoryBot.create(:user, id: 2, chat_id: -1)
-      allow(@player).to receive(:send_message) { |msg| msg[:text] }
+      allow(@player).to receive(:send_message) { |msg| msg[:text].to_s }
 
       @game = FactoryBot.create(
         :game,
@@ -23,6 +23,7 @@ describe SearchndrochBot do
           :level,
           id: id,
           duration: 15,
+          to_pass: 1,
           task: "Level #{id} task"
         )
         level.codes << FactoryBot.create(
@@ -36,7 +37,7 @@ describe SearchndrochBot do
       @snd = SearchndrochBot.new
 
       @chat = FactoryBot.create(:user, id: 3)
-      allow(@chat).to receive(:send_message) { |msg| msg[:text] }
+      allow(@chat).to receive(:send_message) { |msg| msg[:text].to_s }
 
       Timecop.freeze('2050-01-01 17:01:00 UTC+3')
       @snd.instance_variable_set(:@time, Time.now)
