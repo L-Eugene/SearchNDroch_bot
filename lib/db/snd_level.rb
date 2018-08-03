@@ -34,6 +34,28 @@ module SND
       t.game.status result
     end
 
+    def task_print(chat)
+      {
+        text: t.level.task(
+          name: name,
+          task: task,
+          time: time_left(chat.id)
+        ),
+        parse_mode: 'HTML'
+      }
+    end
+
+    def time_left_sec(_chat_id = nil)
+      # length of all previous levels in minutes
+      prev = game.minutes_until(self).minutes
+
+      duration.minutes - (Time.now.to_i - game.start.to_i - prev)
+    end
+
+    def time_left(chat_id = nil)
+      Time.at(time_left_sec(chat_id)).utc.strftime('%H:%M:%S')
+    end
+
     private
 
     # If array contains less than 3 elements, all of them are listed
@@ -56,10 +78,13 @@ module SND
     end
 
     def chat_stat_hash(chat_id)
+      closed = closed_codes(chat_id)
       {
         left: group_indexes(chat_unclosed_indexes(chat_id)).join(','),
-        codes: closed_codes(chat_id).size,
-        points: closed_codes(chat_id).map(&:bonus).inject(0, &:+)
+        left_count: to_pass - closed.size,
+        codes: closed.size,
+        points: closed.map(&:bonus).inject(0, &:+),
+        time: time_left(chat_id)
       }
     end
 
