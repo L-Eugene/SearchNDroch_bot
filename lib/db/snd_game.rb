@@ -73,11 +73,15 @@ module SND
     end
 
     def info_print
-      <<-RES
-        [#{id}] #{name}
-        #{description}
-        #{t.game.starts(time: l(start, '%F %T %z'), status: status)}
-      RES
+      {
+        text: t.game.info(
+          id: id,
+          name: name,
+          description: description,
+          game_status: t.game.starts(time: l(start, '%F %T %z'), status: status)
+        ),
+        parse_mode: 'HTML'
+      }
     end
 
     def stat

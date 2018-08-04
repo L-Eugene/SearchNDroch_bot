@@ -48,6 +48,10 @@ create:
   success: |-
     Игра #%{id} создана.
 game:
+  info: |-
+    <b>[%{id}] %{name}</b>
+    %{description}
+    %{game_status}
   start: |-
     🏁 Игра #%{id} началась. 🏁
   finish: |-
