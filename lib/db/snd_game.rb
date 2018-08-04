@@ -36,7 +36,7 @@ module SND
       update_attribute(:status, 'Running')
       players.each do |player|
         player.send_message(text: t.game.start(id: id))
-        player.send_message(player.menu.merge(text: level.task))
+        player.send_message(player.menu.merge(level.task_print(player)))
       end
     end
 
