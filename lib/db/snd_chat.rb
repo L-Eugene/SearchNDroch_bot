@@ -95,19 +95,28 @@ module SND
     end
 
     def menu(show = true)
-      if show
-        {
-          reply_markup: Telegram::Bot::Types::ReplyKeyboardMarkup.new(
-            keyboard: [['/info', '/task'], ['/stat', '/status', '/help']],
-            resize_keyboard: true
-          )
-        }
-      else
-        { reply_markup: Telegram::Bot::Types::ReplyKeyboardRemove.new }
-      end
+      return menu_add if show
+      menu_remove
     end
 
     private
+
+    def menu_add
+      {
+        reply_markup: Telegram::Bot::Types::ReplyKeyboardMarkup.new(
+          keyboard: [['/info', '/task'], ['/stat', '/status', '/help']],
+          resize_keyboard: true
+        )
+      }
+    end
+
+    def menu_remove
+      {
+        reply_markup: Telegram::Bot::Types::ReplyKeyboardRemove.new(
+          remove_keyboard: true
+        )
+      }
+    end
 
     def active_game
       game = games.where(status: 'Running').first
