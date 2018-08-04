@@ -98,7 +98,7 @@ module SND
       if show
         {
           reply_markup: Telegram::Bot::Types::ReplyKeyboardMarkup.new(
-            keyboard: [['/info', '/task'], ['/stat', '/status'], ['/help']],
+            keyboard: [['/info', '/task'], ['/stat', '/status', '/help']],
             resize_keyboard: true
           )
         }
