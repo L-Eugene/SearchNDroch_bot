@@ -59,7 +59,7 @@ module SND
 
     def warn_level_up!(time)
       players.each do |player|
-        player.send_message(t.level.warn_level_up(time: time))
+        player.send_message(text: t.level.warn_level_up(time: time))
       end
     end
 
