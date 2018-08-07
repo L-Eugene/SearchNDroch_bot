@@ -153,7 +153,7 @@ class SearchndrochBot
   def warn_level_up
     SND::Game.where(status: 'Running').each do |g|
       min_left = Time.at(g.level.time_left_sec).strftime('%M').to_i
-      next unless [5, 1].include? min_left
+      next unless [4, 0].include? min_left
       g.warn_level_up! min_left
     end
   end
