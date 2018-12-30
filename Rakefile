@@ -2,6 +2,7 @@
 
 require_relative 'searchndroch_bot.rb'
 require 'rspec/core/rake_task'
+require 'rubocop/rake_task'
 require 'active_record'
 
 include ActiveRecord::Tasks
@@ -12,6 +13,7 @@ DatabaseTasks.migrations_paths = 'db'
 DatabaseTasks.database_configuration = SND.cfg.options['database']
 
 RSpec::Core::RakeTask.new
+RuboCop::RakeTask.new
 
 task :environment do
   ActiveRecord::Base.establish_connection SND.cfg.options['database']

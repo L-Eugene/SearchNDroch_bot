@@ -14,6 +14,7 @@ source 'https://rubygems.org' do
     gem 'database_cleaner'
     gem 'factory_bot'
     gem 'rspec'
+    gem 'rubocop'
     gem 'sqlite3'
     gem 'timecop'
   end
