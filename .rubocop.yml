@@ -1,14 +1,13 @@
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.4
   Exclude:
     - 'schema.rb'
 
-Metrics/BlockLength:
-  Exclude:
-    - 'spec/**/*_spec.rb'
-
 Style/RegexpLiteral:
   EnforcedStyle: percent_r
+
+Metrics/LineLength:
+  Max: 120
 
 Style/MixinUsage:
   Exclude:

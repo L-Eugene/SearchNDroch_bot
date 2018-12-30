@@ -19,6 +19,7 @@ module SND
 
     def valid?
       return @valid unless @valid.nil?
+
       valid_file?
       @valid = errors.empty?
       @valid = valid_game? if @valid
@@ -57,14 +58,15 @@ module SND
       end
     end
 
-    def valid_date?(s, t)
-      Time.parse s
+    def valid_date?(stamp, place)
+      Time.parse stamp
     rescue StandardError
-      @errors << "Неверный формат времени #{t}"
+      @errors << "Неверный формат времени #{place}"
     end
 
     def valid_file?
       raise ArgumentError, 'Extension is not defined' unless options[:extension]
+
       @doc = Roo::Spreadsheet.open(file.path, extension: options[:extension])
     rescue StandardError
       @errors << 'Неверный формат файла'
@@ -86,10 +88,7 @@ module SND
     end
 
     def valid_level?(sheet, name)
-      unless sheet.cell(3, 2).to_i.positive?
-        @errors << "#{name}: Продолжительность уровня не задана"
-      end
-
+      @errors << "#{name}: Продолжительность уровня не задана" unless sheet.cell(3, 2).to_i.positive?
       @errors << "#{name}: Коды не заданы" if sheet.last_row < 6
 
       codes = sheet.last_row - 5

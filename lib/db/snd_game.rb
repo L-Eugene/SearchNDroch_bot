@@ -17,8 +17,7 @@ module SND
     before_destroy { |g| raise SND::DeleteAfterStart unless g.status.nil? }
 
     def authored_by?(chat)
-      return false if chat_id.nil?
-      chat_id == chat.id
+      chat_id.nil? ? false : chat_id == chat.id
     end
 
     def played_by?(chat)
@@ -26,9 +25,7 @@ module SND
     end
 
     def create_levels(levels)
-      levels.each do |level|
-        self.levels << SND::Level.create_level(level)
-      end
+      levels.each { |level| self.levels << SND::Level.create_level(level) }
       self
     end
 
@@ -65,8 +62,10 @@ module SND
 
     def level(time = Time.now)
       raise SND::GameNotRunning if status != 'Running'
+
       result = levels.inject(start) do |t, l|
         return l if t + l.duration.minutes > time
+
         t + l.duration.minutes
       end
       return nil unless result.is_a? SND::Level
@@ -115,6 +114,7 @@ module SND
       game = SND::Game.find_by_id(game_id)
 
       raise SND::DefunctGameNumberError, chat: chat if game.nil?
+
       game
     end
 
@@ -127,11 +127,8 @@ module SND
 
     def self.create_game(hash)
       raise ArgumentError, 'Incorrect game hash' unless hash.is_a? Hash
-      game = Game.create(
-        name: hash[:name],
-        description: hash[:description],
-        start: hash[:start]
-      )
+
+      game = Game.create(name: hash[:name], description: hash[:description], start: hash[:start])
       game.create_levels(hash[:levels])
     end
   end

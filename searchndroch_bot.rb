@@ -132,6 +132,7 @@ class SearchndrochBot
     time = [ts.beginning_of_minute, ts.end_of_minute]
     SND::Game.where(start: time.first..time.last).each do |g|
       next unless g.status.nil?
+
       g.start!
     end
   end
@@ -146,6 +147,7 @@ class SearchndrochBot
     ts = Time.now
     SND::Game.where(status: 'Running').each do |g|
       next unless g.finish <= ts
+
       g.finish!
     end
   end
@@ -154,6 +156,7 @@ class SearchndrochBot
     SND::Game.where(status: 'Running').each do |g|
       min_left = Time.at(g.level.time_left_sec).strftime('%M').to_i
       next unless [4, 0].include? min_left
+
       g.warn_level_up! min_left
     end
   end

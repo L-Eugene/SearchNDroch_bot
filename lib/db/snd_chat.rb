@@ -16,6 +16,7 @@ module SND
     def send_message(options)
       raise ArgumentError, 'Parameter should be hash' unless options.is_a? Hash
       raise ArgumentError, 'Missing message text' unless options.key? :text
+
       SND.tlg.api.send_message(options.merge(chat_id: chat_id))
     rescue StandardError
       SND.log.error $ERROR_INFO.message
@@ -96,6 +97,7 @@ module SND
 
     def menu(show = true)
       return menu_add if show
+
       menu_remove
     end
 
@@ -121,6 +123,7 @@ module SND
     def active_game
       game = games.where(status: 'Running').first
       raise SND::GameNotRunning if game.nil?
+
       game
     end
 

@@ -6,6 +6,7 @@ module SND
     def cmd_list(_args)
       games = chat.games_print
       return chat.send_message(text: t.list.nogames) if games.empty?
+
       chat.send_message(text: t.list.games(list: games.join("\n")))
     end
   end

@@ -31,6 +31,7 @@ module SND
     def status_print(chat)
       result = chat_stat_hash(chat.id)
       return t.game.code.alldone if result[:left].empty?
+
       t.game.status result
     end
 
@@ -62,6 +63,7 @@ module SND
     # else only first and last elements are displayed
     def compact_list(list)
       return list.join(',') if list.size < 3
+
       "#{list.min}-#{list.max}"
     end
 
