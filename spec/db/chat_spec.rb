@@ -33,4 +33,16 @@ describe SND::Chat do
     expect(SND::Chat.identify(message).id).to eq 2
     expect(SND::Chat.all.size).to eq 2
   end
+
+  it 'should detect groups and private chats' do
+    # Negative chat_id mean group chat
+    c = FactoryBot.create(:user, id: 2, chat_id: -123_432)
+    expect(c.private?).to be(false)
+    expect(c.group?).to be(true)
+
+    # Positive chat_id mean private chat
+    c = FactoryBot.create(:user, id: 3, chat_id: 123_432)
+    expect(c.private?).to be(true)
+    expect(c.group?).to be(false)
+  end
 end

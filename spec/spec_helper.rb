@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'simplecov'
 
+require 'simplecov'
 require 'English'
 require 'factory_bot'
 require 'database_cleaner'

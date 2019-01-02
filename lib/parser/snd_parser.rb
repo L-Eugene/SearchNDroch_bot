@@ -14,11 +14,11 @@ module SND
     end
 
     def parse
-      raise t.error.undefined
+      raise NotImplementedError, t.error.undefined
     end
 
     def valid?
-      raise t.error.undefined
+      raise NotImplementedError, t.error.undefined
     end
 
     def to_hash
