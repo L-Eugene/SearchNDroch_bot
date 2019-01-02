@@ -15,6 +15,7 @@ source 'https://rubygems.org' do
     gem 'factory_bot'
     gem 'rspec'
     gem 'rubocop'
+    gem 'simplecov'
     gem 'sqlite3'
     gem 'timecop'
   end

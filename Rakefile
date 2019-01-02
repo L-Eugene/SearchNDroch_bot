@@ -19,8 +19,6 @@ task :environment do
   ActiveRecord::Base.establish_connection SND.cfg.options['database']
 end
 
-namespace :test do
-  load 'active_record/railties/databases.rake'
+load 'active_record/railties/databases.rake'
 
-  task run: ['db:prepare', :spec]
-end
+task default: [:rubocop, 'db:migrate', :spec]

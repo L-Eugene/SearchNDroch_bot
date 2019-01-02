@@ -53,4 +53,5 @@ Gemfile.lock
 /db/test.sqlite3
 
 .*~
-/.idea/
+/.idea/coverage
+.idea
