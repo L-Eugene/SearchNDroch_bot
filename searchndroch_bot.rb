@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'English'
-
+require 'active_support/all'
 require 'telegram/bot'
 require 'active_record'
 require 'net/http'
