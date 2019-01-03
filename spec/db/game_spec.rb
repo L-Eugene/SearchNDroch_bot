@@ -26,7 +26,7 @@ describe SND::Game do
   it 'should import game' do
     expect(@game.name).to eq 'SD#1'
     expect(@game.description).to eq 'Поисковая игра на одном объекте'
-    expect(@game.start).to eq Time.parse('2020-07-01 00:00:00')
+    expect(@game.start).to eq Time.parse('2020-07-01 00:00:00 UTC+3')
   end
 
   it 'should import levels' do
