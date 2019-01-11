@@ -3,22 +3,10 @@
 require_relative 'searchndroch_bot.rb'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
-require 'active_record'
-
-include ActiveRecord::Tasks
-DatabaseTasks.env = :development
-DatabaseTasks.db_dir = './'
-DatabaseTasks.migrations_paths = 'db'
-
-DatabaseTasks.database_configuration = SND.cfg.options['database']
 
 RSpec::Core::RakeTask.new
 RuboCop::RakeTask.new
 
-task :environment do
-  ActiveRecord::Base.establish_connection SND.cfg.options['database']
-end
+import 'lib/rake/db.rake'
 
-load 'active_record/railties/databases.rake'
-
-task default: [:rubocop, 'db:migrate', :spec]
+task default: [:rubocop, 'snd:db:migrate', :spec]
