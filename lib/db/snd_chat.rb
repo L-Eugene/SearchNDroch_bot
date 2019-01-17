@@ -17,6 +17,7 @@ module SND
       raise ArgumentError, 'Parameter should be hash' unless options.is_a? Hash
       raise ArgumentError, 'Missing message text' unless options.key? :text
 
+      SND.log.debug options.merge(chat_id: chat_id)
       SND.tlg.api.send_message(options.merge(chat_id: chat_id))
     rescue StandardError
       SND.log.error "#{$ERROR_INFO.message}\n#{$ERROR_INFO.backtrace.join("\n")}"
