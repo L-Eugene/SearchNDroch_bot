@@ -9,6 +9,9 @@ Style/RegexpLiteral:
 Metrics/LineLength:
   Max: 120
 
+Metrics/AbcSize:
+  Max: 20
+
 Style/MixinUsage:
   Exclude:
     - 'Rakefile'
