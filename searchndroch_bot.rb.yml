@@ -3,7 +3,9 @@ tg_token: sometoken
 libdir: lib
 logfile: /tmp/sndtest.log
 
-debug: /tmp/test_debug
+debug:
+  flag: /tmp/test_debug
+  enabled: true
 
 database:
   :adapter: sqlite3
