@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 namespace :snd do
-  desc "Run console with bot environment loaded"
+  desc 'Run console with bot environment loaded'
   task :console do
     require 'irb'
     require 'irb/completion'
@@ -10,4 +10,3 @@ namespace :snd do
     IRB.start
   end
 end
-
