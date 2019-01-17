@@ -19,7 +19,7 @@ module SND
 
       SND.tlg.api.send_message(options.merge(chat_id: chat_id))
     rescue StandardError
-      SND.log.error $ERROR_INFO.message
+      SND.log.error "$ERROR_INFO.message\n#{$ERROR_INFO.backtrace.join("\n")}"
     end
 
     def games_print
