@@ -8,11 +8,11 @@ module SND
     private
 
     def default_message
-      t.error.invalid_game_number.log
+      SND.t.error.invalid_game_number.log
     end
 
     def default_cmessage
-      t.error.invalid_game_number.msg
+      SND.t.error.invalid_game_number.msg
     end
 
     def log_level
@@ -25,11 +25,11 @@ module SND
     private
 
     def default_message
-      t.error.defunct_game_number.log
+      SND.t.error.defunct_game_number.log
     end
 
     def default_cmessage
-      t.error.defunct_game_number.msg
+      SND.t.error.defunct_game_number.msg
     end
 
     def log_level
@@ -42,11 +42,11 @@ module SND
     private
 
     def default_message
-      t.error.game_owner.log
+      SND.t.error.game_owner.log
     end
 
     def default_cmessage
-      t.error.game_owner.msg
+      SND.t.error.game_owner.msg
     end
 
     def log_level
@@ -59,11 +59,11 @@ module SND
     private
 
     def default_message
-      t.error.time_in_past.log
+      SND.t.error.time_in_past.log
     end
 
     def default_cmessage
-      t.error.time_in_past.msg
+      SND.t.error.time_in_past.msg
     end
 
     def log_level
@@ -76,11 +76,11 @@ module SND
     private
 
     def default_message
-      t.error.invalid_time_format.log
+      SND.t.error.invalid_time_format.log
     end
 
     def default_cmessage
-      t.error.invalid_time_format.msg
+      SND.t.error.invalid_time_format.msg
     end
 
     def log_level
@@ -93,11 +93,11 @@ module SND
     private
 
     def default_message
-      t.error.already_joined.log
+      SND.t.error.already_joined.log
     end
 
     def default_cmessage
-      t.error.already_joined.msg
+      SND.t.error.already_joined.msg
     end
 
     def log_level
@@ -110,11 +110,11 @@ module SND
     private
 
     def default_message
-      t.error.game_not_running.log
+      SND.t.error.game_not_running.log
     end
 
     def default_cmessage
-      t.error.game_not_running.msg
+      SND.t.error.game_not_running.msg
     end
 
     def log_level
@@ -127,11 +127,11 @@ module SND
     private
 
     def default_message
-      t.error.delete_after_start.log
+      SND.t.error.delete_after_start.log
     end
 
     def default_cmessage
-      t.error.delete_after_start.msg
+      SND.t.error.delete_after_start.msg
     end
 
     def log_level

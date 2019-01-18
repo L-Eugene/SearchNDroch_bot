@@ -8,9 +8,9 @@ module SND
       game.update_start(args.join(' '))
 
       chat.send_message(
-        text: t.move_start.success(
+        text: SND.t.move_start.success(
           id: game.id,
-          start: l(game.start, '%F %T %z')
+          start: SND.l(game.start, '%F %T %z')
         )
       )
     end

@@ -30,14 +30,14 @@ module SND
 
     def status_print(chat)
       result = chat_stat_hash(chat.id)
-      return t.game.code.alldone if result[:left].empty?
+      return SND.t.game.code.alldone if result[:left].empty?
 
-      t.game.status result
+      SND.t.game.status result
     end
 
     def task_print(chat)
       {
-        text: t.level.task(
+        text: SND.t.level.task(
           name: name,
           task: task,
           time: time_left(chat.id)

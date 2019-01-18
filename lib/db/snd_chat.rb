@@ -50,7 +50,7 @@ module SND
     end
 
     def send_noprefix
-      send_message(text: t.game.code.noprefix) if private?
+      send_message(text: SND.t.game.code.noprefix) if private?
     end
 
     def send_code(ucode, time)
@@ -84,7 +84,7 @@ module SND
     end
 
     def added_game(game)
-      send_message(text: t.create.success(id: game.id))
+      send_message(text: SND.t.create.success(id: game.id))
     end
 
     def self.identify(message)
@@ -129,7 +129,7 @@ module SND
     end
 
     def code_msg(name, code)
-      t.game.code.send(name.to_sym, code: code)
+      SND.t.game.code.send(name.to_sym, code: code)
     end
   end
 end

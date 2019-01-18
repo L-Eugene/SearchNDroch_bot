@@ -35,7 +35,7 @@ end
 
 $LOAD_PATH.unshift(SND.libdir)
 
-require 'r18n/filters'
+Dir["#{SND.libdir}/r18n/*.rb"].each { |f| require f }
 
 require 'log/snd_logger'
 Dir["#{SND.libdir}/errors/*.rb"].each { |f| require f }
@@ -45,13 +45,8 @@ require 'telegram/snd_telegram'
 require 'db/snd_game'
 require 'db/snd_chat'
 
-R18n.default_places = "#{SND.libdir}/../i18n/"
-R18n.set('ru')
-
 # Main class for Search'N'Droch bot
 class SearchndrochBot
-  include R18n::Helpers
-
   include SND::ChatCommand
 
   attr_reader :token, :client, :chat

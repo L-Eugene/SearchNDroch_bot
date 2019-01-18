@@ -35,7 +35,7 @@ module SND
     def start!
       update!(status: 'Running')
       players.each do |player|
-        player.send_message(text: t.game.start(id: id))
+        player.send_message(text: SND.t.game.start(id: id))
         player.send_message(player.menu.merge(level.task_print(player)))
       end
     end
@@ -58,7 +58,7 @@ module SND
     end
 
     def warn_level_up!(time)
-      players.each { |player| player.send_message(text: t.level.warn_level_up(time)) }
+      players.each { |player| player.send_message(text: SND.t.level.warn_level_up(time)) }
     end
 
     def level(time = Time.now)
@@ -74,11 +74,11 @@ module SND
 
     def info_print
       {
-        text: t.game.info(
+        text: SND.t.game.info(
           id: id,
           name: name,
           description: description,
-          game_status: t.game.starts(time: l(start, '%F %T %z'), status: status)
+          game_status: SND.t.game.starts(time: SND.l(start, '%F %T %z'), status: status)
         ),
         parse_mode: 'HTML'
       }

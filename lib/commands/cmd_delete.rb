@@ -8,7 +8,7 @@ module SND
 
       SND::Game.load_own_game(chat, game_id).destroy
 
-      chat.send_message(text: t.delete.success(id: game_id))
+      chat.send_message(text: SND.t.delete.success(id: game_id))
     end
   end
 end
