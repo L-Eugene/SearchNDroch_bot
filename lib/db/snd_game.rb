@@ -11,8 +11,7 @@ module SND
     has_many :levels, dependent: :destroy
     has_many :game_players, dependent: :destroy
 
-    has_many :players, through: :game_players, source: :chat,
-                       before_add: :enforce_unique_players
+    has_many :players, through: :game_players, source: :chat, before_add: :enforce_unique_players
 
     after_initialize :set_defaults
 
