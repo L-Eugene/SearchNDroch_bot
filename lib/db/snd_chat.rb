@@ -89,17 +89,12 @@ module SND
 
     def self.identify(message)
       chat = Chat.find_or_create_by(chat_id: message.chat.id)
-      chat.update_attribute(
-        :name,
-        "#{message.from.first_name} #{message.from.last_name}"
-      )
+      chat.update_attribute(:name, "#{message.from.first_name} #{message.from.last_name}")
       chat
     end
 
     def menu(show = true)
-      return menu_add if show
-
-      menu_remove
+      show ? menu_add : menu_remove
     end
 
     private
@@ -114,11 +109,7 @@ module SND
     end
 
     def menu_remove
-      {
-        reply_markup: Telegram::Bot::Types::ReplyKeyboardRemove.new(
-          remove_keyboard: true
-        )
-      }
+      { reply_markup: Telegram::Bot::Types::ReplyKeyboardRemove.new(remove_keyboard: true) }
     end
 
     def active_game
