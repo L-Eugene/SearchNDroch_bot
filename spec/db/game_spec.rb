@@ -71,4 +71,11 @@ describe SND::Game do
     expect(@game).to respond_to(:start)
     expect(@game).to respond_to(:author)
   end
+
+  it 'should validate game status' do
+    expect { @game.update!(status: 'Running') }.not_to raise_error
+    expect { @game.update!(status: 'Over') }.not_to raise_error
+    expect { @game.update!(status: 'Future') }.not_to raise_error
+    expect { @game.update!(status: 'Invalid') }.to raise_error(ActiveRecord::RecordInvalid)
+  end
 end

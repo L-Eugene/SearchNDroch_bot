@@ -41,12 +41,12 @@ describe SND::Game do
         .and_raise('Time fault')
 
       expect { @snd.process }.not_to raise_error
-      expect(@game.status).to be_nil
+      expect(@game.status).to eq 'Future'
 
       Timecop.freeze('2050-01-01 15:00:00 UTC+3')
 
       expect { @snd.process }.not_to raise_error
-      expect(@game.status).to be_nil
+      expect(@game.status).to eq 'Future'
     end
 
     it 'should not start game if it is running' do
@@ -63,7 +63,7 @@ describe SND::Game do
     it 'should start game' do
       Timecop.freeze('2050-01-01 17:00:00 UTC+3')
 
-      expect(@game.status).to be_nil
+      expect(@game.status).to eq 'Future'
       messages = 0
       allow_any_instance_of(SND::Chat)
         .to receive(:send_message) { |_| messages += 1 }

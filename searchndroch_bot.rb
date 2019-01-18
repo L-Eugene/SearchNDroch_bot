@@ -131,7 +131,7 @@ class SearchndrochBot
     ts = Time.now
     time = [ts.beginning_of_minute, ts.end_of_minute]
     SND::Game.where(start: time.first..time.last).each do |g|
-      next unless g.status.nil?
+      next unless g.status == 'Future'
 
       g.start!
     end

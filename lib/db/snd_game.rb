@@ -14,7 +14,11 @@ module SND
     has_many :players, through: :game_players, source: :chat,
                        before_add: :enforce_unique_players
 
-    before_destroy { |g| raise SND::DeleteAfterStart unless g.status.nil? }
+    after_initialize :set_defaults
+
+    before_destroy { |g| raise SND::DeleteAfterStart unless g.status == 'Future' }
+
+    validates_inclusion_of :status, in: %w[Running Over Future], message: 'Invalid game status'
 
     def authored_by?(chat)
       chat_id.nil? ? false : chat_id == chat.id
@@ -30,7 +34,7 @@ module SND
     end
 
     def start!
-      update_attribute(:status, 'Running')
+      update!(status: 'Running')
       players.each do |player|
         player.send_message(text: t.game.start(id: id))
         player.send_message(player.menu.merge(level.task_print(player)))
@@ -42,7 +46,7 @@ module SND
     end
 
     def finish!
-      update_attribute(:status, 'Over')
+      update!(status: 'Over')
       players.each do |player|
         player.send_message(
           player.menu(false).merge(text: player.finish_print(self))
@@ -55,9 +59,7 @@ module SND
     end
 
     def warn_level_up!(time)
-      players.each do |player|
-        player.send_message(text: t.level.warn_level_up(time))
-      end
+      players.each { |player| player.send_message(text: t.level.warn_level_up(time)) }
     end
 
     def level(time = Time.now)
@@ -84,8 +86,7 @@ module SND
     end
 
     def stat
-      players.map { |player| SND::Bonus.player_stat(player, self) }
-             .sort_by { |a| [-1 * a[:bonus], a[:time]] }
+      players.map { |player| SND::Bonus.player_stat(player, self) }.sort_by { |a| [-1 * a[:bonus], a[:time]] }
     end
 
     def update_start(time)
@@ -96,7 +97,7 @@ module SND
       end
       raise SND::TimeInPastError, chat: author if time <= Time.now
 
-      update_attribute(:start, time)
+      update!(start: time)
     end
 
     def enforce_unique_players(player)
@@ -130,6 +131,12 @@ module SND
 
       game = Game.create(name: hash[:name], description: hash[:description], start: hash[:start])
       game.create_levels(hash[:levels])
+    end
+
+    private
+
+    def set_defaults
+      self.status ||= 'Future'
     end
   end
 end
