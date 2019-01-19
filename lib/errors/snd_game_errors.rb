@@ -138,4 +138,21 @@ module SND
       :warn
     end
   end
+
+  # Code without exclamation mark
+  class InvalidCodeFormat < ErrorBase
+    private
+
+    def default_message
+      SND.t.error.invalid_code_format.log
+    end
+
+    def default_cmessage
+      SND.t.error.invalid_code_format.msg
+    end
+
+    def log_level
+      :warn
+    end
+  end
 end

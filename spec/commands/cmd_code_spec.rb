@@ -73,9 +73,9 @@ describe SearchndrochBot do
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
     end
 
-    it 'should warn on codes without octotorp' do
+    it 'should warn on codes without exclamation' do
       allow(@snd).to receive(:chat) { @player }
-      expect(@snd.send(:cmd_code, 'sa')).to include 'забыли ввести префикс'
+      expect { @snd.send(:cmd_code, 'sa') }.to raise_exception(SND::InvalidCodeFormat)
       expect(SND::Bonus.all.where(chat: @player).empty?).to be_truthy
 
       allow(@snd).to receive(:chat) { @player2 }
