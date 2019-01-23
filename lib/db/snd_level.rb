@@ -10,16 +10,9 @@ module SND
     has_many :codes, dependent: :destroy
 
     def self.create_level(hash)
-      level = Level.create(
-        name: hash[:name],
-        task: hash[:task],
-        duration: hash[:duration],
-        to_pass: hash[:to_pass]
-      )
+      level = Level.create(hash.slice(:name, :task, :duration, :to_pass))
 
-      hash[:codes].each do |c|
-        level.codes << Code.create(value_hash: c[:code], bonus: c[:bonus])
-      end
+      hash[:codes].each { |c| level.codes << Code.create(value_hash: c[:code], bonus: c[:bonus]) }
 
       level
     end

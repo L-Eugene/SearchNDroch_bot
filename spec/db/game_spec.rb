@@ -29,6 +29,12 @@ describe SND::Game do
     expect(@game.start).to eq Time.parse('2020-07-01 00:00:00 +0300')
   end
 
+  it 'should not leave invalid records in database on error' do
+    before = [SND::Game.all.size, SND::Level.all.size, SND::Code.all.size]
+    expect { SND::Game.create_game YAML.load_file("#{@file_path}/invalid_game.yml") }.to raise_exception(NoMethodError)
+    expect([SND::Game.all.size, SND::Level.all.size, SND::Code.all.size]).to match_array(before)
+  end
+
   it 'should import levels' do
     expect(@game.levels.size).to eq 2
     expect(@game.levels.first.name).to eq 'Уровень 1'

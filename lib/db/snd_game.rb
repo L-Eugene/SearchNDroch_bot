@@ -8,9 +8,9 @@ module SND
   # Game class
   class Game < SNDBase
     belongs_to :author, class_name: 'Chat', foreign_key: 'chat_id'
+
     has_many :levels, dependent: :destroy
     has_many :game_players, dependent: :destroy
-
     has_many :players, through: :game_players, source: :chat, before_add: :enforce_unique_players
 
     after_initialize :set_defaults
@@ -128,8 +128,7 @@ module SND
     def self.create_game(hash)
       raise ArgumentError, 'Incorrect game hash' unless hash.is_a? Hash
 
-      game = Game.create(name: hash[:name], description: hash[:description], start: hash[:start])
-      game.create_levels(hash[:levels])
+      SNDBase.transaction { Game.create(hash.slice(:name, :description, :start)).create_levels(hash[:levels]) }
     end
 
     private
