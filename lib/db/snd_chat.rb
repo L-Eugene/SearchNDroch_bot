@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'r18n/snd_r18n'
 require 'db/snd_base'
 require 'db/snd_game_player'
 require 'db/snd_bonus'
@@ -43,7 +44,9 @@ module SND
 
     def stat_print(game = active_game)
       game.stat.map
-          .with_index { |row, id| "#{id + 1}. #{row[:name]} [#{row[:bonus]}]" }
+          .with_index do |row, id|
+            "#{id + 1}. #{row[:name]} [#{row[:bonus]}] (#{SND.l(row[:time].localtime, '%d.%m %H:%M:%S')})"
+          end
           .unshift("[#{game.id}] #{game.name}").join("\n")
     end
 

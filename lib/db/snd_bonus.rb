@@ -14,7 +14,7 @@ module SND
         chat: player.id,
         code: game.levels.map { |level| level.codes.map(&:id) }.flatten
       )
-      { name: player.name, bonus: b.sum(:bonus), time: b.maximum(:time) }
+      { name: player.name, bonus: b.sum(:bonus), time: b.maximum(:time) || game.start }
     end
   end
 end

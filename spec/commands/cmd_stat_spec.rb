@@ -61,18 +61,18 @@ describe SearchndrochBot do
       # Nobody has any bonus
       it 'Case 1' do
         expect(@snd.send(:cmd_stat, []))
-          .to include "1. Player 1 [0]\n2. Player 2 [0]"
+          .to include "1. Player 1 [0] (01.01 17:00:00)\n2. Player 2 [0] (01.01 17:00:00)"
       end
 
       # Player 2 has more bonuses than Player 1
       it 'Case 2' do
-        FactoryBot.create(:bonus, code_id: 1, chat_id: 1, time: Time.now)
+        FactoryBot.create(:bonus, code_id: 1, chat_id: 1, time: Time.now - 5.seconds)
         1.upto(3) do |x|
           FactoryBot.create(:bonus, code_id: x, chat_id: 2, time: Time.now)
         end
 
         expect(@snd.send(:cmd_stat, []))
-          .to include "1. Player 2 [3]\n2. Player 1 [1]"
+          .to include "1. Player 2 [3] (01.01 17:01:00)\n2. Player 1 [1] (01.01 17:00:55)"
       end
 
       # Both players has one bonus, but player 1 entered last code earlier
@@ -87,7 +87,7 @@ describe SearchndrochBot do
         )
 
         expect(@snd.send(:cmd_stat, []))
-          .to include "1. Player 1 [1]\n2. Player 2 [1]"
+          .to include "1. Player 1 [1] (01.01 17:01:00)\n2. Player 2 [1] (01.01 17:02:00)"
       end
 
       # Both players has one bonus, but player 2 entered last code earlier
@@ -102,7 +102,7 @@ describe SearchndrochBot do
         )
 
         expect(@snd.send(:cmd_stat, []))
-          .to include "1. Player 2 [1]\n2. Player 1 [1]"
+          .to include "1. Player 2 [1] (01.01 17:01:00)\n2. Player 1 [1] (01.01 17:02:00)"
       end
     end
 
@@ -110,7 +110,7 @@ describe SearchndrochBot do
       allow(@snd).to receive(:chat) { @player1 }
 
       expect(@snd.send(:cmd_stat, ['10']))
-        .to include "1. Player 1 [0]\n2. Player 2 [0]"
+        .to include "1. Player 1 [0] (01.01 17:00:00)\n2. Player 2 [0] (01.01 17:00:00)"
     end
 
     it 'should raise if incorrect game given' do
