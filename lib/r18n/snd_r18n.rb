@@ -23,6 +23,6 @@ module SND
   end
 
   def self.l(*params)
-    SND::Localization.instance.object.l(params)
+    SND::Localization.instance.object.l(*params)
   end
 end
