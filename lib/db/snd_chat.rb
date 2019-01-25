@@ -77,7 +77,7 @@ module SND
     end
 
     def bonus?(code)
-      !code.bonuses.where(chat: id).empty?
+      code.bonuses.where(chat: id).present?
     end
 
     def private?
@@ -94,7 +94,9 @@ module SND
 
     def self.identify(message)
       chat = Chat.find_or_create_by(chat_id: message.chat.id)
-      chat.update_attribute(:name, "#{message.from.first_name} #{message.from.last_name}")
+      return chat if chat.name
+
+      chat.update!(name: "#{message.from.first_name} #{message.from.last_name}")
       chat
     end
 
@@ -118,10 +120,7 @@ module SND
     end
 
     def active_game
-      game = games.where(status: 'Running').first
-      raise SND::GameNotRunning if game.nil?
-
-      game
+      games.where(status: 'Running').first || raise(SND::GameNotRunning)
     end
 
     def code_msg(name, code)

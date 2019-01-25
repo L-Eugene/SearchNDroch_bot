@@ -33,6 +33,9 @@ error:
   already_joined:
     log: User is applying game he is already joined.
     msg: Вы уже заявлены на эту игру.
+  no_parameters_given:
+    log: Called command without an argument.
+    msg: Команде требуется аргумент.
 list:
   games: |-
     Ваши игры:
