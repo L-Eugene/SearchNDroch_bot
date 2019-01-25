@@ -35,11 +35,11 @@ end
 
 $LOAD_PATH.unshift(SND.libdir)
 
-Dir["#{SND.libdir}/r18n/*.rb"].each { |f| require f }
+Dir["#{SND.libdir}/r18n/snd_*.rb"].each { |f| require f }
 
 require 'log/snd_logger'
-Dir["#{SND.libdir}/errors/*.rb"].each { |f| require f }
-Dir["#{SND.libdir}/commands/*.rb"].each { |f| require f }
+Dir["#{SND.libdir}/errors/snd_*.rb"].each { |f| require f }
+Dir["#{SND.libdir}/commands/snd_*.rb"].each { |f| require f }
 require 'parser/snd_spreadsheet_parser'
 require 'telegram/snd_telegram'
 require 'db/snd_game'
