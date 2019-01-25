@@ -79,11 +79,11 @@ describe SearchndrochBot do
       it 'Case 3' do
         FactoryBot.create(
           :bonus,
-          code_id: 1, chat_id: 1, time: '2050-01-01 17:01:00 UTC+3'
+          code_id: 1, chat_id: 1, time: Time.now
         )
         FactoryBot.create(
           :bonus,
-          code_id: 1, chat_id: 2, time: '2050-01-01 17:02:00 UTC+3'
+          code_id: 1, chat_id: 2, time: Time.now + 1.minute
         )
 
         expect(@snd.send(:cmd_stat, []))
@@ -94,11 +94,11 @@ describe SearchndrochBot do
       it 'Case 4' do
         FactoryBot.create(
           :bonus,
-          code_id: 1, chat_id: 2, time: '2050-01-01 17:01:00 UTC+3'
+          code_id: 1, chat_id: 2, time: Time.now
         )
         FactoryBot.create(
           :bonus,
-          code_id: 1, chat_id: 1, time: '2050-01-01 17:02:00 UTC+3'
+          code_id: 1, chat_id: 1, time: Time.now + 1.minute
         )
 
         expect(@snd.send(:cmd_stat, []))
