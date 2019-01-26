@@ -59,22 +59,22 @@ module SND
     def valid_date?(stamp, place)
       Time.parse stamp
     rescue StandardError
-      @errors << "Неверный формат времени #{place}"
+      @errors << SND.t.parser.invalid_timestamp(place: place)
     end
 
     def valid_file?
-      raise ArgumentError, 'Extension is not defined' unless options[:extension]
+      raise ArgumentError, SND.t.parser.extension_missing unless options[:extension]
 
       @doc = Roo::Spreadsheet.open(file.path, extension: options[:extension])
     rescue StandardError
-      @errors << 'Неверный формат файла'
+      @errors << SND.t.parser.invalid_format
     end
 
     def valid_game?
       s0 = doc.sheet(0)
-      @errors << 'В игре нет уровней' if doc.sheets.size < 2
-      @errors << 'Заданы не все параметры игры' if s0.last_row < 3
-      valid_date?(s0.cell(3, 2).to_s, 'начала')
+      @errors << SND.t.parser.no_levels_given if doc.sheets.size < 2
+      @errors << SND.t.parser.game_parameters_missing if s0.last_row < 3
+      valid_date?(s0.cell(3, 2).to_s, SND.t.parser.start)
       @errors.empty?
     end
 
@@ -86,12 +86,12 @@ module SND
     end
 
     def valid_level?(sheet, name)
-      @errors << "#{name}: Продолжительность уровня не задана" unless sheet.cell(3, 2).to_i.positive?
-      @errors << "#{name}: Коды не заданы" if sheet.last_row < 6
+      @errors << SND.t.parser.level_timeout(name: name) unless sheet.cell(3, 2).to_i.positive?
+      @errors << SND.t.parser.level_codes(name: name) if sheet.last_row < 6
 
       codes = sheet.last_row - 5
       limit = sheet.cell(4, 2).to_i
-      @errors << "#{name}: Некорректный порог прохождения" if codes < limit
+      @errors << SND.t.parser.level_limit(name: name) if codes < limit
     end
   end
 end

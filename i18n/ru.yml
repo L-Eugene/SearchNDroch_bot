@@ -95,3 +95,17 @@ level:
     <b>❓ %{name} ❓</b>
     ⌛️ До автоперехода осталось %{time}
     %{task}
+parser:
+  start: начала
+  invalid_timestamp: |-
+    Неверный формат времени %{place}.
+  invalid_format: Неверный формат файла.
+  extension_missing: File extension missing.
+  no_levels_given: В игре нет уровней.
+  game_parameters_missing: Заданы не все параметры игры.
+  level_timeout: |-
+    %{name}: Продолжительность уровня не задана
+  level_codes: |-
+    %{name}: Коды не заданы
+  level_limit: |-
+    %{name}: Некорректный порог прохождения

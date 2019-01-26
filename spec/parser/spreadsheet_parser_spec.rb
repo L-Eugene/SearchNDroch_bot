@@ -38,10 +38,10 @@ describe SND::SpreadsheetParser do
 
   it 'should validate game options' do
     files = [
-      { file: 'hash.yml', error: 'Неверный формат файла' },
-      { file: 'game_notime.ods', error: 'Заданы не все параметры игры' },
-      { file: 'game_wrongtime.ods', error: 'Неверный формат времени начала' },
-      { file: 'game_nolevels.ods', error: 'В игре нет уровней' }
+      { file: 'hash.yml', error: SND.t.parser.invalid_format },
+      { file: 'game_notime.ods', error: SND.t.parser.game_parameters_missing },
+      { file: 'game_wrongtime.ods', error: SND.t.parser.invalid_timestamp(place: SND.t.parser.start) },
+      { file: 'game_nolevels.ods', error: SND.t.parser.no_levels_given }
     ]
     files.each do |test|
       sp = SND::SpreadsheetParser.new(
@@ -63,22 +63,22 @@ describe SND::SpreadsheetParser do
     expect(sp.errors.size).to eq 2
     expect(sp.errors).to match_array(
       [
-        'Неверный формат времени начала',
-        'В игре нет уровней'
+        SND.t.parser.invalid_timestamp(place: SND.t.parser.start),
+        SND.t.parser.no_levels_given
       ]
     )
   end
 
   it 'should validate level data' do
     files = [
-      { file: 'game_nocodes.ods', error: 'Коды не заданы' },
+      { file: 'game_nocodes.ods', error: SND.t.parser.level_codes(name: 'Level 1') },
       {
         file: 'game_wrongleveltime.ods',
-        error: 'Продолжительность уровня не задана'
+        error: SND.t.parser.level_timeout(name: 'Level 1')
       },
       {
         file: 'game_wrongupcondition.ods',
-        error: 'Некорректный порог прохождения'
+        error: SND.t.parser.level_limit(name: 'Level 1')
       }
     ]
     files.each do |test|
@@ -87,7 +87,7 @@ describe SND::SpreadsheetParser do
         extension: :ods
       )
       expect(@sp.valid).to eq false
-      expect(@sp.errors.first).to include test[:error]
+      expect(@sp.errors.first.to_s).to include test[:error].to_s
     end
   end
 end
