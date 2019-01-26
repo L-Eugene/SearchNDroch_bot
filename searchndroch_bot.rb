@@ -104,7 +104,7 @@ class SearchndrochBot
   def process_file(document)
     file = SND::Tlg.instance.download_file(document)
     ext = File.extname(file.path).delete('.')
-    raise 'Invalid file format' unless %w[ods xls xlsx].include? ext
+    raise SND::InvalidFileExtension unless %w[ods xls xlsx].include? ext
 
     game = parse_spreadsheet(file, ext.to_sym)
     file.unlink
@@ -113,9 +113,10 @@ class SearchndrochBot
   end
 
   def parse_spreadsheet(file, ext)
-    @sp = SND::SpreadsheetParser.new(file, extension: ext)
-    @sp.valid? ? @sp.to_hash : nil
-    # TODO: raise exception
+    sp = SND::SpreadsheetParser.new(file, extension: ext)
+    raise SND::FileParsingErrors, data: sp.errors unless sp.valid?
+
+    sp.to_hash
   end
 
   def parse_args(preg, msg)

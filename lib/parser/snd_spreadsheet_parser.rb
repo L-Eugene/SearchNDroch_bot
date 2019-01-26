@@ -21,10 +21,8 @@ module SND
       return @valid unless @valid.nil?
 
       valid_file?
-      @valid = errors.empty?
-      @valid = valid_game? if @valid
-      @valid = valid_levels? if @valid
-      @valid
+
+      @valid = errors.empty? && valid_game? && valid_levels?
     end
 
     private

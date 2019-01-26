@@ -23,4 +23,11 @@ describe SearchndrochBot do
     expect(@snd.__send__(:parse_args, %r{^\/\w+\s?}, '/test 123')).to eq %w[123]
     expect(@snd.__send__(:parse_args, %r{^\/\w+\s?}, 'test 123')).to eq %w[test 123]
   end
+
+  it 'should raise exception on invalid game file' do
+    file_path = "#{File.dirname(__FILE__)}/fixtures/spreadsheet_parser/"
+
+    expect { @snd.__send__(:parse_spreadsheet, "#{file_path}/game_nocodes.ods", :ods) }
+      .to raise_error(SND::FileParsingErrors, %r{Errors in parsed file:})
+  end
 end
