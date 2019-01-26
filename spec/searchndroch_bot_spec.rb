@@ -28,6 +28,6 @@ describe SearchndrochBot do
     file_path = "#{File.dirname(__FILE__)}/fixtures/spreadsheet_parser/"
 
     expect { @snd.__send__(:parse_spreadsheet, "#{file_path}/game_nocodes.ods", :ods) }
-      .to raise_error(SND::FileParsingErrors, %r{Errors in parsed file:})
+      .to raise_error(SND::FileParsingErrors, %r{Errors in parsed game file:})
   end
 end
