@@ -114,7 +114,7 @@ class SearchndrochBot
 
   def parse_spreadsheet(file, ext)
     sp = SND::SpreadsheetParser.new(file, extension: ext)
-    raise SND::FileParsingErrors, data: sp.errors unless sp.valid?
+    raise SND::FileParsingErrors, data: sp.errors, chat: @chat unless sp.valid?
 
     sp.to_hash
   end

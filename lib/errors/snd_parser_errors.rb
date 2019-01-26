@@ -25,11 +25,15 @@ module SND
     private
 
     def default_message
-      SND.t.error.game_parsing_errors.log errors: @data.join("\n")
+      SND.t.error.game_parsing_errors.log
     end
 
     def default_cmessage
       SND.t.error.game_parsing_errors.msg errors: @data.join("\n")
+    end
+
+    def log_level
+      :warn
     end
   end
 end

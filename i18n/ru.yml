@@ -41,8 +41,7 @@ error:
     msg: Неверный формат файла (определено по расширению).
   game_parsing_errors:
     log: |-
-      Errors in parsed file:
-      %{errors}
+      Errors in parsed game file:
     msg: |-
       При чтении файла выявлены следующие ошибки:
       %{errors}
