@@ -20,7 +20,7 @@ describe SearchndrochBot do
 
     it 'should show list of games' do
       allow(@snd).to receive(:chat) { @chat2 }
-      expect(@snd.send(:cmd_list, []).scan(%r{^#}).size).to eq 3
+      expect(@snd.send(:cmd_list, []).scan(%r{^[🔜🔚🔛]\s#}).size).to eq 3
     end
 
     it 'should show empty list of games' do

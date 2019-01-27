@@ -75,10 +75,14 @@ game:
   finish: |-
     🏁 Игра #%{id} завершилась. 🏁
     %{results}
-  starts: !!gamestate
+  starts: !!snd_gamestate
     future: Игра начнётся в %{time}.
     active: Игра идёт.
     passed: Игра завершилась.
+  icon: !!snd_gamestate_icon
+    future: 🔜
+    active: 🔛
+    passed: 🔚
   code:
     valid: ✅ Код "%{code}" верный.
     invalid: ❌ Код "%{code}" неверный.

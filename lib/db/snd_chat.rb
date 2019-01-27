@@ -27,7 +27,7 @@ module SND
     end
 
     def games_print
-      own_games.map { |g| "##{g.id}: [#{g.start}] #{g.name}" }
+      own_games.map { |g| "#{SND.t.game.icon status: g.status} ##{g.id}: [#{g.start}] #{g.name}" }
     end
 
     def task_print
