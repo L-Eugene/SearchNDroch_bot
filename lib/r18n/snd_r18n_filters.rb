@@ -16,6 +16,8 @@ R18n::Filters.add('snd_gamestate') do |translate, _config, hash|
 end
 
 R18n::Filters.add('snd_gamestate_icon') do |translate, _config, hash|
+  next translate unless translate.is_a? Hash
+
   case hash[:status]
   when 'Over'
     translate['passed']
