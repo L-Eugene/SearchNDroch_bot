@@ -62,6 +62,9 @@ move_start:
 create:
   success: |-
     Игра #%{id} создана.
+name:
+  success: |-
+    Ваше имя сменено. Новое имя: %{name}.
 game:
   info: |-
     <b>[%{id}] %{name}</b>
