@@ -124,7 +124,7 @@ module SND
     end
 
     def code_msg(name, code)
-      SND.t.game.code.send(name.to_sym, code: code)
+      SND.t.game.code.__send__(name.to_sym, code: code)
     end
   end
 end

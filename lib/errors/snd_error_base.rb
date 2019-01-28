@@ -17,8 +17,8 @@ module SND
     end
 
     def process
-      SND.log.send(log_level, message)
-      SND.log.send(log_level, @data) unless @data.nil?
+      SND.log.__send__(log_level, message)
+      SND.log.__send__(log_level, @data) unless @data.nil?
 
       @chat&.send_message(text: cmessage)
     end
