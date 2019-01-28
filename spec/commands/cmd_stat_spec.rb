@@ -49,7 +49,7 @@ describe SearchndrochBot do
 
     it 'should raise error if there is no active games' do
       allow(@snd).to receive(:chat) { @chat }
-      expect { @snd.send(:cmd_stat, []) }.to raise_error(SND::GameNotRunning)
+      expect { @snd.__send__(:process_command, :cmd_stat, []) }.to raise_error(SND::GameNotRunning)
     end
 
     describe 'should build correct statistics' do
@@ -60,7 +60,7 @@ describe SearchndrochBot do
 
       # Nobody has any bonus
       it 'Case 1' do
-        expect(@snd.send(:cmd_stat, []))
+        expect(@snd.__send__(:process_command, :cmd_stat, []))
           .to include "1. Player 1 [0] (01.01 17:00:00)\n2. Player 2 [0] (01.01 17:00:00)"
       end
 
@@ -71,7 +71,7 @@ describe SearchndrochBot do
           FactoryBot.create(:bonus, code_id: x, chat_id: 2, time: Time.now)
         end
 
-        expect(@snd.send(:cmd_stat, []))
+        expect(@snd.__send__(:process_command, :cmd_stat, []))
           .to include "1. Player 2 [3] (01.01 17:01:00)\n2. Player 1 [1] (01.01 17:00:55)"
       end
 
@@ -86,7 +86,7 @@ describe SearchndrochBot do
           code_id: 1, chat_id: 2, time: Time.now + 1.minute
         )
 
-        expect(@snd.send(:cmd_stat, []))
+        expect(@snd.__send__(:process_command, :cmd_stat, []))
           .to include "1. Player 1 [1] (01.01 17:01:00)\n2. Player 2 [1] (01.01 17:02:00)"
       end
 
@@ -101,7 +101,7 @@ describe SearchndrochBot do
           code_id: 1, chat_id: 1, time: Time.now + 1.minute
         )
 
-        expect(@snd.send(:cmd_stat, []))
+        expect(@snd.__send__(:process_command, :cmd_stat, []))
           .to include "1. Player 2 [1] (01.01 17:01:00)\n2. Player 1 [1] (01.01 17:02:00)"
       end
     end
@@ -109,14 +109,14 @@ describe SearchndrochBot do
     it 'should show game stat by id' do
       allow(@snd).to receive(:chat) { @player1 }
 
-      expect(@snd.send(:cmd_stat, ['10']))
+      expect(@snd.__send__(:process_command, :cmd_stat, ['10']))
         .to include "1. Player 1 [0] (01.01 17:00:00)\n2. Player 2 [0] (01.01 17:00:00)"
     end
 
     it 'should raise if incorrect game given' do
       allow(@snd).to receive(:chat) { @player1 }
 
-      expect { @snd.send(:cmd_stat, ['2']) }
+      expect { @snd.__send__(:process_command, :cmd_stat, ['2']) }
         .to raise_error(SND::DefunctGameNumberError)
     end
   end

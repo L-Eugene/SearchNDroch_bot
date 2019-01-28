@@ -56,12 +56,12 @@ describe SearchndrochBot do
 
     it 'should raise error if there is no active games' do
       allow(@snd).to receive(:chat) { @chat }
-      expect { @snd.send(:cmd_info, []) }.to raise_error(SND::GameNotRunning)
+      expect { @snd.__send__(:process_command, :cmd_info, []) }.to raise_error(SND::GameNotRunning)
     end
 
     it 'should return correct game info' do
       allow(@snd).to receive(:chat) { @player }
-      expect { @result = @snd.send(:cmd_info, []) }.not_to raise_error
+      expect { @result = @snd.__send__(:process_command, :cmd_info, []) }.not_to raise_error
       expect(@result).to include '[10]'
       expect(@result).to include 'TG1'
       expect(@result).to include 'Игра идёт'
@@ -71,19 +71,19 @@ describe SearchndrochBot do
       allow(@snd).to receive(:chat) { @player }
 
       @game2.update_attribute(:status, nil)
-      expect { @result = @snd.send(:cmd_info, [11]) }.not_to raise_error
+      expect { @result = @snd.__send__(:process_command, :cmd_info, [11]) }.not_to raise_error
       expect(@result).to include '[11]'
       expect(@result).to include 'TG2'
       expect(@result).to include 'начнётся'
 
       @game2.update_attribute(:status, 'Running')
-      expect { @result = @snd.send(:cmd_info, [11]) }.not_to raise_error
+      expect { @result = @snd.__send__(:process_command, :cmd_info, [11]) }.not_to raise_error
       expect(@result).to include '[11]'
       expect(@result).to include 'TG2'
       expect(@result).to include 'идёт'
 
       @game2.update_attribute(:status, 'Over')
-      expect { @result = @snd.send(:cmd_info, [11]) }.not_to raise_error
+      expect { @result = @snd.__send__(:process_command, :cmd_info, [11]) }.not_to raise_error
       expect(@result).to include '[11]'
       expect(@result).to include 'TG2'
       expect(@result).to include 'завершилась'

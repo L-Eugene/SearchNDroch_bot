@@ -40,22 +40,22 @@ describe SearchndrochBot do
 
     it 'should raise error if there is no active games' do
       allow(@snd).to receive(:chat) { @chat }
-      expect { @snd.send(:cmd_task, []) }.to raise_error(SND::GameNotRunning)
+      expect { @snd.__send__(:process_command, :cmd_task, []) }.to raise_error(SND::GameNotRunning)
     end
 
     it 'should return correct level task' do
-      expect(@snd.send(:cmd_task, [])).to include('Level 1')
+      expect(@snd.__send__(:process_command, :cmd_task, [])).to include('Level 1')
     end
 
     it 'should calculate time left on level' do
       Timecop.freeze('2050-01-01 17:01:00 UTC+3')
-      expect(@snd.send(:cmd_task, [])).to include '00:14:00'
+      expect(@snd.__send__(:process_command, :cmd_task, [])).to include '00:14:00'
 
       Timecop.freeze('2050-01-01 17:17:15 UTC+3')
-      expect(@snd.send(:cmd_task, [])).to include '00:12:45'
+      expect(@snd.__send__(:process_command, :cmd_task, [])).to include '00:12:45'
 
       Timecop.freeze('2050-01-01 17:40:11 UTC+3')
-      expect(@snd.send(:cmd_task, [])).to include '00:04:49'
+      expect(@snd.__send__(:process_command, :cmd_task, [])).to include '00:04:49'
     end
   end
 end

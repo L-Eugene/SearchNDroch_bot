@@ -51,7 +51,7 @@ describe SearchndrochBot do
 
     it 'should raise error if there is no active games' do
       allow(@snd).to receive(:chat) { @chat }
-      expect { @snd.send(:cmd_status, []) }.to raise_error(SND::GameNotRunning)
+      expect { @snd.__send__(:process_command, :cmd_status, []) }.to raise_error(SND::GameNotRunning)
     end
 
     describe 'should group sectors left' do
@@ -62,45 +62,45 @@ describe SearchndrochBot do
 
       it 'Case 1' do
         [2, 5, 9].each do |x|
-          @snd.send(:cmd_code, "!as#{x}")
+          @snd.__send__(:process_command, :cmd_code, "!as#{x}")
         end
-        expect(@snd.send(:cmd_status, [])).to include '1,3,4,6-8,10'
-        expect(@snd.send(:cmd_status, [])).to include '3 [6'
-        expect(@snd.send(:cmd_status, [])).to include '(7)'
-        expect(@snd.send(:cmd_status, [])).to include '00:13:58'
+        expect(@snd.__send__(:process_command, :cmd_status, [])).to include '1,3,4,6-8,10'
+        expect(@snd.__send__(:process_command, :cmd_status, [])).to include '3 [6'
+        expect(@snd.__send__(:process_command, :cmd_status, [])).to include '(7)'
+        expect(@snd.__send__(:process_command, :cmd_status, [])).to include '00:13:58'
       end
 
       it 'Case 2' do
         [5, 9].each do |x|
-          @snd.send(:cmd_code, "!as#{x}")
+          @snd.__send__(:process_command, :cmd_code, "!as#{x}")
         end
-        expect(@snd.send(:cmd_status, [])).to include '1-4,6-8,10'
-        expect(@snd.send(:cmd_status, [])).to include '2 [4'
-        expect(@snd.send(:cmd_status, [])).to include '(8)'
+        expect(@snd.__send__(:process_command, :cmd_status, [])).to include '1-4,6-8,10'
+        expect(@snd.__send__(:process_command, :cmd_status, [])).to include '2 [4'
+        expect(@snd.__send__(:process_command, :cmd_status, [])).to include '(8)'
       end
 
       it 'Case 3' do
-        expect(@snd.send(:cmd_status, [])).to include '1-10'
-        expect(@snd.send(:cmd_status, [])).to include '0 [0'
-        expect(@snd.send(:cmd_status, [])).to include '(10)'
+        expect(@snd.__send__(:process_command, :cmd_status, [])).to include '1-10'
+        expect(@snd.__send__(:process_command, :cmd_status, [])).to include '0 [0'
+        expect(@snd.__send__(:process_command, :cmd_status, [])).to include '(10)'
       end
 
       it 'Case 4' do
         2.upto(8) do |x|
-          @snd.send(:cmd_code, "!as#{x}")
+          @snd.__send__(:process_command, :cmd_code, "!as#{x}")
         end
-        expect(@snd.send(:cmd_status, [])).to include '1,9,10'
-        expect(@snd.send(:cmd_status, [])).to include '7 [14'
-        expect(@snd.send(:cmd_status, [])).to include '(3)'
+        expect(@snd.__send__(:process_command, :cmd_status, [])).to include '1,9,10'
+        expect(@snd.__send__(:process_command, :cmd_status, [])).to include '7 [14'
+        expect(@snd.__send__(:process_command, :cmd_status, [])).to include '(3)'
       end
     end
 
     it 'should write when no codes left to search' do
       allow(@snd).to receive(:chat) { @player }
       1.upto(10) do |x|
-        @snd.send(:cmd_code, "!as#{x}")
+        @snd.__send__(:process_command, :cmd_code, "!as#{x}")
       end
-      expect(@snd.send(:cmd_status, [])).to include 'Все коды введены'
+      expect(@snd.__send__(:process_command, :cmd_status, [])).to include 'Все коды введены'
     end
   end
 end

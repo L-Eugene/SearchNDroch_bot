@@ -13,14 +13,14 @@ describe SearchndrochBot do
     end
 
     it 'should raise if no parameter given' do
-      expect { @snd.send(:cmd_name, []) }.to raise_error(SND::NoParametersGiven)
+      expect { @snd.__send__(:process_command, :cmd_name, []) }.to raise_error(SND::NoParametersGiven)
     end
 
     it 'should rename user if new name is passed' do
       expect(@snd.chat.name).to eq 'Player 1'
-      expect { @snd.send(:cmd_name, ['NewName']) }.not_to raise_exception
+      expect { @snd.__send__(:process_command, :cmd_name, ['NewName']) }.not_to raise_exception
       expect(@snd.chat.name).to eq 'NewName'
-      expect { @snd.send(:cmd_name, %w[New Name]) }.not_to raise_exception
+      expect { @snd.__send__(:process_command, :cmd_name, %w[New Name]) }.not_to raise_exception
       expect(@snd.chat.name).to eq 'New Name'
     end
   end
