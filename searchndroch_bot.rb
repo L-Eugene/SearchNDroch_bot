@@ -104,7 +104,8 @@ class SearchndrochBot
 
   def process_command(meth, args)
     result = nil
-    SND.log.debug Benchmark.measure(meth) { result = __send__(meth, args) }.format('%n: user:%u CPU:%y total:%t %r')
+    SND.log.debug Benchmark.measure(meth) { result = __send__(meth, args) }
+                           .format('%n: user:%u CPU:%y total:%t %r') # rubocop:disable Style/FormatStringToken
     result
   end
 
