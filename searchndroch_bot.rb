@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'English'
+require 'benchmark'
 require 'active_support/all'
 require 'telegram/bot'
 require 'active_record'
@@ -74,7 +75,7 @@ class SearchndrochBot
     if message.text
       meth = method_from_message(message.text)
       args = parse_args(%r{^\/\w+\s?}, message.text)
-      send(meth, args) if respond_to?(meth.to_sym, true)
+      process_command(meth, args) if respond_to?(meth.to_sym, true)
       cmd_code(message.text)
     elsif message.document
       process_file(message.document)
@@ -99,6 +100,12 @@ class SearchndrochBot
     SND.log.debug "Full command is #{text}"
 
     "cmd_#{meth}"
+  end
+
+  def process_command(meth, args)
+    result = nil
+    SND.log.debug Benchmark.measure(meth) { result = __send__(meth, args) }.format('%n: user:%u CPU:%y total:%t %r')
+    result
   end
 
   def process_file(document)
