@@ -11,8 +11,6 @@ $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../")
 
 require 'searchndroch_bot'
 
-FactoryBot.find_definitions
-
 ActiveRecord::Base.establish_connection(SND.cfg.options['database'])
 
 RSpec.configure do |config|
@@ -42,6 +40,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :truncation
+    FactoryBot.find_definitions
   end
 
   config.before(:each) do

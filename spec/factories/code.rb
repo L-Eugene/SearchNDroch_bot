@@ -4,6 +4,6 @@ require 'db/snd_game'
 
 FactoryBot.define do
   factory :code, class: SND::Code do
-    bonus 1
+    bonus { 1 }
   end
 end
