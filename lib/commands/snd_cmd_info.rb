@@ -4,10 +4,15 @@ module SND
   # Chat /info command processor
   module ChatCommand
     def cmd_info(args)
-      return chat.send_message(chat.info_print) if args.empty?
+      game = args.empty? ? chat.active_game : SND::Game.load_game(chat, args.shift)
 
       chat.send_message(
-        chat.info_print(SND::Game.load_game(chat, args.shift))
+        text: SND.t.game.info(
+          game.attributes.symbolize_keys.slice(:id, :name, :description).merge(
+            game_status: SND.t.game.starts(time: SND.l(game.start, '%F %T %z'), status: game.status)
+          )
+        ),
+        parse_mode: 'HTML'
       )
     end
   end

@@ -4,7 +4,7 @@ module SND
   # Chat /task command processor
   module ChatCommand
     def cmd_task(_args)
-      chat.send_message(chat.task_print)
+      chat.send_message(Tpl::Chat.task(chat))
     end
   end
 end

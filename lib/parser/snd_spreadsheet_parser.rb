@@ -12,9 +12,7 @@ module SND
 
     def parse
       @game = parse_game(doc.sheet(0))
-      @game[:levels] = doc.sheets.drop(1).map do |sheet|
-        parse_level doc.sheet(sheet)
-      end
+      @game[:levels] = doc.sheets.drop(1).map { |sheet| parse_level doc.sheet(sheet) }
     end
 
     def valid?

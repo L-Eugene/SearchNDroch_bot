@@ -46,19 +46,19 @@ describe SND::Game do
   end
 
   it 'should validate game_id' do
-    expect { SND::Game.load_own_game(@chat, '') }
+    expect { SND::Game.load_game(@chat, '', true) }
       .to raise_error(SND::InvalidGameNumberError)
-    expect { SND::Game.load_own_game(@chat, '0') }
+    expect { SND::Game.load_game(@chat, '0', true) }
       .to raise_error(SND::InvalidGameNumberError)
-    expect { SND::Game.load_own_game(@chat, '-5') }
+    expect { SND::Game.load_game(@chat, '-5', true) }
       .to raise_error(SND::InvalidGameNumberError)
-    expect { SND::Game.load_own_game(@chat, 'text') }
+    expect { SND::Game.load_game(@chat, 'text', true) }
       .to raise_error(SND::InvalidGameNumberError)
 
-    expect { SND::Game.load_own_game(@chat, 2) }
+    expect { SND::Game.load_game(@chat, 2, true) }
       .to raise_error(SND::DefunctGameNumberError)
 
-    expect { SND::Game.load_own_game(@chat, 1) }
+    expect { SND::Game.load_game(@chat, 1, true) }
       .to raise_error(SND::GameOwnerError)
   end
 

@@ -6,7 +6,7 @@ module SND
     def cmd_delete(args)
       game_id = args.shift.to_i
 
-      SND::Game.load_own_game(chat, game_id).destroy
+      SND::Game.load_game(chat, game_id, true).destroy
 
       chat.send_message(text: SND.t.delete.success(id: game_id))
     end

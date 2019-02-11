@@ -8,5 +8,7 @@ module SND
     belongs_to :level
 
     has_many :bonuses, class_name: 'Bonus'
+
+    scope :closed, lambda { |chat_id| joins(:bonuses).where(bonuses: { chat: chat_id }) }
   end
 end

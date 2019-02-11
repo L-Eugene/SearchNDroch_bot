@@ -13,43 +13,47 @@ module SND
     has_many :game_players, dependent: :destroy
     has_many :players, through: :game_players, source: :chat, before_add: :enforce_unique_players
 
-    after_initialize :set_defaults
+    after_initialize { self.status ||= 'Future' }
 
     before_destroy { |g| raise SND::DeleteAfterStart unless g.status == 'Future' }
 
     validates_inclusion_of :status, in: %w[Running Over Future], message: 'Invalid game status'
 
+    # @param [SND::Chat] chat
+    # @return [Boolean]
     def authored_by?(chat)
       chat_id.nil? ? false : chat_id == chat.id
     end
 
+    # @param [SND::Chat] chat
+    # @return [Boolean]
     def played_by?(chat)
       players.exists? chat.id
     end
 
+    # @param [Array] levels
+    # @return [SND::Game]
     def create_levels(levels)
-      levels.each { |level| self.levels << SND::Level.create_level(level) }
-      self
+      tap { |game| levels.each { |level| game.levels << SND::Level.create_level(level) } }
     end
 
     def start!
       update!(status: 'Running')
       players.each do |player|
         player.send_message(text: SND.t.game.start(id: id))
-        player.send_message(player.menu.merge(level.task_print(player)))
+        player.send_message(Tpl::Chat.menu.merge(Tpl::Level.task(level, player)))
       end
     end
 
-    def finish
+    # @return [Integer] seconds to game finish
+    def finish_time
       start + levels.sum(&:duration).minutes
     end
 
     def finish!
       update!(status: 'Over')
       players.each do |player|
-        player.send_message(
-          player.menu(false).merge(text: player.finish_print(self))
-        )
+        player.send_message(Tpl::Chat.menu(false).merge(Tpl::Game.finish(self)))
       end
     end
 
@@ -61,80 +65,90 @@ module SND
       players.each { |player| player.send_message(text: SND.t.level.warn_level_up(time)) }
     end
 
+    # @param [Time] time
+    # @return [SND::Level] if level is active
+    # @return [NilClass] if no active level available
+    # @raise [SND::GameNotRunning] if game status is not 'Running'
     def level(time = Time.now)
       raise SND::GameNotRunning if status != 'Running'
 
-      result = levels.inject(start) do |t, l|
-        return l if t + l.duration.minutes > time
+      levels.inject(start) do |tm, level|
+        return level if tm + level.duration.minutes > time
 
-        t + l.duration.minutes
+        tm + level.duration.minutes
       end
-      return nil unless result.is_a? SND::Level
+      nil
     end
 
-    def info_print
-      {
-        text: SND.t.game.info(
-          id: id,
-          name: name,
-          description: description,
-          game_status: SND.t.game.starts(time: SND.l(start, '%F %T %z'), status: status)
-        ),
-        parse_mode: 'HTML'
-      }
-    end
-
+    # @return [Hash]
     def stat
       players.map { |player| SND::Bonus.player_stat(player, self) }.sort_by { |a| [-1 * a[:bonus], a[:time]] }
     end
 
+    # @param [String] time
+    # @raise [SND::TimeInPastError] if given time is in past
+    # @raise [SND::InvalidTimeFormat]
     def update_start(time)
-      begin
-        time = Time.parse(time)
-      rescue ArgumentError
-        raise SND::InvalidTimeFormat, chat: author
-      end
+      time = Time.parse(time)
       raise SND::TimeInPastError, chat: author if time <= Time.now
 
       update!(start: time)
+    rescue ArgumentError
+      raise SND::InvalidTimeFormat, chat: author
     end
 
+    # @param [SND::Chat] player
+    # @raise [SND::AlreadyJoinedError] if trying to attend game more than once
     def enforce_unique_players(player)
-      raise AlreadyJoinedError, chat: player if played_by? player
+      raise SND::AlreadyJoinedError, chat: player if played_by? player
     end
 
-    def minutes_until(level)
-      levels.take_while { |e| e.id != level.id }.sum(&:duration)
+    # @param [SND::Level] level
+    # @return [Numeric] seconds left to given level
+    def time_to_level(level)
+      levels.take_while { |l| l.id != level.id }.sum(&:duration)
     end
 
-    def self.load_game(chat, game_id)
-      game_id = game_id.to_i
-      raise SND::InvalidGameNumberError, chat: chat if game_id <= 0
+    # @param [SND::Chat] chat
+    # @param [Numeric] game_id
+    # @param [Boolean] own
+    # @return [SND::Game]
+    # @raise [SND::InvalidGameNumberError] if given game id is non-positive or not a number
+    # @raise [SND::DefunctGameNumberError] if game with given id is not exists
+    # @raise [SND::GameOwnerError] if user asking for game is not it's owner.
+    #   Only checked if own param is true
+    def self.load_game(chat, game_id, own = false)
+      raise SND::InvalidGameNumberError, chat: chat if game_id.to_i <= 0
 
-      game = SND::Game.find_by_id(game_id)
-
-      raise SND::DefunctGameNumberError, chat: chat if game.nil?
-
-      game
+      SND::Game.find_by_id(game_id).tap do |game|
+        raise SND::DefunctGameNumberError, chat: chat if game.nil?
+        raise SND::GameOwnerError, chat: chat if own && !game.authored_by?(chat)
+      end
     end
 
-    def self.load_own_game(chat, game_id)
-      game = load_game(chat, game_id)
-      raise SND::GameOwnerError unless game.authored_by? chat
-
-      game
-    end
-
+    # @param [Hash] hash
+    # @raise [ArgumentError] if given parameter is not a hash
     def self.create_game(hash)
       raise ArgumentError, 'Incorrect game hash' unless hash.is_a? Hash
 
       SNDBase.transaction { Game.create(hash.slice(:name, :description, :start)).create_levels(hash[:levels]) }
     end
 
-    private
+    def self.start_games
+      ts = Time.now
+      Game.where(start: ts.beginning_of_minute..ts.end_of_minute).each { |g| g.start! if g.status == 'Future' }
+    end
 
-    def set_defaults
-      self.status ||= 'Future'
+    def self.game_operations
+      ts = Time.now
+      SND::Game.where(status: 'Running').each do |g|
+        next g.finish! if g.finish_time <= ts
+
+        min_left = Time.at(g.level.time_left_sec).strftime('%M').to_i
+        next g.warn_level_up! min_left if [4, 0].include? min_left
+
+        g.level_up! if g.level != g.level(Time.now - 1.minute)
+      end
     end
   end
 end

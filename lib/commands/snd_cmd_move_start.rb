@@ -4,7 +4,7 @@ module SND
   # Chat /move_start command processor
   module ChatCommand
     def cmd_move_start(args)
-      game = SND::Game.load_own_game(chat, args.shift)
+      game = SND::Game.load_game(chat, args.shift, true)
       game.update_start(args.join(' '))
 
       chat.send_message(

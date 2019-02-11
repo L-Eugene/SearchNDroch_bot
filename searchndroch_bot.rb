@@ -41,6 +41,7 @@ Dir["#{SND.libdir}/r18n/snd_*.rb"].each { |f| require f }
 require 'log/snd_logger'
 Dir["#{SND.libdir}/errors/snd_*.rb"].each { |f| require f }
 Dir["#{SND.libdir}/commands/snd_*.rb"].each { |f| require f }
+Dir["#{SND.libdir}/templates/snd_*.rb"].each { |f| require f }
 require 'parser/snd_spreadsheet_parser'
 require 'telegram/snd_telegram'
 require 'db/snd_game'
@@ -74,7 +75,7 @@ class SearchndrochBot
 
     if message.text
       meth = method_from_message(message.text)
-      args = parse_args(%r{^\/\w+\s?}, message.text)
+      args = args_from_message(%r{^\/\w+\s?}, message.text)
       process_command(meth, args) if respond_to?(meth.to_sym, true)
       cmd_code(message.text)
     elsif message.document
@@ -83,11 +84,9 @@ class SearchndrochBot
   end
 
   # Start/stop games by cron
-  def process
-    finish_games
-    level_up
-    warn_level_up
-    start_games
+  def periodic
+    SND::Game.game_operations
+    SND::Game.start_games
   end
 
   private
@@ -100,6 +99,10 @@ class SearchndrochBot
     SND.log.debug "Full command is #{text}"
 
     "cmd_#{meth}"
+  end
+
+  def args_from_message(preg, msg)
+    msg.gsub(preg, '').gsub(%r{\s+}m, ' ').strip.split(' ')
   end
 
   def process_command(meth, args)
@@ -125,43 +128,5 @@ class SearchndrochBot
     raise SND::FileParsingErrors, data: sp.errors, chat: @chat unless sp.valid?
 
     sp.to_hash
-  end
-
-  def parse_args(preg, msg)
-    msg.gsub(preg, '').gsub(%r{\s+}m, ' ').strip.split(' ')
-  end
-
-  def start_games
-    ts = Time.now
-    time = [ts.beginning_of_minute, ts.end_of_minute]
-    SND::Game.where(start: time.first..time.last).each do |g|
-      next unless g.status == 'Future'
-
-      g.start!
-    end
-  end
-
-  def level_up
-    SND::Game.where(status: 'Running').each do |g|
-      g.level_up! if g.level != g.level(Time.now - 60.seconds)
-    end
-  end
-
-  def finish_games
-    ts = Time.now
-    SND::Game.where(status: 'Running').each do |g|
-      next unless g.finish <= ts
-
-      g.finish!
-    end
-  end
-
-  def warn_level_up
-    SND::Game.where(status: 'Running').each do |g|
-      min_left = Time.at(g.level.time_left_sec).strftime('%M').to_i
-      next unless [4, 0].include? min_left
-
-      g.warn_level_up! min_left
-    end
   end
 end

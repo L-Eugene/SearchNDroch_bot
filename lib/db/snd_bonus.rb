@@ -9,6 +9,9 @@ module SND
     belongs_to :code
     belongs_to :chat
 
+    # @param [SND::Chat] player
+    # @param [SND::Game] game
+    # @return [Hash]
     def self.player_stat(player, game)
       b = Bonus.joins(:code).where(
         chat: player.id,

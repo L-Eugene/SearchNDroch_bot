@@ -19,9 +19,9 @@ describe SearchndrochBot do
   end
 
   it 'should parse arguments from command' do
-    expect(@snd.__send__(:parse_args, %r{^\/\w+\s?}, '/test')).to eq []
-    expect(@snd.__send__(:parse_args, %r{^\/\w+\s?}, '/test 123')).to eq %w[123]
-    expect(@snd.__send__(:parse_args, %r{^\/\w+\s?}, 'test 123')).to eq %w[test 123]
+    expect(@snd.__send__(:args_from_message, %r{^\/\w+\s?}, '/test')).to eq []
+    expect(@snd.__send__(:args_from_message, %r{^\/\w+\s?}, '/test 123')).to eq %w[123]
+    expect(@snd.__send__(:args_from_message, %r{^\/\w+\s?}, 'test 123')).to eq %w[test 123]
   end
 
   it 'should raise exception on invalid game file' do

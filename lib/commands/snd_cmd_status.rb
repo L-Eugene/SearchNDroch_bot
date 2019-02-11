@@ -4,7 +4,7 @@ module SND
   # Chat /status command processor
   module ChatCommand
     def cmd_status(_args)
-      chat.send_message text: chat.status_print
+      chat.send_message(text: chat.status_message)
     end
   end
 end
