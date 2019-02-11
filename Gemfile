@@ -17,7 +17,7 @@ source 'https://rubygems.org' do
     gem 'rspec'
     gem 'rubocop'
     gem 'simplecov'
-    gem 'sqlite3'
+    gem 'sqlite3', '~> 1.4.0'
     gem 'timecop'
   end
 end
