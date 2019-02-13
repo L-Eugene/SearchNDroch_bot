@@ -84,7 +84,7 @@ class SearchndrochBot
     return unless callback.data
 
     meth = method_from_message(callback.data)
-    args = args_from_message(%r{^\/\w+\s?}, callback.data)
+    args = args_from_message(%r{^\/\w+\s?}, callback.data) + [callback.message.message_id]
     process_command(meth, args) if respond_to?(meth.to_sym, true)
   end
 

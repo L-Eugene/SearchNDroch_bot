@@ -5,8 +5,8 @@ module SND
   module ChatCommand
     # @param [Array] args
     def cmd_list(args)
-      page = args.shift || 1
-      message = args.shift.to_i
+      page = (args.shift || 1).to_i
+      message = args.shift
 
       return chat.send_message(Tpl::Chat.list(chat, page)) unless message
 
