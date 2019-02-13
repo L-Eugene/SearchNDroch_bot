@@ -11,7 +11,7 @@ describe SearchndrochBot do
       allow(@chat1).to receive(:send_message) { |msg| msg[:text] }
       allow(@chat2).to receive(:send_message) { |msg| msg[:text] }
 
-      3.times do |i|
+      25.times do |i|
         @chat2.own_games << FactoryBot.create(:game, name: "Game##{i}")
       end
 
@@ -20,7 +20,7 @@ describe SearchndrochBot do
 
     it 'should show list of games' do
       allow(@snd).to receive(:chat) { @chat2 }
-      expect(@snd.__send__(:process_command, :cmd_list, []).scan(%r{^[🔜🔚🔛]\s#}).size).to eq 3
+      expect(@snd.__send__(:process_command, :cmd_list, []).scan(%r{^[🔜🔚🔛]\s#}).size).to eq 10
     end
 
     it 'should show empty list of games' do

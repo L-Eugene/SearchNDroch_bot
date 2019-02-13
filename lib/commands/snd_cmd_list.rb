@@ -3,11 +3,17 @@
 module SND
   # Chat /list command processor
   module ChatCommand
-    def cmd_list(_args)
-      games = Tpl::Chat.games(chat)
-      return chat.send_message(text: SND.t.list.nogames) if games.empty?
+    # @param [Array] args
+    def cmd_list(args)
+      page = args.shift || 1
+      message = args.shift.to_i
 
-      chat.send_message(text: SND.t.list.games(list: games.join("\n")))
+      return chat.send_message(Tpl::Chat.list(chat, page)) unless message
+
+      chat.send_message(
+        Tpl::Chat.list(chat, page).merge(message_id: message),
+        :edit_message_text
+      )
     end
   end
 end

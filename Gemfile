@@ -9,6 +9,7 @@ source 'https://rubygems.org' do
   gem 'telegram-bot-ruby'
   gem 'tzinfo'
   gem 'unicode'
+  gem 'will_paginate'
 
   group :test do
     gem 'database_cleaner'

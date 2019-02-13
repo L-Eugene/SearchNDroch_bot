@@ -53,10 +53,9 @@ class SearchndrochBot
 
   def update(data)
     update = Telegram::Bot::Types::Update.new(data)
-    message = update.message
-    @time = Time.at(message.date)
 
-    process_message(message) unless message.nil?
+    process_message(update.message) unless update.message.nil?
+    process_callback(update.callback_query) unless update.callback_query.nil?
   rescue SND::ErrorBase
     $ERROR_INFO.process
   rescue StandardError
@@ -65,6 +64,7 @@ class SearchndrochBot
 
   def process_message(message)
     @chat = SND::Chat.identify(message)
+    @time = Time.at(message.date)
 
     if message.text
       meth = method_from_message(message.text)
@@ -74,6 +74,18 @@ class SearchndrochBot
     elsif message.document
       process_file(message.document)
     end
+  end
+
+  def process_callback(callback)
+    @chat = SND::Chat.identify(callback.message)
+    @time = Time.now
+
+    SND.tlg.api.answer_callback_query(callback_query_id: callback.id)
+    return unless callback.data
+
+    meth = method_from_message(callback.data)
+    args = args_from_message(%r{^\/\w+\s?}, callback.data)
+    process_command(meth, args) if respond_to?(meth.to_sym, true)
   end
 
   # Start/stop games by cron

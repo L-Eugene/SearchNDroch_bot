@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'will_paginate/array'
+
 # Search'N'Droch bot module
 module SND
   module Tpl
@@ -32,6 +34,37 @@ module SND
       def self.task(chat)
         level = chat.active_game.level
         Tpl::Level.task(level, chat)
+      end
+
+      def self.keyboard_button(text, callback)
+        { text: text, callback_data: callback }
+      end
+
+      # @param [String] command command to send on button click
+      # @param [Fixnum] size game list size
+      # @param [Fixnum] page current page
+      # @return [Telegram::Bot::Types::InlineKeyboardMarkup]
+      def self.keyboard(command, size, page)
+        pages = (size.to_f / 10).ceil
+        Telegram::Bot::Types::InlineKeyboardMarkup.new.tap do |result|
+          result.inline_keyboard = []
+
+          result.inline_keyboard << keyboard_button('<', "/#{command} #{page - 1}") if page > 1
+          result.inline_keyboard << keyboard_button('>', "/#{command} #{page + 1}") if pages > page
+        end
+      end
+
+      # @param [SND::Chat] chat
+      # @param [Fixnum] page
+      # @return [Hash] Telegram Bot message hash
+      def self.list(chat, page = 1)
+        games = games(chat)
+        return { text: SND.t.list.nogames } if games.empty?
+
+        {
+          text: SND.t.list.games(list: games.paginate(per_page: 10, page: page).join("\n")),
+          reply_markup: keyboard('list', games.size, page)
+        }
       end
     end
   end
