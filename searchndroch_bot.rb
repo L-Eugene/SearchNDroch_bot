@@ -36,16 +36,9 @@ end
 
 $LOAD_PATH.unshift(SND.libdir)
 
-Dir["#{SND.libdir}/r18n/snd_*.rb"].each { |f| require f }
-
-require 'log/snd_logger'
-Dir["#{SND.libdir}/errors/snd_*.rb"].each { |f| require f }
-Dir["#{SND.libdir}/commands/snd_*.rb"].each { |f| require f }
-Dir["#{SND.libdir}/templates/snd_*.rb"].each { |f| require f }
-require 'parser/snd_spreadsheet_parser'
-require 'telegram/snd_telegram'
-require 'db/snd_game'
-require 'db/snd_chat'
+Dir.glob(
+  %w[r18n errors commands templates log db telegram parser].map { |s| "#{SND.libdir}/#{s}/snd_*.rb" }
+).each { |f| require f }
 
 # Main class for Search'N'Droch bot
 class SearchndrochBot
