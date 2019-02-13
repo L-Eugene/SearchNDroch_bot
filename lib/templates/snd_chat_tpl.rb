@@ -47,10 +47,12 @@ module SND
       def self.keyboard(command, size, page)
         pages = (size.to_f / 10).ceil
         Telegram::Bot::Types::InlineKeyboardMarkup.new.tap do |result|
-          result.inline_keyboard = []
+          keyboard = []
 
-          result.inline_keyboard << keyboard_button('<', "/#{command} #{page - 1}") if page > 1
-          result.inline_keyboard << keyboard_button('>', "/#{command} #{page + 1}") if pages > page
+          keyboard << keyboard_button('<', "/#{command} #{page - 1}") if page > 1
+          keyboard << keyboard_button('>', "/#{command} #{page + 1}") if pages > page
+
+          result.inline_keyboard = [keyboard]
         end
       end
 
