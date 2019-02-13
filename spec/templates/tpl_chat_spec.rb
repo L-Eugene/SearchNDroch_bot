@@ -12,7 +12,7 @@ describe SND::Tpl::Chat do
 
     kbd = SND::Tpl::Chat.keyboard('list', 25, 2).inline_keyboard
     expect(kbd.first.size).to eq 2
-    expect(kbd.first).to eq([{text: '<', callback_data: '/list 1'}, {text: '>', callback_data: '/list 3'}])
+    expect(kbd.first).to eq([{ text: '<', callback_data: '/list 1' }, { text: '>', callback_data: '/list 3' }])
 
     kbd = SND::Tpl::Chat.keyboard('list', 25, 3).inline_keyboard
     expect(kbd.size).to eq 1
