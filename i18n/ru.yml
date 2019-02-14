@@ -50,6 +50,11 @@ list:
     Ваши игры:
     %{list}
   nogames: У Вас нет игр
+cal:
+  games: |-
+    Предстоящие игры:
+    %{list}
+  nogames: Нет активных или ожидаемых игр
 delete:
   success: |-
     Игра #%{id} удалена

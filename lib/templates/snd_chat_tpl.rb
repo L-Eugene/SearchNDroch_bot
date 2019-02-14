@@ -25,8 +25,10 @@ module SND
 
       # @param [SND::Chat] chat
       # @return [Array] List of strings, each describes one game
-      def self.games(chat)
-        chat.own_games.map { |g| "#{SND.t.game.icon status: g.status} ##{g.id}: [#{g.start}] #{g.name}" }
+      def self.games(chat = nil)
+        # if chat is not defined - show all future or running games
+        (chat&.own_games || SND::Game.where(status: %w[Future Running]))
+          .map { |g| "#{SND.t.game.icon status: g.status} ##{g.id}: [#{g.start}] #{g.name}" }
       end
 
       # @param [SND::Chat] chat
@@ -60,12 +62,24 @@ module SND
       # @param [Fixnum] page
       # @return [Hash] Telegram Bot message hash
       def self.list(chat, page = 1)
-        games = games(chat)
-        return { text: SND.t.list.nogames } if games.empty?
+        list = games(chat)
+        return { text: SND.t.list.nogames } if list.empty?
 
         {
-          text: SND.t.list.games(list: games.paginate(per_page: 10, page: page).join("\n")),
-          reply_markup: keyboard('list', games.size, page)
+          text: SND.t.list.games(list: list.paginate(per_page: 10, page: page).join("\n")),
+          reply_markup: keyboard('list', list.size, page)
+        }
+      end
+
+      # @param [Fixnum] page
+      # @return [Hash] Telegram Bot message hash
+      def self.calendar(page = 1)
+        list = games
+        return { text: SND.t.cal.nogames } if list.empty?
+
+        {
+          text: SND.t.cal.games(list: list.paginate(per_page: 10, page: page).join("\n")),
+          reply_markup: keyboard('cal', list.size, page)
         }
       end
     end

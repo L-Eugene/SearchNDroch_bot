@@ -7,6 +7,8 @@ require 'db/snd_game_player'
 module SND
   # Game class
   class Game < SNDBase
+    default_scope { order(start: :asc) }
+
     belongs_to :author, class_name: 'Chat', foreign_key: 'chat_id'
 
     has_many :levels, dependent: :destroy

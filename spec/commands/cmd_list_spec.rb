@@ -23,6 +23,11 @@ describe SearchndrochBot do
       expect(@snd.__send__(:process_command, :cmd_list, []).scan(%r{^[🔜🔚🔛]\s#}).size).to eq 10
     end
 
+    it 'should accept page number' do
+      allow(@snd).to receive(:chat) { @chat2 }
+      expect(@snd.__send__(:process_command, :cmd_list, [3]).scan(%r{^[🔜🔚🔛]\s#}).size).to eq 5
+    end
+
     it 'should show empty list of games' do
       allow(@snd).to receive(:chat) { @chat1 }
       expect(@snd.__send__(:process_command, :cmd_list, [])).to eq 'У Вас нет игр'
