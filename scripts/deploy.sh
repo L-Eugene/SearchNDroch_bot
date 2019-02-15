@@ -14,7 +14,7 @@ commands=(
   "cd $BOT_PATH; git pull"
   "cd $BOTSERVER_PATH; $RVM_WRAPPER/bundle install --without test;"
   "cd $BOTSERVER_PATH; $RVM_WRAPPER/bundle update"
-  "cd "$BOTSERVER_PATH/app"; $RVM_WRAPPER/rake snd:db:migrate"
+  "cd $BOTSERVER_PATH/app; $RVM_WRAPPER/rake snd:db:migrate"
   "sudo service $SERVICE_NAME restart"
 )
 
