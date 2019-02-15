@@ -15,10 +15,8 @@ deploy:
   skip_cleanup: false
   script:
   - ssh $DEPLOY_USER@$DEPLOY_SERVER "cd $BOT_PATH_DBG; git pull"
-  - ssh $DEPLOY_USER@$DEPLOY_SERVER "cd $BOTSERVER_PATH_DBG; $RVM_WRAPPER_DBG/bundle
-    install --without test && $RVM_WRAPPER_DBG/bundle update"
-  - ssh $DEPLOY_USER@$DEPLOY_SERVER "cd $BOTSERVER_PATH_DBG; $RVM_WRAPPER_DBG/rake
-    snd:db:migrate"
+  - ssh $DEPLOY_USER@$DEPLOY_SERVER "cd $BOTSERVER_PATH_DBG; $RVM_WRAPPER_DBG/bundle install --without test && $RVM_WRAPPER_DBG/bundle update"
+  - ssh $DEPLOY_USER@$DEPLOY_SERVER "cd $BOTSERVER_PATH_DBG; $RVM_WRAPPER_DBG/rake snd:db:migrate"
   - ssh $DEPLOY_USER@$DEPLOY_SERVER "sudo service $SERVICE_NAME_DBG restart"
   on:
     branch: master
