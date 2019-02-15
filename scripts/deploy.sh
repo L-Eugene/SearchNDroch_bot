@@ -19,5 +19,6 @@ commands=(
 )
 
 for cmd in "${commands[@]}"; do
+  echo "$cmd"
   ssh $DEPLOY_USER@$DEPLOY_SERVER "$cmd"
 done
