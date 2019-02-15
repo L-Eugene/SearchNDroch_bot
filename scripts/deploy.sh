@@ -5,7 +5,12 @@ if [ "$1" = "development" ]; then
   BOTSERVER_PATH=$BOTSERVER_PATH_DBG
   RVM_WRAPPER=$RVM_WRAPPER_DBG
   SERVICE_NAME=$SERVICE_NAME_DBG
-elif [ "$1" != "production" ]; then
+elif [ "$1" = "production" ]; then
+  BOT_PATH=$BOT_PATH_PROD
+  BOTSERVER_PATH=$BOTSERVER_PATH_PROD
+  RVM_WRAPPER=$RVM_WRAPPER_PROD
+  SERVICE_NAME=$SERVICE_NAME_PROD
+else
   echo "Invalid argument"
   exit 2
 fi
