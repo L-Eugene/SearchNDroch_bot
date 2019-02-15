@@ -5,7 +5,7 @@ if [ "$1" = "development" ]; then
   BOTSERVER_PATH=$BOTSERVER_PATH_DBG
   RVM_WRAPPER=$RVM_WRAPPER_DBG
   SERVICE_NAME=$SERVICE_NAME_DBG
-elif [ "$1" != "development" ]; then
+elif [ "$1" != "production" ]; then
   echo "Invalid argument"
   exit 2
 fi
@@ -19,6 +19,5 @@ commands=(
 )
 
 for cmd in "${commands[@]}"; do
-  echo "$cmd"
   ssh $DEPLOY_USER@$DEPLOY_SERVER "$cmd"
 done

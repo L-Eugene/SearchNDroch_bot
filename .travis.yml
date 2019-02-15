@@ -13,7 +13,7 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: false
-  script: scripts/deploy.sh
+  script: scripts/deploy.sh development
   on:
     branch: master
     rvm: '2.4'
