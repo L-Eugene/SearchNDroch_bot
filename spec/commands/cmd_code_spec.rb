@@ -83,7 +83,7 @@ describe SearchndrochBot do
       expect(SND::Bonus.all.where(chat: @player).empty?).to be_truthy
     end
 
-    it 'should cout bonuses for different players separately' do
+    it 'should count bonuses for different players separately' do
       allow(@snd).to receive(:chat) { @player }
 
       expect(@snd.__send__(:process_command, :cmd_code, '!as')).to include 'верный'
@@ -119,6 +119,32 @@ describe SearchndrochBot do
       expect(@snd.__send__(:process_command, :cmd_code, '!as')).to include 'верный'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 2
+    end
+
+    describe SND::Monitoring do
+      before(:each) do
+        [@player, @player2].each do |player|
+          allow(@snd).to receive(:chat) { player }
+          %w[as xx ww].each do |code|
+            @snd.__send__(:process_command, :cmd_code, "!#{code}")
+          end
+        end
+      end
+
+      it 'should store codes in monitoring' do
+        expect(SND::Monitoring.all.size).to eq 6
+        expect(SND::Monitoring.where(chat: @player).size).to eq 3
+      end
+
+      it 'should show valid codes' do
+        expect(SND::Monitoring.valid.size).to eq 2
+        expect(SND::Monitoring.valid.all? { |m| !m.code.nil? }).to be_truthy
+      end
+
+      it 'should show invalid codes' do
+        expect(SND::Monitoring.invalid.size).to eq 4
+        expect(SND::Monitoring.invalid.all? { |m| m.code.nil? }).to be_truthy
+      end
     end
   end
 end

@@ -35,6 +35,8 @@ module SND
     def send_code(ucode, time)
       code = active_game.level(time).check_code(ucode)
 
+      SND::Monitoring.create(value: ucode, time: time, level: active_game.level(time), chat: self, code: code)
+
       return code_msg(:invalid, ucode) unless code
       return code_msg(:double, ucode) if bonus?(code)
 
