@@ -29,7 +29,7 @@ describe SearchndrochBot do
         level.codes << FactoryBot.create(
           :code,
           id: 10 * id + 1,
-          value_hash: Digest::MD5.hexdigest('as')
+          value: 'as'
         )
         @game.levels << level
       end

@@ -31,7 +31,7 @@ describe SearchndrochBot do
           :code,
           id: i,
           bonus: 1,
-          value_hash: Digest::MD5.hexdigest("as#{i}")
+          value: "as#{i}"
         )
       end
       @game.levels << level

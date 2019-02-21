@@ -13,14 +13,14 @@ module SND
     # @return [SND::Level]
     def self.create_level(hash)
       Level.create(hash.slice(:name, :task, :duration, :to_pass)).tap do |level|
-        hash[:codes].each { |c| level.codes << Code.create(value_hash: c[:code], bonus: c[:bonus]) }
+        hash[:codes].each { |c| level.codes << Code.create(value: c[:code], bonus: c[:bonus]) }
       end
     end
 
     # @param [String] code
     # @return [SND::Code]
     def check_code(code)
-      codes.where(value_hash: Digest::MD5.hexdigest(code)).first
+      codes.where(value: code).first
     end
 
     def time_left_sec(_chat_id = nil)

@@ -10,7 +10,7 @@ describe SND::Code do
 
   it 'should provide needed attributes' do
     expect(@code).to respond_to(:id)
-    expect(@code).to respond_to(:value_hash)
+    expect(@code).to respond_to(:value)
     expect(@code).to respond_to(:bonus)
     expect(@code).to respond_to(:level_id)
   end
