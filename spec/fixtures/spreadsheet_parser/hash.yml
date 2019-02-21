@@ -8,15 +8,20 @@
   :duration: 15
   :to_pass: 5
   :codes:
-  - :code: 1e2c4066d2f0c0ab31882518788444e6
+  - :codes:
+    - code1
     :bonus: 1
-  - :code: 602d1b91f8ddfc25930d4b4eac851f8e
+  - :codes:
+    - code2
     :bonus: 1
-  - :code: e7680b9959574fa938882179097488b4
+  - :codes:
+    - code3
     :bonus: 1
-  - :code: fd190b3b77b0cdaff3c32add4ccb88b2
+  - :codes:
+    - code4
     :bonus: 1
-  - :code: 5b796f5f7a641d57f5fc4857ec3f9239
+  - :codes:
+    - code5
     :bonus: 1
 - :name: Уровень 2
   :task: !ruby/string:Spreadsheet::Link
@@ -26,13 +31,21 @@
   :duration: 17
   :to_pass: 3
   :codes:
-  - :code: 1e2c4066d2f0c0ab31882518788444e6
+  - :codes:
+    - code1
+    - code1.1
+    - code1.2
+    - code1.3
     :bonus: 1
-  - :code: 602d1b91f8ddfc25930d4b4eac851f8e
+  - :codes:
+    - code2
     :bonus: 1
-  - :code: e7680b9959574fa938882179097488b4
+  - :codes:
+    - code3
     :bonus: 1
-  - :code: fd190b3b77b0cdaff3c32add4ccb88b2
+  - :codes:
+    - code4
     :bonus: 1
-  - :code: 5b796f5f7a641d57f5fc4857ec3f9239
+  - :codes:
+    - code5
     :bonus: 1

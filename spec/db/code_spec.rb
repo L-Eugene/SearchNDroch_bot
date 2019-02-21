@@ -9,9 +9,12 @@ describe SND::Code do
   end
 
   it 'should provide needed attributes' do
-    expect(@code).to respond_to(:id)
-    expect(@code).to respond_to(:value)
-    expect(@code).to respond_to(:bonus)
-    expect(@code).to respond_to(:level_id)
+    expect(@code).to respond_to(:id, :value, :bonus, :level_id, :parent)
+  end
+
+  it 'should save secondary codes' do
+    code2 = SND::Code.create(value: 'code2', parent: @code)
+
+    expect(code2.parent.id).to eq @code.id
   end
 end

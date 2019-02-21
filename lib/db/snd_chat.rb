@@ -38,9 +38,9 @@ module SND
       SND::Monitoring.create(value: ucode, time: time, level: active_game.level(time), chat: self, code: code)
 
       return code_msg(:invalid, ucode) unless code
-      return code_msg(:double, ucode) if bonus?(code)
+      return code_msg(:double, ucode) if bonus?(code.parent)
 
-      code.bonuses << SND::Bonus.create(chat: self, code: code, time: time)
+      code.bonuses << SND::Bonus.create(chat: self, code: code.parent, time: time)
       "#{code_msg(:valid, ucode)}\n#{status_message}"
     end
 

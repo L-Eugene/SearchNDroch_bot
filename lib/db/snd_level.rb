@@ -13,7 +13,11 @@ module SND
     # @return [SND::Level]
     def self.create_level(hash)
       Level.create(hash.slice(:name, :task, :duration, :to_pass)).tap do |level|
-        hash[:codes].each { |c| level.codes << Code.create(value: c[:code], bonus: c[:bonus]) }
+        hash[:codes].each do |code|
+          main = Code.create(value: code[:codes].shift, bonus: code[:bonus])
+          level.codes << main
+          code[:codes].each { |c| level.codes << Code.create(value: c, parent: main) }
+        end
       end
     end
 

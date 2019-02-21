@@ -26,11 +26,18 @@ describe SearchndrochBot do
           to_pass: 1,
           task: "Level #{id} task"
         )
-        level.codes << FactoryBot.create(
+        code1 = FactoryBot.create(
           :code,
           id: 10 * id + 1,
           value: 'as'
         )
+        code2 = FactoryBot.create(
+          :code,
+          id: 100 * id + 1,
+          value: 'double-as',
+          parent: code1
+        )
+        level.codes << code1 << code2
         @game.levels << level
       end
 
@@ -65,6 +72,10 @@ describe SearchndrochBot do
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
 
       expect(@snd.__send__(:process_command, :cmd_code, '!As')).to include 'уже введен'
+      expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
+      expect(SND::Bonus.all.where(chat: @player).size).to eq 1
+
+      expect(@snd.__send__(:process_command, :cmd_code, '!double-As')).to include 'уже введен'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
 
