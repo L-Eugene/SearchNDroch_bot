@@ -9,6 +9,10 @@ describe SND::SpreadsheetParser do
     @hash = YAML.load_file "#{@file_path}/hash.yml"
   end
 
+  it 'should return extension list' do
+    expect(SND::SpreadsheetParser.extensions).to match_array %w[xls ods xlsx]
+  end
+
   it 'should parse xls' do
     sp = SND::SpreadsheetParser.new(
       File.open("#{@file_path}/game.xls", 'r'),

@@ -5,7 +5,26 @@ module SND
   class Parser
     attr_accessor :file, :options, :valid, :errors
 
-    def initialize(file, options)
+    def self.extensions
+      subclasses.each_with_object([]) do |klass, result|
+        result.concat(klass.extensions) if klass.respond_to?(:extensions)
+      end
+    end
+
+    # @param [String] file
+    # @param [String] ext
+    # @return [Hash]
+    def self.parse(file, ext)
+      parser = subclasses.find { |klass| klass.extensions.include? ext }
+      raise SND::InvalidFileExtension unless parser
+
+      result = parser.new(file, extension: ext.to_sym)
+      raise SND::FileParsingErrors, data: result.errors, chat: @chat unless result.valid?
+
+      result.to_hash
+    end
+
+    def initialize(file, options = {})
       @game = {}
       @errors = []
       @file = file
@@ -23,6 +42,14 @@ module SND
 
     def to_hash
       @game
+    end
+
+    private
+
+    def valid_date?(stamp, place)
+      Time.parse stamp unless stamp.is_a? Time
+    rescue StandardError
+      @errors << SND.t.parser.invalid_timestamp(place: place)
     end
   end
 end

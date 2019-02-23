@@ -122,18 +122,10 @@ class SearchndrochBot
   def process_file(document)
     file = SND::Tlg.instance.download_file(document)
     ext = File.extname(file.path).delete('.')
-    raise SND::InvalidFileExtension unless %w[ods xls xlsx].include? ext
 
-    game = parse_spreadsheet(file, ext.to_sym)
+    game_hash = SND::Parser.parse(file, ext)
     file.unlink
 
-    chat.own_games << SND::Game.create_game(game)
-  end
-
-  def parse_spreadsheet(file, ext)
-    sp = SND::SpreadsheetParser.new(file, extension: ext)
-    raise SND::FileParsingErrors, data: sp.errors, chat: @chat unless sp.valid?
-
-    sp.to_hash
+    chat.own_games << SND::Game.create_game(game_hash)
   end
 end

@@ -27,7 +27,7 @@ describe SearchndrochBot do
   it 'should raise exception on invalid game file' do
     file_path = "#{File.dirname(__FILE__)}/fixtures/spreadsheet_parser/"
 
-    expect { @snd.__send__(:parse_spreadsheet, "#{file_path}/game_nocodes.ods", :ods) }
+    expect { SND::Parser.parse("#{file_path}/game_nocodes.ods", 'ods') }
       .to raise_error(SND::FileParsingErrors, %r{Errors in parsed game file:})
   end
 end

@@ -1,0 +1,51 @@
+---
+:name: SD#1
+:description: Поисковая игра на одном объекте
+:start: 2020-07-01 00:00:00.000000000 +0300
+:levels:
+- :name: Уровень 1
+  :task: Найдите все 5 кодов.
+  :duration: 15
+  :to_pass: 5
+  :codes:
+  - :codes:
+    - code1
+    :bonus: 1
+  - :codes:
+    - code2
+    :bonus: 1
+  - :codes:
+    - code3
+    :bonus: 1
+  - :codes:
+    - code4
+    :bonus: 1
+  - :codes:
+    - code5
+    :bonus: 1
+- :name: Уровень 2
+  :task: !ruby/string:Spreadsheet::Link
+    str: http://telegra.ph/Some-link-55-55
+    url: http://telegra.ph/Some-link-55-55
+    fragment: 
+  :duration: 17
+  :to_pass: 3
+  :codes:
+  - :codes:
+    - code1
+    - code1.1
+    - code1.2
+    - code1.3
+    :bonus: 1
+  - :codes:
+    - code2
+    :bonus: 1
+  - :codes:
+    - code3
+    :bonus: 1
+  - :codes:
+    - code4
+    :bonus: 1
+  - :codes:
+    - code5
+    :bonus: 1

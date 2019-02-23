@@ -3,12 +3,15 @@
 require 'roo'
 require 'roo-xls'
 require 'parser/snd_parser'
-require 'digest'
 
 module SND
   # Class for parsing game scenario from spreadsheets
   class SpreadsheetParser < Parser
     attr_reader :doc
+
+    def self.extensions
+      %w[ods xls xlsx]
+    end
 
     def parse
       @game = parse_game(doc.sheet(0))
@@ -52,12 +55,6 @@ module SND
       end
     end
 
-    def valid_date?(stamp, place)
-      Time.parse stamp
-    rescue StandardError
-      @errors << SND.t.parser.invalid_timestamp(place: place)
-    end
-
     def valid_file?
       raise ArgumentError, SND.t.parser.extension_missing unless options[:extension]
 
@@ -89,5 +86,7 @@ module SND
       limit = sheet.cell(4, 2).to_i
       @errors << SND.t.parser.level_limit(name: name) if codes < limit
     end
+
+    private :parse_game, :parse_level, :parse_codes, :valid_file?, :valid_game?, :valid_levels?, :valid_level?
   end
 end
