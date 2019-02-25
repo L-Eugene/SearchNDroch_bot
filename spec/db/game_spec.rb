@@ -70,12 +70,7 @@ describe SND::Game do
   end
 
   it 'should provide needed attributes' do
-    expect(@game).to respond_to(:id)
-    expect(@game).to respond_to(:name)
-    expect(@game).to respond_to(:description)
-    expect(@game).to respond_to(:allow_teams)
-    expect(@game).to respond_to(:start)
-    expect(@game).to respond_to(:author)
+    expect(@game).to respond_to(:id, :name, :description, :allow_teams, :start, :author, :status, :players)
   end
 
   it 'should validate game status' do
