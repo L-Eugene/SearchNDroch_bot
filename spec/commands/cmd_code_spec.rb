@@ -23,7 +23,7 @@ describe SearchndrochBot do
           :level,
           id: id,
           duration: 15,
-          to_pass: 1,
+          to_pass: 2,
           task: "Level #{id} task"
         )
         code1 = FactoryBot.create(
@@ -37,7 +37,12 @@ describe SearchndrochBot do
           value: 'double-as',
           parent: code1
         )
-        level.codes << code1 << code2
+        code3 = FactoryBot.create(
+          :code,
+          id: 1000 * id + 1,
+          value: 'second'
+        )
+        level.codes << code1 << code2 << code3
         @game.levels << level
       end
 
@@ -48,6 +53,7 @@ describe SearchndrochBot do
 
       Timecop.freeze('2050-01-01 17:01:00 UTC+3')
       @snd.instance_variable_set(:@time, Time.now)
+      allow(@snd).to receive(:chat) { @player }
 
       @game.start!
     end
@@ -62,7 +68,7 @@ describe SearchndrochBot do
     end
 
     it 'should return code results' do
-      allow(@snd).to receive(:chat) { @player }
+      @snd.periodic
 
       expect(@snd.__send__(:process_command, :cmd_code, '!sa')).to include 'неверный'
       expect(SND::Bonus.all.where(chat: @player).empty?).to be_truthy
@@ -85,7 +91,6 @@ describe SearchndrochBot do
     end
 
     it 'should warn on codes without exclamation' do
-      allow(@snd).to receive(:chat) { @player }
       expect { @snd.__send__(:process_command, :cmd_code, 'sa') }.to raise_exception(SND::InvalidCodeFormat)
       expect(SND::Bonus.all.where(chat: @player).empty?).to be_truthy
 
@@ -95,8 +100,6 @@ describe SearchndrochBot do
     end
 
     it 'should count bonuses for different players separately' do
-      allow(@snd).to receive(:chat) { @player }
-
       expect(@snd.__send__(:process_command, :cmd_code, '!as')).to include 'верный'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 1
@@ -109,11 +112,10 @@ describe SearchndrochBot do
     end
 
     it 'should add correct code to previous level' do
-      allow(@snd).to receive(:chat) { @player }
-
       # Playing at level 2 now
       Timecop.freeze('2050-01-01 17:16:00 UTC+3')
       @snd.instance_variable_set(:@time, Time.now)
+      @snd.periodic
 
       # Putting code to level 2
       expect(@snd.__send__(:process_command, :cmd_code, '!as')).to include 'верный'
@@ -130,6 +132,32 @@ describe SearchndrochBot do
       expect(@snd.__send__(:process_command, :cmd_code, '!as')).to include 'верный'
       expect(SND::Bonus.all.where(chat: @player).empty?).not_to be_truthy
       expect(SND::Bonus.all.where(chat: @player).size).to eq 2
+    end
+
+    it 'should calculate codes left to level up' do
+      # Playing at level 1 now
+      Timecop.freeze('2050-01-01 17:06:00 UTC+3')
+      @snd.instance_variable_set(:@time, Time.now)
+      @snd.periodic
+
+      # Putting code to level 1
+      expect(@player.active_game.level(@player).codes_left(@player)).to eq 2
+      @snd.__send__(:process_command, :cmd_code, '!as')
+      expect(@player.active_game.level(@player).codes_left(@player)).to eq 1
+    end
+
+    it 'should switch to next level when pass limit reached' do
+      # Playing at level 1 now
+      Timecop.freeze('2050-01-01 17:06:00 UTC+3')
+      @snd.instance_variable_set(:@time, Time.now)
+      @snd.periodic
+
+      # Putting codes to level 1
+      @snd.__send__(:process_command, :cmd_code, '!as')
+      @snd.__send__(:process_command, :cmd_code, '!second')
+
+      # Expect level 2 here
+      expect(@player.active_game.level(@player).id).to eq 2
     end
 
     describe SND::Monitoring do

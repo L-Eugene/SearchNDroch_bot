@@ -122,6 +122,23 @@ module SND
     end
   end
 
+  # The game is over
+  class GameOver < ErrorBase
+    private
+
+    def default_message
+      SND.t.error.game_over.log
+    end
+
+    def default_cmessage
+      SND.t.error.game_over.msg
+    end
+
+    def log_level
+      :info
+    end
+  end
+
   # Trying to delete game after it started
   class DeleteAfterStart < ErrorBase
     private

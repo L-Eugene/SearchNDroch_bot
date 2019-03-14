@@ -33,9 +33,8 @@ module SND
 
       # @param [SND::Chat] chat
       # @return [Hash] Telegram Bot message hash
-      def self.task(chat)
-        level = chat.active_game.level
-        Tpl::Level.task(level, chat)
+      def self.task(chat, level = nil)
+        Tpl::Level.task(level || chat.active_game.level(chat), chat)
       end
 
       def self.keyboard_button(text, callback)

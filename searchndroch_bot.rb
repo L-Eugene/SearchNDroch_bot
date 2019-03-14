@@ -88,7 +88,7 @@ class SearchndrochBot
     process_command(meth, args) if respond_to?(meth.to_sym, true)
   end
 
-  # Start/stop games by cron
+  # Start/stop games by cron, check level autocomplete
   def periodic
     SND::Game.game_operations
     SND::Game.start_games

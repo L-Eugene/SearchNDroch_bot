@@ -42,8 +42,10 @@ module SND
     def start!
       update!(status: 'Running')
       players.each do |player|
+        SND::LevelTime.create(level: levels.first, chat: player, start_time: start, end_time: nil)
+
         player.send_message(text: SND.t.game.start(id: id))
-        player.send_message(Tpl::Chat.menu.merge(Tpl::Level.task(level, player)))
+        player.send_message(Tpl::Chat.menu.merge(Tpl::Level.task(levels.first, player)))
       end
     end
 
@@ -59,27 +61,45 @@ module SND
       end
     end
 
-    def level_up!
-      players.each { |player| player.send_message(level.task_print(player)) }
+    def level_up
+      ts = Time.now
+
+      players.each do |chat|
+        while SND::LevelTime.timeout(self, ts).present?
+          SND::LevelTime.timeout(self, ts).each(&:level_up)
+          chat.send_message(SND::Tpl::Chat.task(chat))
+        end
+      end
     end
 
-    def warn_level_up!(time)
-      players.each { |player| player.send_message(text: SND.t.level.warn_level_up(time)) }
+    def check_pass(chat)
+      lvl = level(chat)
+      return unless lvl.codes_left(chat) <= 0
+
+      SND::LevelTime.by_game_chat(self, chat).last.level_up(Time.current)
+      chat.send_message(SND::Tpl::Chat.task(chat, lvl))
     end
 
+    def warn_level_up
+      SND::LevelTime.warn_levelup(self).each do |lt|
+        lt.chat.send_message(
+          text: SND.t.level.warn_level_up(lt.level.time_left_min(lt.chat))
+        )
+      end
+    end
+
+    # @param [SND::Chat] player
     # @param [Time] time
     # @return [SND::Level] if level is active
     # @return [NilClass] if no active level available
     # @raise [SND::GameNotRunning] if game status is not 'Running'
-    def level(time = Time.now)
+    def level(player, time = Time.now)
       raise SND::GameNotRunning if status != 'Running'
 
-      levels.inject(start) do |tm, level|
-        return level if tm + level.duration.minutes > time
-
-        tm + level.duration.minutes
-      end
-      nil
+      SND::LevelTime.by_game_chat(self, player).reorder(level_id: :desc).find_by(
+        '(:time >= start_time AND :time < end_time) OR (:time >= start_time AND end_time IS NULL)',
+        time: time
+      )&.level || raise(SND::GameOver)
     end
 
     # @return [Hash]
@@ -103,12 +123,6 @@ module SND
     # @raise [SND::AlreadyJoinedError] if trying to attend game more than once
     def enforce_unique_players(player)
       raise SND::AlreadyJoinedError, chat: player if played_by? player
-    end
-
-    # @param [SND::Level] level
-    # @return [Numeric] seconds left to given level
-    def time_to_level(level)
-      levels.take_while { |l| l.id != level.id }.sum(&:duration)
     end
 
     # @param [SND::Chat] chat
@@ -138,7 +152,7 @@ module SND
 
     def self.start_games
       ts = Time.now
-      Game.where(start: ts.beginning_of_minute..ts.end_of_minute).each { |g| g.start! if g.status == 'Future' }
+      Game.where(start: ts.beginning_of_minute..ts.end_of_minute, status: 'Future').each(&:start!)
     end
 
     def self.game_operations
@@ -146,10 +160,8 @@ module SND
       SND::Game.where(status: 'Running').each do |g|
         next g.finish! if g.finish_time <= ts
 
-        min_left = Time.at(g.level.time_left_sec).strftime('%M').to_i
-        next g.warn_level_up! min_left if [4, 0].include? min_left
-
-        g.level_up! if g.level != g.level(Time.now - 1.minute)
+        g.level_up
+        g.warn_level_up
       end
     end
   end

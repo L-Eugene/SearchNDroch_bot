@@ -17,6 +17,7 @@ describe 'Game error classes' do
     { class: SND::InvalidFileExtension, level: :warn },
     { class: SND::AlreadyJoinedError, level: :warn },
     { class: SND::GameNotRunning, level: :warn },
+    { class: SND::GameOver, level: :info },
     { class: SND::NoParametersGiven, level: :warn },
     { class: SND::FileParsingErrors, level: :warn },
     { class: SND::DeleteAfterStart, level: :warn }

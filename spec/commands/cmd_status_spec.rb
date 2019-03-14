@@ -96,11 +96,13 @@ describe SearchndrochBot do
     end
 
     it 'should write when no codes left to search' do
+      # TODO: send game over message
+      # raise an exception when trying to load level on already finished game
       allow(@snd).to receive(:chat) { @player }
       1.upto(10) do |x|
         @snd.__send__(:process_command, :cmd_code, "!as#{x}")
       end
-      expect(@snd.__send__(:process_command, :cmd_status, [])).to include 'Все коды введены'
+      expect(@snd.__send__(:process_command, :cmd_status, [])).to include 'Все уровни выполнены'
     end
   end
 end

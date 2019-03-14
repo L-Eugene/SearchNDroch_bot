@@ -33,15 +33,21 @@ module SND
     # @param [Time] time
     # @return [String] response text for user
     def send_code(ucode, time)
-      code = active_game.level(time).check_code(ucode)
+      level = active_game.level(self, time)
+      code = level.check_code(ucode)
 
-      SND::Monitoring.create(value: ucode, time: time, level: active_game.level(time), chat: self, code: code)
+      # Saving nil as code for invalid codes
+      SND::Monitoring.create(value: ucode, time: time, level: level, chat: self, code: code)
 
       return code_msg(:invalid, ucode) unless code
       return code_msg(:double, ucode) if bonus?(code.parent)
 
       code.bonuses << SND::Bonus.create(chat: self, code: code.parent, time: time)
       "#{code_msg(:valid, ucode)}\n#{status_message}"
+    end
+
+    def warn_level_up!(time)
+      send_message(text: SND.t.level.warn_level_up(time))
     end
 
     # @return [Boolean]
@@ -79,8 +85,10 @@ module SND
 
     # @return [String]
     def status_message
-      result = active_game.level.chat_stat(id)
+      result = active_game.level(self).chat_stat(id)
       result[:left].empty? ? SND.t.game.code.alldone : SND.t.game.status(result)
+    rescue SND::GameOver
+      $ERROR_INFO.cmessage
     end
 
     # @param [SND::Game] game

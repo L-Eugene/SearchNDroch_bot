@@ -9,6 +9,9 @@ Style/RegexpLiteral:
 Metrics/LineLength:
   Max: 120
 
+Metrics/ClassLength:
+  Max: 300
+
 Metrics/AbcSize:
   Max: 25
 

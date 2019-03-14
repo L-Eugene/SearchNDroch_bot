@@ -49,12 +49,15 @@ describe SearchndrochBot do
 
     it 'should calculate time left on level' do
       Timecop.freeze('2050-01-01 17:01:00 UTC+3')
+      SND::Game.game_operations
       expect(@snd.__send__(:process_command, :cmd_task, [])).to include '00:14:00'
 
       Timecop.freeze('2050-01-01 17:17:15 UTC+3')
+      SND::Game.game_operations
       expect(@snd.__send__(:process_command, :cmd_task, [])).to include '00:12:45'
 
       Timecop.freeze('2050-01-01 17:40:11 UTC+3')
+      SND::Game.game_operations
       expect(@snd.__send__(:process_command, :cmd_task, [])).to include '00:04:49'
     end
   end

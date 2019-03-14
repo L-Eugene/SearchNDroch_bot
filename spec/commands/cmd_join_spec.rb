@@ -7,15 +7,31 @@ describe SearchndrochBot do
     before(:each) do
       @chat = FactoryBot.create(:user)
 
-      @game1 = FactoryBot.create(:game, name: 'Game#1', id: 1)
+      Timecop.freeze('2019-02-02 17:05:00 UTC+3')
+
+      @game1 = FactoryBot.create(
+        :game,
+        name: 'Game#1', id: 1, start: '2019-02-02 20:00:00 UTC+3', status: 'Future'
+      )
       @chat.own_games << @game1
 
-      @game2 = FactoryBot.create(:game, name: 'Game#2', id: 2)
+      @game2 = FactoryBot.create(
+        :game,
+        name: 'Game#2', id: 2, start: '2019-02-02 15:00:00 UTC+3', status: 'Running'
+      )
+
+      1.upto(3) do |id|
+        @game2.levels << FactoryBot.create(:level, id: id, duration: 90)
+      end
 
       @snd = SearchndrochBot.new
 
       allow(@chat).to receive(:send_message) { |msg| msg[:text] }
       allow(@snd).to receive(:chat) { @chat }
+    end
+
+    after(:each) do
+      Timecop.return
     end
 
     it 'should validate game_id' do
@@ -44,6 +60,19 @@ describe SearchndrochBot do
       expect(@chat.games.reload.size).to eq 1
       expect(@game1.players.reload.size).to eq 1
       expect(@game2.players.reload.size).to eq 0
+    end
+
+    it 'should set current level when joining active game' do
+      expect(@chat.games.reload.size).to eq 0
+
+      expect(@snd.__send__(:process_command, :cmd_join, ['2'])).to eq 'Вы заявлены на игру #2'
+
+      expect(@chat.games.reload.size).to eq 1
+
+      expect(@game2.level(@game2.game_players.first).id).to eq 2
+
+      lt = SND::LevelTime.by_game_chat(@game2, @game2.game_players.first).last
+      expect(lt.start_time).to eq '2019-02-02 16:30:00 UTC+3'
     end
   end
 end

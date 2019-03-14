@@ -6,6 +6,8 @@ require 'db/snd_code'
 module SND
   # Level class
   class Level < SNDBase
+    default_scope { order(id: :asc) }
+
     belongs_to :game
     has_many :codes, dependent: :destroy
 
@@ -27,15 +29,30 @@ module SND
       codes.where(value: code).first
     end
 
-    def time_left_sec(_chat_id = nil)
-      # length of all previous levels in minutes
-      prev = game.time_to_level(self).minutes
+    def time_left_sec(chat_id = nil)
+      lt = SND::LevelTime.find_by(chat_id: chat_id, level: self)
 
-      duration.minutes - (Time.now.to_i - game.start.to_i - prev)
+      duration.minutes - (Time.now.to_i - lt.start_time.to_i)
+    end
+
+    def time_left_min(chat_id = nil)
+      lt = SND::LevelTime.find_by(chat_id: chat_id, level: self)
+
+      (duration.minutes - (Time.now.to_i - lt.start_time.to_i)) / 60
     end
 
     def time_left(chat_id = nil)
       Time.at(time_left_sec(chat_id)).utc.strftime('%H:%M:%S')
+    end
+
+    def codes_left(chat)
+      to_pass - codes.closed(chat.id).size
+    end
+
+    # @return [SND::Level] next level if current level is not the last one
+    # @return [NilClass] nil if current level is the last one
+    def next_level
+      game.levels[game.levels.find_index { |level| level.id == id } + 1]
     end
 
     # If array contains less than 3 elements, all of them are listed
