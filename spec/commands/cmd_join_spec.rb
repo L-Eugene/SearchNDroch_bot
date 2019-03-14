@@ -7,7 +7,7 @@ describe SearchndrochBot do
     before(:each) do
       @chat = FactoryBot.create(:user)
 
-      Timecop.freeze('2019-02-02 17:05:00 UTC+3')
+      Timecop.freeze('2019-02-02 17:05:00 +0300')
 
       @game1 = FactoryBot.create(
         :game,

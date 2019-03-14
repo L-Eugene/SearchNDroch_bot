@@ -13,7 +13,7 @@ module SND
     def create_leveltime
       return unless game.status == 'Running'
 
-      time = Time.now
+      time = Time.current
       game.levels.inject(game.start) do |tm, level|
         if tm + level.duration.minutes > time
           SND::LevelTime.create(level: level, start_time: tm, chat: chat)
