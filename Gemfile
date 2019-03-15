@@ -2,6 +2,7 @@
 
 source 'https://rubygems.org' do
   gem 'activerecord'
+  gem 'psych', '~> 3'
   gem 'r18n-core'
   gem 'r18n-rails-api'
   gem 'roo'
