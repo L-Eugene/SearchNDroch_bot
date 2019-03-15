@@ -29,7 +29,7 @@ module SND
     end
 
     def default_cmessage
-      SND.t.error.game_parsing_errors.msg errors: @data.join("\n")
+      SND.t.error.game_parsing_errors.msg errors: @data.map { |err| "- #{err}" }.join("\n")
     end
 
     def log_level
