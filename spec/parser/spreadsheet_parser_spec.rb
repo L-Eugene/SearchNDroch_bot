@@ -43,7 +43,7 @@ describe SND::SpreadsheetParser do
   it 'should validate game options' do
     files = [
       { file: 'hash.yml', error: SND.t.parser.invalid_format },
-      { file: 'game_notime.ods', error: SND.t.parser.game_parameters_missing },
+      { file: 'game_notime.ods', error: SND.t.parser.game_parameters_missing.to_s.lines.first },
       { file: 'game_wrongtime.ods', error: SND.t.parser.invalid_timestamp(place: SND.t.parser.start) },
       { file: 'game_nolevels.ods', error: SND.t.parser.no_levels_given }
     ]
@@ -53,7 +53,7 @@ describe SND::SpreadsheetParser do
         extension: :ods
       )
       expect(sp.valid).to eq false
-      expect(sp.errors.first).to eq test[:error]
+      expect(sp.errors.first).to include test[:error]
     end
   end
 

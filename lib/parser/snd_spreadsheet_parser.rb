@@ -60,7 +60,7 @@ module SND
 
       @doc = Roo::Spreadsheet.open(file.path, extension: options[:extension])
     rescue StandardError
-      @errors << SND.t.parser.invalid_format
+      @errors << SND.t.parser.invalid_format(error: $ERROR_INFO.message)
     end
 
     def valid_game?

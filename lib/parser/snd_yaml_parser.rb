@@ -22,7 +22,7 @@ module SND
     def valid_file?
       @game = YAML.load_file(@file).symbolize_keys
     rescue StandardError
-      @errors << SND.t.parser.invalid_format
+      @errors << SND.t.parser.invalid_format(error: $ERROR_INFO.message)
     ensure
       @errors.empty?
     end

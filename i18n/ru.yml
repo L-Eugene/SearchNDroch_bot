@@ -113,7 +113,9 @@ parser:
   start: начала
   invalid_timestamp: |-
     Неверный формат времени %{place}.
-  invalid_format: Неверный формат файла.
+  invalid_format: |-
+    Неверный формат файла.
+    %{error}
   extension_missing: File extension missing.
   no_levels_given: В игре нет уровней.
   game_parameters_missing: Заданы не все параметры игры.
