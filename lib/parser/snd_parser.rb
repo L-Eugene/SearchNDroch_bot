@@ -28,6 +28,7 @@ module SND
       @game = {}
       @errors = []
       @file = file
+      @file = File.open(file) if file.is_a? String
       @options = options
       parse if valid?
     end

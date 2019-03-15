@@ -12,10 +12,12 @@ describe SND::YamlParser do
   end
 
   it 'should load game' do
-    yp = SND::YamlParser.new("#{@file_path}/game.yml")
+    File.open("#{@file_path}/game.yml") do |file|
+      yp = SND::YamlParser.new(file)
 
-    expect(yp.valid?).to be_truthy
-    expect(yp.to_hash).to eq YAML.load_file("#{@file_path}/game.yml")
+      expect(yp.valid?).to be_truthy
+      expect(yp.to_hash).to eq YAML.load_file("#{@file_path}/game.yml")
+    end
   end
 
   %w[name description start levels].each do |field|

@@ -20,7 +20,8 @@ module SND
     end
 
     def valid_file?
-      @game = YAML.load_file(@file).symbolize_keys
+      SND.log.debug "Validating file #{file.path}"
+      @game = YAML.load_file(file.path).symbolize_keys
     rescue StandardError
       @errors << SND.t.parser.invalid_format(error: $ERROR_INFO.message)
     ensure
