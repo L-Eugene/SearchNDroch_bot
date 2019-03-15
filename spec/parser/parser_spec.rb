@@ -13,7 +13,7 @@ describe SND::Parser do
   end
 
   it 'should raise if invalid file format is sent' do
-    expect { SND::Parser.parse('nofile', 'unsupported') }.to raise_error(SND::InvalidFileExtension)
+    expect { SND::Parser.parse('nofile', 'unsupported', nil) }.to raise_error(SND::InvalidFileExtension)
   end
 
   it 'should return nonempty array of extensions' do

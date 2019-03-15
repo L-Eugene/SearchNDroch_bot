@@ -14,12 +14,12 @@ module SND
     # @param [String] file
     # @param [String] ext
     # @return [Hash]
-    def self.parse(file, ext)
+    def self.parse(file, ext, chat)
       parser = subclasses.find { |klass| klass.extensions.include? ext }
       raise SND::InvalidFileExtension unless parser
 
       result = parser.new(file, extension: ext.to_sym)
-      raise SND::FileParsingErrors, data: result.errors, chat: @chat unless result.valid?
+      raise SND::FileParsingErrors, data: result.errors, chat: chat unless result.valid?
 
       result.to_hash
     end

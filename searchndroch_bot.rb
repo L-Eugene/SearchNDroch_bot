@@ -123,7 +123,7 @@ class SearchndrochBot
     file = SND::Tlg.instance.download_file(document)
     ext = File.extname(file.path).delete('.')
 
-    game_hash = SND::Parser.parse(file, ext)
+    game_hash = SND::Parser.parse(file, ext, @chat)
     file.unlink
 
     chat.own_games << SND::Game.create_game(game_hash)
