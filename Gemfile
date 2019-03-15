@@ -3,9 +3,9 @@
 source 'https://rubygems.org' do
   gem 'activerecord'
   gem 'psych', '~> 3.1'
-  gem 'rake'
   gem 'r18n-core'
   gem 'r18n-rails-api'
+  gem 'rake'
   gem 'roo'
   gem 'roo-xls'
   gem 'telegram-bot-ruby'
