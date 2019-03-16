@@ -31,7 +31,7 @@ module SND
     def valid_game?
       @errors << SND.t.parser.game_parameters_missing unless %i[name description start].all? { |key| @game.key? key }
 
-      valid_date?(@game[:start], SND.t.parser.start)
+      valid_date?(@game[:start], SND.t.parser.start, true)
 
       unless @game.key?(:levels) && @game[:levels].is_a?(Array)
         @errors << SND.t.parser.no_levels_given

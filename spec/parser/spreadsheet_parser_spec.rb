@@ -40,14 +40,21 @@ describe SND::SpreadsheetParser do
     expect(sp.to_hash).to include(@hash)
   end
 
-  it 'should validate game options' do
-    files = [
-      { file: 'hash.yml', error: SND.t.parser.invalid_format },
-      { file: 'game_notime.ods', error: SND.t.parser.game_parameters_missing.to_s.lines.first },
-      { file: 'game_wrongtime.ods', error: SND.t.parser.invalid_timestamp(place: SND.t.parser.start) },
-      { file: 'game_nolevels.ods', error: SND.t.parser.no_levels_given }
-    ]
-    files.each do |test|
+  files = [
+    { title: 'file format', file: 'hash.yml', error: SND.t.parser.invalid_format },
+    {
+      title: 'start time presence', file: 'game_notime.ods',
+      error: SND.t.parser.game_parameters_missing.to_s.lines.first
+    },
+    {
+      title: 'start time format', file: 'game_wrongtime.ods',
+      error: SND.t.parser.invalid_timestamp(place: SND.t.parser.start)
+    },
+    { title: 'start time to be in future', file: 'game_pasttime.ods', error: SND.t.parser.timestamp_in_past },
+    { title: 'level presence', file: 'game_nolevels.ods', error: SND.t.parser.no_levels_given }
+  ]
+  files.each do |test|
+    it "should validate #{test[:title]}" do
       sp = SND::SpreadsheetParser.new(
         File.open("#{@file_path}/#{test[:file]}", 'r'),
         extension: :ods
@@ -73,19 +80,22 @@ describe SND::SpreadsheetParser do
     )
   end
 
-  it 'should validate level data' do
-    files = [
-      { file: 'game_nocodes.ods', error: SND.t.parser.level_codes(name: 'Level 1') },
-      {
-        file: 'game_wrongleveltime.ods',
-        error: SND.t.parser.level_timeout(name: 'Level 1')
-      },
-      {
-        file: 'game_wrongupcondition.ods',
-        error: SND.t.parser.level_limit(name: 'Level 1')
-      }
-    ]
-    files.each do |test|
+  files = [
+    {
+      title: 'codes presence', file: 'game_nocodes.ods',
+      error: SND.t.parser.level_codes(name: 'Level 1')
+    },
+    {
+      title: 'level time format', file: 'game_wrongleveltime.ods',
+      error: SND.t.parser.level_timeout(name: 'Level 1')
+    },
+    {
+      title: 'levelup condition', file: 'game_wrongupcondition.ods',
+      error: SND.t.parser.level_limit(name: 'Level 1')
+    }
+  ]
+  files.each do |test|
+    it "should validate #{test[:title]}" do
       @sp = SND::SpreadsheetParser.new(
         File.open("#{@file_path}/#{test[:file]}", 'r'),
         extension: :ods

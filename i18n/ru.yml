@@ -113,6 +113,7 @@ parser:
   start: начала
   invalid_timestamp: |-
     Неверный формат времени %{place}.
+  timestamp_in_past: Заданное время в прошлом.
   invalid_format: |-
     Неверный формат файла.
     %{error}

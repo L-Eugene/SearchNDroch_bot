@@ -36,6 +36,13 @@ describe SND::YamlParser do
     expect(yp.errors).not_to be_empty
   end
 
+  it 'should signalize if start date is in past' do
+    yp = SND::YamlParser.new("#{@file_path}/game_start_time_in_past.yml")
+
+    expect(yp.valid?).to be_falsey
+    expect(yp.errors).not_to be_empty
+  end
+
   it 'should validate level contents' do
     Dir.glob(%w[level codes].map { |type| "#{@file_path}/game_invalid_#{type}*yml" }).each do |file|
       yp = SND::YamlParser.new(file)

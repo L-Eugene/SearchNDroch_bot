@@ -67,7 +67,7 @@ module SND
       s0 = doc.sheet(0)
       @errors << SND.t.parser.no_levels_given if doc.sheets.size < 2
       @errors << SND.t.parser.game_parameters_missing if s0.last_row < 3
-      valid_date?(s0.cell(3, 2).to_s, SND.t.parser.start)
+      valid_date?(s0.cell(3, 2).to_s, SND.t.parser.start, true)
       @errors.empty?
     end
 
