@@ -7,7 +7,7 @@ module SND
       return if %r{^\/}.match? msg
 
       unless %r{^!}.match? msg
-        raise InvalidCodeFormat if chat.private?
+        raise InvalidCodeFormat, chat: chat if chat.private?
 
         return
       end
