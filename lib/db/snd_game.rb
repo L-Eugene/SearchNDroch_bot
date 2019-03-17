@@ -40,7 +40,7 @@ module SND
     end
 
     def start!
-      SND.log.debug "Starting game ##{self.id}"
+      SND.log.debug "Starting game ##{id}"
       update!(status: 'Running')
       players.each do |player|
         SND::LevelTime.create(level: levels.first, chat: player, start_time: start, end_time: nil)
