@@ -56,8 +56,11 @@ module SND
     end
 
     def finish!
+      SND.log.debug " ++ Game finish operation for ##{id}"
+
       update!(status: 'Over')
       players.each do |player|
+        SND.log.debug " +++ Send gameover message to #{player.name}(#{player.id})"
         player.send_message(Tpl::Chat.menu(false).merge(Tpl::Game.finish(self)))
       end
     end
@@ -67,6 +70,10 @@ module SND
 
       players.each do |chat|
         while SND::LevelTime.timeout(self, ts).present?
+          SND.log.debug do
+            " ++ Game levelup operations for ##{SND::LevelTime.timeout(self, ts).pluck(:id).join(',')}"
+          end
+
           SND::LevelTime.timeout(self, ts).each(&:level_up)
           chat.send_message(SND::Tpl::Chat.task(chat))
         end
@@ -83,6 +90,7 @@ module SND
 
     def warn_level_up
       SND::LevelTime.warn_levelup(self).each do |lt|
+        SND.log.debug " ++ Game warn levelup operations for ##{lt.level_id}"
         lt.chat.send_message(
           text: SND.t.level.warn_level_up(lt.level.time_left_min(lt.chat))
         )
@@ -152,10 +160,13 @@ module SND
     end
 
     def self.start_games
+      SND.log.debug ' + Game start operations'
       Game.where(start: Time.at(0)..Time.current.end_of_minute, status: 'Future').each(&:start!)
     end
 
     def self.game_operations
+      SND.log.debug ' + Periodic game operations'
+
       ts = Time.now
       SND::Game.where(status: 'Running').each do |g|
         next g.finish! if g.finish_time <= ts

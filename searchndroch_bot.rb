@@ -91,9 +91,7 @@ class SearchndrochBot
   # Start/stop games by cron, check level autocomplete
   def periodic
     SND.log.debug 'Periodic actions start'
-    SND.log.debug ' + Periodic game operations'
     SND::Game.game_operations
-    SND.log.debug ' + Game start operations'
     SND::Game.start_games
     SND.log.debug 'Periodic actions end'
   end
