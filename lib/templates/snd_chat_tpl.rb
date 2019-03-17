@@ -35,6 +35,8 @@ module SND
       # @return [Hash] Telegram Bot message hash
       def self.task(chat, level = nil)
         Tpl::Level.task(level || chat.active_game.level(chat), chat)
+      rescue SND::GameOver
+        Tpl::Game.no_levels_left
       end
 
       def self.keyboard_button(text, callback)

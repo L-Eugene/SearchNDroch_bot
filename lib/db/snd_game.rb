@@ -81,11 +81,10 @@ module SND
     end
 
     def check_pass(chat)
-      lvl = level(chat)
-      return unless lvl.codes_left(chat) <= 0
+      return unless level(chat).codes_left(chat) <= 0
 
       SND::LevelTime.by_game_chat(self, chat).last.level_up(Time.current)
-      chat.send_message(SND::Tpl::Chat.task(chat, lvl))
+      chat.send_message(SND::Tpl::Chat.task(chat))
     end
 
     def warn_level_up
@@ -108,7 +107,7 @@ module SND
       SND::LevelTime.by_game_chat(self, player).reorder(level_id: :desc).find_by(
         '(:time >= start_time AND :time < end_time) OR (:time >= start_time AND end_time IS NULL)',
         time: time
-      )&.level || raise(SND::GameOver)
+      )&.level || raise(SND::GameOver, chat: player)
     end
 
     # @return [Hash]

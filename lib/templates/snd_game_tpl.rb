@@ -20,6 +20,10 @@ module SND
       def self.finish(game)
         { text: t.game.finish(results: stat(game), id: game.id) }
       end
+
+      def self.no_levels_left
+        { text: t.error.game_over.msg }
+      end
     end
   end
 end
