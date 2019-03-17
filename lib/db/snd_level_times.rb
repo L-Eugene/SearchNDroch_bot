@@ -20,7 +20,7 @@ module SND
 
     def self.warn_levelup(game)
       ids = joins(:level, :chat).where(level_id: game.level_ids, end_time: nil).map do |lt|
-        lt.id if [0, 4].include? lt.level.time_left_min(lt.chat)
+        lt.id if [1, 5].include? lt.level.time_left_min(lt.chat)
       end.compact
 
       where(id: ids)

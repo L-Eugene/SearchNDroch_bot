@@ -137,7 +137,7 @@ describe SND::Game do
       expect { @snd.periodic }.not_to raise_error
       expect(messages).to eq 0
 
-      Timecop.freeze('2050-01-01 17:10:55 UTC+3')
+      Timecop.freeze('2050-01-01 17:09:55 UTC+3')
       @snd.periodic
 
       messages = 0
@@ -151,7 +151,7 @@ describe SND::Game do
       expect { @snd.periodic }.not_to raise_error
       expect(messages).to eq 0
 
-      Timecop.freeze('2050-01-01 17:14:05 UTC+3')
+      Timecop.freeze('2050-01-01 17:13:05 UTC+3')
       @snd.periodic
 
       messages = 0
