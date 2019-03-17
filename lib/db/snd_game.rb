@@ -40,6 +40,7 @@ module SND
     end
 
     def start!
+      SND.log.debug "Starting game ##{self.id}"
       update!(status: 'Running')
       players.each do |player|
         SND::LevelTime.create(level: levels.first, chat: player, start_time: start, end_time: nil)
@@ -151,8 +152,7 @@ module SND
     end
 
     def self.start_games
-      ts = Time.now
-      Game.where(start: ts.beginning_of_minute..ts.end_of_minute, status: 'Future').each(&:start!)
+      Game.where(start: Time.at(0)..Time.current.end_of_minute, status: 'Future').each(&:start!)
     end
 
     def self.game_operations
