@@ -10,7 +10,7 @@ module SND
       def self.stat(game)
         game.stat.map
             .with_index do |row, id|
-              "#{id + 1}. #{row[:name]} [#{row[:bonus]}] (#{SND.l(row[:time].localtime, '%d.%m %H:%M:%S')})"
+              "#{id + 1}. #{row[:name]} [#{row[:bonus]}] (#{SND.l(row[:time].localtime, '%d.%m %T')})"
             end
             .unshift("[#{game.id}] #{game.name}").join("\n")
       end

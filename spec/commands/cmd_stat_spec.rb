@@ -15,7 +15,7 @@ describe SearchndrochBot do
         id: 10,
         name: 'TG1',
         description: 'Test game',
-        start: Time.parse('2050-01-01 17:00:00 UTC+3')
+        start: Time.parse('2050-01-01 17:00:00 +0300')
       )
       @game.players << @player1
       @game.players << @player2
@@ -41,10 +41,14 @@ describe SearchndrochBot do
       @chat = FactoryBot.create(:user, id: 3)
       allow(@chat).to receive(:send_message) { |msg| msg[:text] }
 
-      Timecop.freeze('2050-01-01 17:01:00 UTC+3')
-      @snd.instance_variable_set(:@time, Time.now)
+      Timecop.freeze('2050-01-01 17:01:00 +0300')
+      @snd.instance_variable_set(:@time, Time.current)
 
       @game.start!
+
+      @t0 = time_to_tz('2050-01-01 17:00:00 +0300')
+      @t1 = time_to_tz('2050-01-01 17:01:00 +0300')
+      @t2 = time_to_tz('2050-01-01 17:02:00 +0300')
     end
 
     it 'should raise error if there is no active games' do
@@ -61,56 +65,61 @@ describe SearchndrochBot do
       # Nobody has any bonus
       it 'Case 1' do
         expect(@snd.__send__(:process_command, :cmd_stat, []))
-          .to include "1. Player 1 [0] (01.01 17:00:00)\n2. Player 2 [0] (01.01 17:00:00)"
+          .to include "1. Player 1 [0] (#{@t0})\n2. Player 2 [0] (#{@t0})"
       end
 
       # Player 2 has more bonuses than Player 1
       it 'Case 2' do
-        FactoryBot.create(:bonus, code_id: 1, chat_id: 1, time: Time.now - 5.seconds)
+        FactoryBot.create(:bonus, code_id: 1, chat_id: 1, time: Time.current - 5.seconds)
         1.upto(3) do |x|
-          FactoryBot.create(:bonus, code_id: x, chat_id: 2, time: Time.now)
+          FactoryBot.create(:bonus, code_id: x, chat_id: 2, time: Time.current)
         end
 
+        t = time_to_tz('2050-01-01 17:00:55 +0300')
+
         expect(@snd.__send__(:process_command, :cmd_stat, []))
-          .to include "1. Player 2 [3] (01.01 17:01:00)\n2. Player 1 [1] (01.01 17:00:55)"
+          .to include "1. Player 2 [3] (#{@t1})\n2. Player 1 [1] (#{t})"
       end
 
       # Both players has one bonus, but player 1 entered last code earlier
       it 'Case 3' do
         FactoryBot.create(
           :bonus,
-          code_id: 1, chat_id: 1, time: Time.now
+          code_id: 1, chat_id: 1, time: Time.current
         )
         FactoryBot.create(
           :bonus,
-          code_id: 1, chat_id: 2, time: Time.now + 1.minute
+          code_id: 1, chat_id: 2, time: Time.current + 1.minute
         )
 
         expect(@snd.__send__(:process_command, :cmd_stat, []))
-          .to include "1. Player 1 [1] (01.01 17:01:00)\n2. Player 2 [1] (01.01 17:02:00)"
+          .to include "1. Player 1 [1] (#{@t1})\n2. Player 2 [1] (#{@t2})"
       end
 
       # Both players has one bonus, but player 2 entered last code earlier
       it 'Case 4' do
         FactoryBot.create(
           :bonus,
-          code_id: 1, chat_id: 2, time: Time.now
+          code_id: 1, chat_id: 2, time: Time.current
         )
         FactoryBot.create(
           :bonus,
-          code_id: 1, chat_id: 1, time: Time.now + 1.minute
+          code_id: 1, chat_id: 1, time: Time.current + 1.minute
         )
 
         expect(@snd.__send__(:process_command, :cmd_stat, []))
-          .to include "1. Player 2 [1] (01.01 17:01:00)\n2. Player 1 [1] (01.01 17:02:00)"
+          .to include "1. Player 2 [1] (#{@t1})\n2. Player 1 [1] (#{@t2})"
       end
     end
 
     it 'should show game stat by id' do
       allow(@snd).to receive(:chat) { @player1 }
 
-      expect(@snd.__send__(:process_command, :cmd_stat, ['10']))
-        .to include "1. Player 1 [0] (01.01 17:00:00)\n2. Player 2 [0] (01.01 17:00:00)"
+      time = time_to_tz('2050-01-01 17:00:00 +0300')
+
+      result = @snd.__send__(:process_command, :cmd_stat, ['10'])
+      expect(result)
+        .to include "1. Player 1 [0] (#{@t0})\n2. Player 2 [0] (#{@t0})"
     end
 
     it 'should raise if incorrect game given' do

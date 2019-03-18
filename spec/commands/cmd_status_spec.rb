@@ -13,7 +13,7 @@ describe SearchndrochBot do
         id: 10,
         name: 'TG1',
         description: 'Test game',
-        start: Time.parse('2050-01-01 17:00:00 UTC+3')
+        start: Time.parse('2050-01-01 17:00:00 +0300')
       )
       @game.players << @player
 
@@ -39,8 +39,8 @@ describe SearchndrochBot do
       @chat = FactoryBot.create(:user, id: 3)
       allow(@chat).to receive(:send_message) { |msg| msg[:text].to_s }
 
-      Timecop.freeze('2050-01-01 17:01:02 UTC+3')
-      @snd.instance_variable_set(:@time, Time.now)
+      Timecop.freeze('2050-01-01 17:01:02 +0300')
+      @snd.instance_variable_set(:@time, Time.current)
 
       @game.start!
     end

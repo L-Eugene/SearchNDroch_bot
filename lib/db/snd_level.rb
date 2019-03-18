@@ -32,13 +32,13 @@ module SND
     def time_left_sec(chat_id = nil)
       lt = SND::LevelTime.find_by(chat_id: chat_id, level: self)
 
-      duration.minutes - (Time.now.to_i - lt.start_time.to_i)
+      duration.minutes - (Time.current.to_i - lt.start_time.to_i)
     end
 
     def time_left_min(chat_id = nil)
       lt = SND::LevelTime.find_by(chat_id: chat_id, level: self)
 
-      (duration.minutes - (Time.now.to_i - lt.start_time.to_i)) / 60
+      (duration.minutes - (Time.current.to_i - lt.start_time.to_i)) / 60
     end
 
     def time_left(chat_id = nil)

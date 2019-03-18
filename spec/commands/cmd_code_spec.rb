@@ -14,7 +14,7 @@ describe SearchndrochBot do
         id: 10,
         name: 'TG1',
         description: 'Test game',
-        start: Time.parse('2050-01-01 17:00:00 UTC+3')
+        start: Time.parse('2050-01-01 17:00:00 +0300')
       )
       @game.players << @player << @player2
 
@@ -51,8 +51,8 @@ describe SearchndrochBot do
       @chat = FactoryBot.create(:user, id: 3)
       allow(@chat).to receive(:send_message) { |msg| msg[:text].to_s }
 
-      Timecop.freeze('2050-01-01 17:01:00 UTC+3')
-      @snd.instance_variable_set(:@time, Time.now)
+      Timecop.freeze('2050-01-01 17:01:00 +0300')
+      @snd.instance_variable_set(:@time, Time.current)
       allow(@snd).to receive(:chat) { @player }
 
       @game.start!
@@ -113,8 +113,8 @@ describe SearchndrochBot do
 
     it 'should add correct code to previous level' do
       # Playing at level 2 now
-      Timecop.freeze('2050-01-01 17:16:00 UTC+3')
-      @snd.instance_variable_set(:@time, Time.now)
+      Timecop.freeze('2050-01-01 17:16:00 +0300')
+      @snd.instance_variable_set(:@time, Time.current)
       @snd.periodic
 
       # Putting code to level 2
@@ -125,7 +125,7 @@ describe SearchndrochBot do
       # Imitate late submission of correct code
       @snd.instance_variable_set(
         :@time,
-        Time.parse('2050-01-01 17:10:00 UTC+3')
+        Time.parse('2050-01-01 17:10:00 +0300')
       )
 
       # This code has to be sent to level 1
@@ -136,8 +136,8 @@ describe SearchndrochBot do
 
     it 'should calculate codes left to level up' do
       # Playing at level 1 now
-      Timecop.freeze('2050-01-01 17:06:00 UTC+3')
-      @snd.instance_variable_set(:@time, Time.now)
+      Timecop.freeze('2050-01-01 17:06:00 +0300')
+      @snd.instance_variable_set(:@time, Time.current)
       @snd.periodic
 
       # Putting code to level 1
@@ -148,8 +148,8 @@ describe SearchndrochBot do
 
     it 'should switch to next level when pass limit reached' do
       # Playing at level 1 now
-      Timecop.freeze('2050-01-01 17:06:00 UTC+3')
-      @snd.instance_variable_set(:@time, Time.now)
+      Timecop.freeze('2050-01-01 17:06:00 +0300')
+      @snd.instance_variable_set(:@time, Time.current)
       @snd.periodic
 
       # Putting codes to level 1

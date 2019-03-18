@@ -72,7 +72,7 @@ module SND
     end
 
     def level_up
-      ts = Time.now
+      ts = Time.current
 
       players.each do |chat|
         while SND::LevelTime.timeout(self, ts).present?
@@ -107,7 +107,7 @@ module SND
     # @return [SND::Level] if level is active
     # @return [NilClass] if no active level available
     # @raise [SND::GameNotRunning] if game status is not 'Running'
-    def level(player, time = Time.now)
+    def level(player, time = Time.current)
       raise SND::GameNotRunning if status != 'Running'
 
       SND::LevelTime.by_game_chat(self, player).reorder(level_id: :desc).find_by(
@@ -126,7 +126,7 @@ module SND
     # @raise [SND::InvalidTimeFormat]
     def update_start(time)
       time = Time.parse(time)
-      raise SND::TimeInPastError, chat: author if time <= Time.now
+      raise SND::TimeInPastError, chat: author if time <= Time.current
 
       update!(start: time)
     rescue ArgumentError
@@ -172,7 +172,7 @@ module SND
     def self.game_operations
       SND.log.debug ' + Periodic game operations'
 
-      ts = Time.now
+      ts = Time.current
       SND::Game.where(status: 'Running').each do |g|
         next g.finish! if g.finish_time <= ts
 

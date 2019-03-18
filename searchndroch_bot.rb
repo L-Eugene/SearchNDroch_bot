@@ -81,7 +81,7 @@ class SearchndrochBot
 
   def process_callback(callback)
     @chat = SND::Chat.identify(callback.message)
-    @time = Time.now
+    @time = Time.current
 
     SND.tlg.api.answer_callback_query(callback_query_id: callback.id)
     return unless callback.data

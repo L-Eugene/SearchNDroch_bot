@@ -11,7 +11,7 @@ describe SearchndrochBot do
         :game,
         name: 'Game#1',
         id: 1,
-        start: Time.parse('2020-04-04 18:17:00 UTC+3')
+        start: Time.parse('2020-04-04 18:17:00 +0300')
       )
       chat.own_games << g
 

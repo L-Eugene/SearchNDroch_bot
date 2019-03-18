@@ -11,13 +11,13 @@ describe SearchndrochBot do
 
       @game1 = FactoryBot.create(
         :game,
-        name: 'Game#1', id: 1, start: '2019-02-02 20:00:00 UTC+3', status: 'Future'
+        name: 'Game#1', id: 1, start: '2019-02-02 20:00:00 +0300', status: 'Future'
       )
       @chat.own_games << @game1
 
       @game2 = FactoryBot.create(
         :game,
-        name: 'Game#2', id: 2, start: '2019-02-02 15:00:00 UTC+3', status: 'Running'
+        name: 'Game#2', id: 2, start: '2019-02-02 15:00:00 +0300', status: 'Running'
       )
 
       1.upto(3) do |id|
@@ -72,7 +72,7 @@ describe SearchndrochBot do
       expect(@game2.level(@game2.game_players.first).id).to eq 2
 
       lt = SND::LevelTime.by_game_chat(@game2, @game2.game_players.first).last
-      expect(lt.start_time).to eq '2019-02-02 16:30:00 UTC+3'
+      expect(lt.start_time).to eq '2019-02-02 16:30:00 +0300'
     end
   end
 end

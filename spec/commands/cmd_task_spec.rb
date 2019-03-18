@@ -10,7 +10,7 @@ describe SearchndrochBot do
 
       @game = FactoryBot.create(
         :game,
-        start: Time.parse('2050-01-01 17:00:00 UTC+3')
+        start: Time.parse('2050-01-01 17:00:00 +0300')
       )
       @game.players << @player
 
@@ -29,7 +29,7 @@ describe SearchndrochBot do
       allow(@chat).to receive(:send_message) { |msg| msg[:text] }
 
       allow(@snd).to receive(:chat) { @player }
-      Timecop.freeze('2050-01-01 17:01:00 UTC+3')
+      Timecop.freeze('2050-01-01 17:01:00 +0300')
 
       @game.start!
     end
@@ -48,15 +48,15 @@ describe SearchndrochBot do
     end
 
     it 'should calculate time left on level' do
-      Timecop.freeze('2050-01-01 17:01:00 UTC+3')
+      Timecop.freeze('2050-01-01 17:01:00 +0300')
       SND::Game.game_operations
       expect(@snd.__send__(:process_command, :cmd_task, [])).to include '00:14:00'
 
-      Timecop.freeze('2050-01-01 17:17:15 UTC+3')
+      Timecop.freeze('2050-01-01 17:17:15 +0300')
       SND::Game.game_operations
       expect(@snd.__send__(:process_command, :cmd_task, [])).to include '00:12:45'
 
-      Timecop.freeze('2050-01-01 17:40:11 UTC+3')
+      Timecop.freeze('2050-01-01 17:40:11 +0300')
       SND::Game.game_operations
       expect(@snd.__send__(:process_command, :cmd_task, [])).to include '00:04:49'
     end

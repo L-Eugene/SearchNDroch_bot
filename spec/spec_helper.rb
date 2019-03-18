@@ -13,6 +13,12 @@ require 'searchndroch_bot'
 
 ActiveRecord::Base.establish_connection(SND.cfg.options['database'])
 
+# @param [String] str
+# @return [Time]
+def time_to_tz(str)
+  Time.parse(str).localtime.strftime('%d.%m %T')
+end
+
 RSpec.configure do |config|
   include R18n::Helpers
   # rspec-expectations config goes here. You can use an alternate
