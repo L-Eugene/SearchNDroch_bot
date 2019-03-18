@@ -115,8 +115,6 @@ describe SearchndrochBot do
     it 'should show game stat by id' do
       allow(@snd).to receive(:chat) { @player1 }
 
-      time = time_to_tz('2050-01-01 17:00:00 +0300')
-
       result = @snd.__send__(:process_command, :cmd_stat, ['10'])
       expect(result)
         .to include "1. Player 1 [0] (#{@t0})\n2. Player 2 [0] (#{@t0})"
