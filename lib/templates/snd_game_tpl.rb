@@ -18,11 +18,11 @@ module SND
       # @param [SND::Game] game
       # @return [Hash] Telegram Bot message hash
       def self.finish(game)
-        { text: t.game.finish(results: stat(game), id: game.id) }
+        { text: SND.t.game.finish(results: stat(game), id: game.id) }
       end
 
       def self.no_levels_left
-        { text: t.error.game_over.msg }
+        { text: SND.t.error.game_over.msg }
       end
     end
   end
