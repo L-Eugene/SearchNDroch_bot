@@ -28,6 +28,7 @@ module SND
       def self.games(chat = nil)
         # if chat is not defined - show all future or running games
         (chat&.own_games || SND::Game.where(status: %w[Future Running]))
+          .sort_by { |obj| %w[Running Future Over].find_index obj.status }
           .map { |g| "#{SND.t.game.icon status: g.status} ##{g.id}: [#{g.start}] #{g.name}" }
       end
 
