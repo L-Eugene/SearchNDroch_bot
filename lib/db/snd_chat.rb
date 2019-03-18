@@ -86,7 +86,7 @@ module SND
     # @return [String]
     def status_message
       result = active_game.level(self).chat_stat(id)
-      result[:left].empty? ? SND.t.game.code.alldone : SND.t.game.status(result)
+      result[:left_count].zero? ? SND.t.game.code.alldone : SND.t.game.status(result)
     rescue SND::GameOver
       $ERROR_INFO.cmessage
     end
