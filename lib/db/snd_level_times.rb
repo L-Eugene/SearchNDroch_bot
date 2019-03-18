@@ -26,6 +26,10 @@ module SND
       where(id: ids)
     end
 
+    def self.gameover(game)
+      where(level_id: game.level_ids, end_time: nil).each { |lt| lt.update!(end_time: Time.current) }
+    end
+
     def level_up(time = start_time + level.duration.minutes)
       update_attributes(end_time: time)
 

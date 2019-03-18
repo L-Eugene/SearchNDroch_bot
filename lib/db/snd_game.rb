@@ -58,7 +58,13 @@ module SND
     def finish!
       SND.log.debug " ++ Game finish operation for ##{id}"
 
+      # Changing game status
       update!(status: 'Over')
+
+      # Closing opened levels
+      SND::LevelTime.gameover(self)
+
+      # Sending message to players
       players.each do |player|
         SND.log.debug " +++ Send gameover message to #{player.name}(#{player.id})"
         player.send_message(Tpl::Chat.menu(false).merge(Tpl::Game.finish(self)))

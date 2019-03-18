@@ -90,9 +90,15 @@ describe SND::Game do
       messages = 0
       allow_any_instance_of(SND::Chat)
         .to receive(:send_message) { |_| messages += 1 }
+
       expect { @snd.periodic }.not_to raise_error
       expect(@game.reload.status).to eq 'Over'
+
+      # Two finish messages should me sent to players
       expect(messages).to eq 2
+
+      # All levels should be marked over
+      expect(SND::LevelTime.where(end_time: nil).size).to eq 0
     end
 
     it 'should detect current level' do
