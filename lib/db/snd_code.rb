@@ -12,6 +12,6 @@ module SND
 
     after_save { |instance| instance.update_attribute(:main, instance.id) unless instance.main }
 
-    scope :closed, ->(chat_id) { joins(:bonuses).where(bonuses: { chat: chat_id }) }
+    scope :closed, ->(chat_id) { joins(:bonuses).where('bonuses.chat_id = ? and codes.main = codes.id', [chat_id]) }
   end
 end

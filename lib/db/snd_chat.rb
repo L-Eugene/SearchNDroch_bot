@@ -42,7 +42,7 @@ module SND
       return code_msg(:invalid, ucode) unless code
       return code_msg(:double, ucode) if bonus?(code.parent)
 
-      code.bonuses << SND::Bonus.create(chat: self, code: code.parent, time: time)
+      code.parent.bonuses << SND::Bonus.create(chat: self, time: time)
       "#{code_msg(:valid, ucode)}\n#{status_message}"
     end
 
