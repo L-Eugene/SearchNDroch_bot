@@ -40,6 +40,9 @@ Dir.glob(
   %w[r18n errors commands templates log db telegram parser].map { |s| "#{SND.libdir}/#{s}/snd_*.rb" }
 ).each { |f| require f }
 
+# Set timezone
+Time.zone = SND.cfg.options['timezone']
+
 # Main class for Search'N'Droch bot
 class SearchndrochBot
   include SND::ChatCommand

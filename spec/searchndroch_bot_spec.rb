@@ -30,4 +30,8 @@ describe SearchndrochBot do
     expect { SND::Parser.parse("#{file_path}/game_nocodes.ods", 'ods', nil) }
       .to raise_error(SND::FileParsingErrors, %r{Errors in parsed game file:})
   end
+
+  it 'should set timezone from config file' do
+    expect(Time.zone.name).to eq 'Madrid'
+  end
 end

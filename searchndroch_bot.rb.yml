@@ -7,6 +7,8 @@ debug:
   flag: /tmp/test_debug
   enabled: true
 
+timezone: Madrid
+
 database:
   :adapter: sqlite3
   :encoding: utf8
