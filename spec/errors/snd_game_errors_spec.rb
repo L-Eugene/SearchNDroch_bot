@@ -27,8 +27,8 @@ describe 'Game error classes' do
     it "should return valid log level for #{node[:class]}" do
       begin
         raise node[:class], data: [], chat: @chat
-      rescue node[:class]
-        expect($ERROR_INFO.__send__(:log_level)).to be node[:level]
+      rescue node[:class] => e
+        expect(e.__send__(:log_level)).to be node[:level]
       end
     end
   end
