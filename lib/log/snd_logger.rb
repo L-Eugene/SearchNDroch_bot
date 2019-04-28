@@ -13,7 +13,7 @@ module SND
     def initialize
       debug = SND.cfg.options['debug']['enabled'] || File.exist?(SND.cfg.options['debug']['flag'])
 
-      @logger = Logger.new(SND.cfg.options['logfile'], 'daily')
+      @logger = Logger.new(SND.cfg.options['logfile'])
       @logger.level = debug ? Logger::DEBUG : Logger::INFO
       @logger.formatter = proc do |severity, datetime, _progname, msg|
         date_format = datetime.strftime('%Y-%m-%d %H:%M:%S')
