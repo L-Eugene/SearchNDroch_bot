@@ -73,7 +73,13 @@ module SND
       Chat.find_or_create_by(chat_id: message.chat.id).tap do |chat|
         return chat if chat.name
 
-        chat.update!(name: "#{message.from.first_name} #{message.from.last_name}")
+        name = case
+               when message.chat.title
+                 message.chat.title
+               else
+                 "#{message.chat.first_name} #{message.chat.last_name}"
+               end
+        chat.update!(name: name)
       end
     end
 
