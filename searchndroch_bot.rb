@@ -70,8 +70,8 @@ class SearchndrochBot
     @time = Time.at(message.date)
 
     if message.text
-      meth = method_from_message(message.text)
-      args = args_from_message(%r{^\/\w+\s?}, message.text)
+      meth = method_from_message(message.text.gsub(%r{@[a-zA-Z0-9]}, ''))
+      args = args_from_message(%r{^\/\w+\s?}, message.text.gsub(%r{@[a-zA-Z0-9]}, ''))
       process_command(meth, args) if respond_to?(meth.to_sym, true)
       cmd_code(message.text)
     elsif message.document
