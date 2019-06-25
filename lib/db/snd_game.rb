@@ -45,8 +45,8 @@ module SND
       players.each do |player|
         SND::LevelTime.create(level: levels.first, chat: player, start_time: start, end_time: nil)
 
-        player.send_message(text: SND.t.game.start(id: id))
-        player.send_message(Tpl::Chat.menu.merge(Tpl::Level.task(levels.first, player)))
+        # Sending level because level time is not initialized yet
+        SND::Game.game_start_messages(player, self, levels.first)
       end
     end
 
@@ -167,6 +167,11 @@ module SND
     def self.start_games
       SND.log.debug ' + Game start operations'
       Game.where(start: Time.at(0)..Time.current.end_of_minute, status: 'Future').each(&:start!)
+    end
+
+    def self.game_start_messages(player, game, level = game.level(player))
+      player.send_message(text: SND.t.game.start(id: game.id))
+      player.send_message(Tpl::Chat.menu.merge(Tpl::Level.task(level, player)))
     end
 
     def self.game_operations

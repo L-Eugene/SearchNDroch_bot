@@ -48,7 +48,12 @@ module SND
     def cmd_join(args)
       game = SND::Game.load_game(chat, args.shift)
       game.players << chat
-      chat.send_message text: SND.t.join.success(id: game.id)
+
+      if game.status == 'Running'
+        SND::Game.game_start_messages(chat, game)
+      else
+        chat.send_message text: SND.t.join.success(id: game.id)
+      end
     end
 
     # @param [Array] args

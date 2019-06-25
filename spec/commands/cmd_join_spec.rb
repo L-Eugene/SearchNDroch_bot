@@ -63,9 +63,14 @@ describe SearchndrochBot do
     end
 
     it 'should set current level when joining active game' do
+      allow(@chat).to receive(:send_message) { |p| p }
+
       expect(@chat.games.reload.size).to eq 0
 
-      expect(@snd.__send__(:process_command, :cmd_join, ['2'])).to eq 'Вы заявлены на игру #2'
+      result = @snd.__send__(:process_command, :cmd_join, ['2'])
+
+      expect(result[:reply_markup]).to be_a Telegram::Bot::Types::ReplyKeyboardMarkup
+      expect(result[:text]).to include 'До автоперехода осталось'
 
       expect(@chat.games.reload.size).to eq 1
 
