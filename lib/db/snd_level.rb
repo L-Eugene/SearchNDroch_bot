@@ -26,7 +26,7 @@ module SND
     # @param [String] code
     # @return [SND::Code]
     def check_code(code)
-      codes.where(value: code).first
+      codes.where(value: code)
     end
 
     def time_left_sec(chat_id = nil)

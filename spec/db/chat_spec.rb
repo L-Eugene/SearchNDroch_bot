@@ -34,7 +34,7 @@ describe SND::Chat do
 
   it 'should create chat using title if possible' do
     message = double(
-        chat: double('chat', id: 12_534, title: 'chat_title_not_name', first_name: 'User', last_name: 'Name')
+      chat: double('chat', id: 12_534, title: 'chat_title_not_name', first_name: 'User', last_name: 'Name')
     )
 
     expect(SND::Chat.all.size).to eq 1

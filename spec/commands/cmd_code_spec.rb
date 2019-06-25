@@ -185,5 +185,16 @@ describe SearchndrochBot do
         expect(SND::Monitoring.invalid.all? { |m| m.code.nil? }).to be_truthy
       end
     end
+
+    it 'should process same codes in different sectors' do
+      @game.levels.first.codes << FactoryBot.create(
+        :code,
+        id: 999, value: 'second'
+      )
+
+      expect(SND::Monitoring.valid).to be_empty
+      @snd.__send__(:process_command, :cmd_code, '!second')
+      expect(SND::Monitoring.valid.size).to eq 2
+    end
   end
 end

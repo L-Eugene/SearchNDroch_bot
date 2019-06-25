@@ -34,15 +34,19 @@ module SND
     # @return [String] response text for user
     def send_code(ucode, time)
       level = active_game.level(self, time)
-      code = level.check_code(ucode)
+      codes = level.check_code(ucode)
 
-      # Saving nil as code for invalid codes
-      SND::Monitoring.create(value: ucode, time: time, level: level, chat: self, code: code)
+      if codes.empty?
+        # Saving nil as code for invalid codes
+        SND::Monitoring.create(value: ucode, time: time, level: level, chat: self, code: nil)
+        return code_msg(:invalid, ucode)
+      end
 
-      return code_msg(:invalid, ucode) unless code
-      return code_msg(:double, ucode) if bonus?(code.parent)
+      SND::Monitoring.create(codes.map { |code| { value: ucode, time: time, level: level, chat: self, code: code } })
 
-      code.parent.bonuses << SND::Bonus.create(chat: self, time: time)
+      return code_msg(:double, ucode) if bonus?(codes.first.parent)
+
+      codes.each { |code| code.parent.bonuses << SND::Bonus.create(chat: self, time: time) }
       "#{code_msg(:valid, ucode)}\n#{status_message}"
     end
 
@@ -73,13 +77,7 @@ module SND
       Chat.find_or_create_by(chat_id: message.chat.id).tap do |chat|
         return chat if chat.name
 
-        name = case
-               when message.chat.title
-                 message.chat.title
-               else
-                 "#{message.chat.first_name} #{message.chat.last_name}"
-               end
-        chat.update!(name: name)
+        chat.update!(name: message.chat.title || "#{message.chat.first_name} #{message.chat.last_name}")
       end
     end
 
