@@ -103,10 +103,14 @@ class SearchndrochBot
 
   def method_from_message(text)
     meth = (text || '').downcase
+    log = meth[0] == '/'
+
     [%r{\@.*$}, %r{\s.*$}, %r{^/}].each { |x| meth.gsub!(x, '') }
 
-    SND.log.info "#{meth} command from #{chat.chat_id}"
-    SND.log.debug "Full command is #{text}"
+    if log
+      SND.log.info "#{meth} command from #{chat.chat_id}"
+      SND.log.debug "Full command is #{text}"
+    end
 
     "cmd_#{meth}"
   end
