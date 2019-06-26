@@ -25,12 +25,15 @@ describe SearchndrochBot do
         task: 'Level 1 task'
       )
       1.upto(10) do |i|
-        level.codes << FactoryBot.create(
+        c1 = FactoryBot.create(
           :code,
-          id: i,
-          bonus: 2,
-          value: "as#{i}"
+          id: i, bonus: 2, value: "as#{i}"
         )
+        c2 = FactoryBot.create(
+          :code,
+          id: 100 + i, bonus: nil, value: 'notacode', parent: c1
+        )
+        level.codes << c1 << c2
       end
       @game.levels << level
 

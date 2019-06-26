@@ -68,7 +68,11 @@ module SND
     # @return [Array<Integer>]
     def chat_unclosed_indexes(chat_id)
       closed = codes.closed(chat_id).order(:id).ids
-      codes.each_with_index.map { |code, index| index + 1 unless closed.include?(code.id) }
+      codes.each_with_index.map do |code, index|
+        next if closed.include?(code.id) || code.parent.id != code.id
+
+        index + 1
+      end
     end
 
     # @param [SND::Chat] chat_id

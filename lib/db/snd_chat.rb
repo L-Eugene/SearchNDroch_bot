@@ -44,7 +44,7 @@ module SND
 
       SND::Monitoring.create(codes.map { |code| { value: ucode, time: time, level: level, chat: self, code: code } })
 
-      return code_msg(:double, ucode) if bonus?(codes.first.parent)
+      return code_msg(:double, ucode) if codes.all? { |code| bonus?(code.parent) }
 
       codes.each { |code| code.parent.bonuses << SND::Bonus.create(chat: self, time: time) }
       "#{code_msg(:valid, ucode)}\n#{status_message}"
@@ -57,7 +57,7 @@ module SND
     # @return [Boolean]
     # Checks if user already completed this code
     def bonus?(code)
-      code.bonuses.where(chat: id).present?
+      code.parent.bonuses.where(chat: id).present?
     end
 
     # @return [Boolean]
