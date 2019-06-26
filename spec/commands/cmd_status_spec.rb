@@ -27,11 +27,11 @@ describe SearchndrochBot do
       1.upto(10) do |i|
         c1 = FactoryBot.create(
           :code,
-          id: i, bonus: 2, value: "as#{i}"
+          id: 2 * i, bonus: 2, value: "as#{i}"
         )
         c2 = FactoryBot.create(
           :code,
-          id: 100 + i, bonus: nil, value: 'notacode', parent: c1
+          id: 2 * i + 1, bonus: nil, value: 'notacode', parent: c1
         )
         level.codes << c1 << c2
       end
