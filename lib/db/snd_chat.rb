@@ -46,7 +46,7 @@ module SND
 
       return code_msg(:double, ucode) if codes.all? { |code| bonus?(code.parent) }
 
-      codes.each { |code| code.parent.bonuses << SND::Bonus.create(chat: self, time: time) }
+      codes.each { |code| code.parent.bonuses << SND::Bonus.create(chat: self, time: time) unless bonus?(code.parent) }
       "#{code_msg(:valid, ucode)}\n#{status_message}"
     end
 

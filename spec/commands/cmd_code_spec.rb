@@ -189,19 +189,18 @@ describe SearchndrochBot do
     it 'should process same codes in different sectors' do
       code1 = FactoryBot.create(
         :code,
-        id: 997, value: 'second'
+        id: 997, bonus: 1, value: 'second'
       )
       code2 = FactoryBot.create(
         :code,
-        id: 999, value: 'first', parent: code1
+        id: 999, bonus: nil, value: 'first', parent: code1
       )
       @game.levels.first.codes << code1 << code2
 
-      expect(SND::Monitoring.valid).to be_empty
-      @snd.__send__(:process_command, :cmd_code, '!second')
-      expect(SND::Monitoring.valid.size).to eq 2
+      expect(SND::Bonus.all).to be_empty
       @snd.__send__(:process_command, :cmd_code, '!first')
-      expect(SND::Monitoring.valid.size).to eq 2
+      expect(SND::Bonus.all.size).to eq 1
+      @snd.__send__(:process_command, :cmd_code, '!second')
       expect(SND::Bonus.all.size).to eq 2
     end
   end
