@@ -74,14 +74,14 @@ module SND
     def level_up
       ts = Time.current
 
-      players.each do |chat|
-        while SND::LevelTime.timeout(self, ts).present?
-          SND.log.debug do
-            " ++ Game levelup operations for ##{SND::LevelTime.timeout(self, ts).pluck(:id).join(',')}"
-          end
+      while SND::LevelTime.timeout(self, ts).present?
+        SND.log.debug do
+          " ++ Game levelup operations for ##{SND::LevelTime.timeout(self, ts).pluck(:id).join(',')}"
+        end
 
-          SND::LevelTime.timeout(self, ts).each(&:level_up)
-          chat.send_message(SND::Tpl::Chat.task(chat))
+        SND::LevelTime.timeout(self, ts).each do |lt|
+          lt.level_up
+          lt.chat.send_message(SND::Tpl::Chat.task(lt.chat))
         end
       end
     end
