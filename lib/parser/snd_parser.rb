@@ -15,7 +15,7 @@ module SND
     # @param [String] ext
     # @return [Hash]
     def self.parse(file, ext, chat)
-      SND.log.debug { "#{file.path}: EXT=#{ext}" }
+      SND.log.debug { "#{file.try(:path)}: EXT=#{ext}" }
       parser = subclasses.find { |klass| klass.extensions.include? ext }
       raise SND::InvalidFileExtension unless parser
 
