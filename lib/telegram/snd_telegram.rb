@@ -20,8 +20,8 @@ module SND
     end
 
     def download_file(document)
-      Tempfile.open(['snd_game', document.file_name.chars.last(4).join]).tap do |f|
-        f.write Net::HTTP.get(get_file_uri(document))
+      Tempfile.open(['snd_game', File.extname(document.file_name)]).tap do |f|
+        f.write Net::HTTP.get(get_file_uris(document))
         f.close
       end
     end
