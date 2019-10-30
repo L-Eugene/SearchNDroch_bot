@@ -31,7 +31,7 @@ module SND
     end
 
     def level_up(time = start_time + level.duration.minutes)
-      update_attributes(end_time: time)
+      update(end_time: time)
 
       return unless level.next_level
 
