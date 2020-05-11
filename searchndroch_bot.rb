@@ -36,9 +36,12 @@ end
 
 $LOAD_PATH.unshift(SND.libdir)
 
+# Disabling cop because of false-positive
+# rubocop:disable Lint/NonDeterministicRequireOrder
 Dir.glob(
   %w[r18n errors commands templates log db telegram parser].map { |s| "#{SND.libdir}/#{s}/snd_*.rb" }
 ).each { |f| require f }
+# rubocop:enable Lint/NonDeterministicRequireOrder
 
 # Set timezone
 Time.zone = SND.cfg.options['timezone']

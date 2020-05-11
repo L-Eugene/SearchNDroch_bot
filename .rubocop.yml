@@ -1,12 +1,13 @@
 AllCops:
   TargetRubyVersion: 2.4
+  NewCops: enable
   Exclude:
     - 'schema.rb'
 
 Style/RegexpLiteral:
   EnforcedStyle: percent_r
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
 Metrics/ClassLength:
