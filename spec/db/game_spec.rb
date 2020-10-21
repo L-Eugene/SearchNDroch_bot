@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path("#{File.dirname(__FILE__)}/../spec_helper")
 require 'db/snd_game'
 
 describe SND::Game do
@@ -26,7 +26,7 @@ describe SND::Game do
   it 'should import game' do
     expect(@game.name).to eq 'SD#1'
     expect(@game.description).to eq 'Поисковая игра на одном объекте'
-    expect(@game.start).to eq Time.parse('2020-07-01 00:00:00 +0300')
+    expect(@game.start).to eq Time.parse('2050-07-01 00:00:00 +0300')
   end
 
   it 'should not leave invalid records in database on error' do
@@ -46,19 +46,19 @@ describe SND::Game do
   end
 
   it 'should validate game_id' do
-    expect { SND::Game.load_game(@chat, '', true) }
+    expect { SND::Game.load_game(@chat, '', own: true) }
       .to raise_error(SND::InvalidGameNumberError)
-    expect { SND::Game.load_game(@chat, '0', true) }
+    expect { SND::Game.load_game(@chat, '0', own: true) }
       .to raise_error(SND::InvalidGameNumberError)
-    expect { SND::Game.load_game(@chat, '-5', true) }
+    expect { SND::Game.load_game(@chat, '-5', own: true) }
       .to raise_error(SND::InvalidGameNumberError)
-    expect { SND::Game.load_game(@chat, 'text', true) }
+    expect { SND::Game.load_game(@chat, 'text', own: true) }
       .to raise_error(SND::InvalidGameNumberError)
 
-    expect { SND::Game.load_game(@chat, 2, true) }
+    expect { SND::Game.load_game(@chat, 2, own: true) }
       .to raise_error(SND::DefunctGameNumberError)
 
-    expect { SND::Game.load_game(@chat, 1, true) }
+    expect { SND::Game.load_game(@chat, 1, own: true) }
       .to raise_error(SND::GameOwnerError)
   end
 

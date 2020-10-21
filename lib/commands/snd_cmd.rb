@@ -20,7 +20,7 @@ module SND
     def cmd_delete(args)
       game_id = args.shift.to_i
 
-      SND::Game.load_game(chat, game_id, true).destroy
+      SND::Game.load_game(chat, game_id, own: true).destroy
 
       chat.send_message(text: SND.t.delete.success(id: game_id))
     end
@@ -71,7 +71,7 @@ module SND
 
     # @param [Array] args
     def cmd_move_start(args)
-      game = SND::Game.load_game(chat, args.shift, true)
+      game = SND::Game.load_game(chat, args.shift, own: true)
       game.update_start(args.join(' '))
 
       chat.send_message(

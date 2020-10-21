@@ -67,7 +67,7 @@ module SND
       # Sending message to players
       players.each do |player|
         SND.log.debug " +++ Send gameover message to #{player.name}(#{player.id})"
-        player.send_message(Tpl::Chat.menu(false).merge(Tpl::Game.finish(self)))
+        player.send_message(Tpl::Chat.menu(show: false).merge(Tpl::Game.finish(self)))
       end
     end
 
@@ -147,7 +147,7 @@ module SND
     # @raise [SND::DefunctGameNumberError] if game with given id is not exists
     # @raise [SND::GameOwnerError] if user asking for game is not it's owner.
     #   Only checked if own param is true
-    def self.load_game(chat, game_id, own = false)
+    def self.load_game(chat, game_id, own: false)
       raise SND::InvalidGameNumberError, chat: chat if game_id.to_i <= 0
 
       SND::Game.find_by_id(game_id).tap do |game|

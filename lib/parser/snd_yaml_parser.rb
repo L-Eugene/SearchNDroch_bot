@@ -31,7 +31,7 @@ module SND
     def valid_game?
       @errors << SND.t.parser.game_parameters_missing unless %i[name description start].all? { |key| @game.key? key }
 
-      valid_date?(@game[:start], SND.t.parser.start, true)
+      valid_date?(@game[:start], SND.t.parser.start, check_future: true)
 
       unless @game.key?(:levels) && @game[:levels].is_a?(Array)
         @errors << SND.t.parser.no_levels_given
@@ -46,7 +46,7 @@ module SND
     end
 
     # @param [Hash] level
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     def validate_level(level)
       unless %i[name task duration to_pass codes].all? { |key| level.key? key }
         return @errors << SND.t.parser.level_parameters(name: level[:name] || 'Unnamed level')
@@ -60,11 +60,11 @@ module SND
 
       @errors << SND.t.parser.level_timeout(name: level[:name]) unless level[:duration].to_i.positive?
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
     # @param [Array<Hash>] codes
     # @param [String] name Level name
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     def validate_codes(codes, name)
       return @errors << SND.t.parser.level_codes(name: level[:name]) unless codes&.size.to_i.positive?
 
@@ -77,7 +77,7 @@ module SND
         @errors << SND.t.parser.codes_bonus(name: name, code: idx) unless code[:bonus].to_i.positive?
       end
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
 
     private :valid_file?, :valid_game?, :validate_level, :validate_codes
   end

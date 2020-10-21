@@ -4,7 +4,7 @@ module SND
   # Chat code processor
   module ChatCommand
     def cmd_code(msg)
-      return if %r{^\/}.match? msg
+      return if %r{^/}.match? msg
 
       unless %r{^!}.match? msg
         raise InvalidCodeFormat, chat: chat if chat.private?

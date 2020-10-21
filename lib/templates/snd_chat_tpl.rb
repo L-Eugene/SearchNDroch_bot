@@ -10,7 +10,7 @@ module SND
       # @param [Boolean] show show or hide menu
       # @return [Hash] Telegram Bot message hash
       # Template to add game menu
-      def self.menu(show = true)
+      def self.menu(show: true)
         if show
           {
             reply_markup: Telegram::Bot::Types::ReplyKeyboardMarkup.new(

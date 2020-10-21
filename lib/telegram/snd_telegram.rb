@@ -16,7 +16,7 @@ module SND
     end
 
     def self.escape(text)
-      text.gsub(%r{([\*_])}) { |x| "\\#{x}" }
+      text.gsub(%r{([*_])}) { |x| "\\#{x}" }
     end
 
     def download_file(document)

@@ -51,7 +51,7 @@ module SND
     # @param [DateTime] stamp
     # @param [String] place
     # @param [Boolean] check_future
-    def valid_date?(stamp, place, check_future = false)
+    def valid_date?(stamp, place, check_future: false)
       stamp = Time.parse stamp unless stamp.is_a? Time
       @errors << SND.t.parser.timestamp_in_past if check_future && stamp < Time.current
     rescue StandardError

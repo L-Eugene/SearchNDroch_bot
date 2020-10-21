@@ -74,7 +74,7 @@ class SearchndrochBot
 
     if message.text
       meth = method_from_message(message.text.gsub(%r{@[a-zA-Z0-9]}, ''))
-      args = args_from_message(%r{^\/\w+\s?}, message.text.gsub(%r{@[a-zA-Z0-9]}, ''))
+      args = args_from_message(%r{^/\w+\s?}, message.text.gsub(%r{@[a-zA-Z0-9]}, ''))
       process_command(meth, args) if respond_to?(meth.to_sym, true)
       cmd_code(message.text)
     elsif message.document
@@ -90,7 +90,7 @@ class SearchndrochBot
     return unless callback.data
 
     meth = method_from_message(callback.data)
-    args = args_from_message(%r{^\/\w+\s?}, callback.data) + [callback.message.message_id]
+    args = args_from_message(%r{^/\w+\s?}, callback.data) + [callback.message.message_id]
     process_command(meth, args) if respond_to?(meth.to_sym, true)
   end
 
@@ -108,7 +108,7 @@ class SearchndrochBot
     meth = (text || '').downcase
     log = meth[0] == '/'
 
-    [%r{\@.*$}, %r{\s.*$}, %r{^/}].each { |x| meth.gsub!(x, '') }
+    [%r{@.*$}, %r{\s.*$}, %r{^/}].each { |x| meth.gsub!(x, '') }
 
     if log
       SND.log.info "#{meth} command from #{chat.chat_id}"
@@ -124,10 +124,8 @@ class SearchndrochBot
 
   def process_command(meth, args)
     result = nil
-    # rubocop:disable Style/FormatStringToken
     SND.log.debug Benchmark.measure(meth) { result = __send__(meth, args) }
                            .format('%n: user:%u CPU:%y total:%t %r')
-    # rubocop:enable Style/FormatStringToken
     result
   end
 
